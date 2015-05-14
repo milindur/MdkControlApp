@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MDKControl.Tools
+namespace MDKControl.Core.Tools
 {
     public delegate void TimerCallback(object state);
 

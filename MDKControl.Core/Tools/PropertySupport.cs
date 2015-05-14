@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace MDKControl.Tools
+namespace MDKControl.Core.Tools
 {
     ///<summary>
     /// Provides support for extracting property information based on a property expression.

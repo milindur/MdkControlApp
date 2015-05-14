@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Xamarin.Forms;
 
-using Xamarin.Forms;
-
-namespace MDKControl
+namespace MDKControl.Core
 {
     public class App : Application
     {

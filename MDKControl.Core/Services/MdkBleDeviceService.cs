@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Linq;
-using System.Threading.Tasks;
-using Ble = Robotics.Mobile.Core.Bluetooth.LE;
-using MDKControl.Contracts;
 using System.Threading;
+using System.Threading.Tasks;
+using MDKControl.Core.Contracts;
+using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
-namespace MDKControl.Services
+namespace MDKControl.Core.Services
 {
     public delegate IMdkDeviceService MdkBleDeviceServiceFactory(Ble.IDevice device);
 

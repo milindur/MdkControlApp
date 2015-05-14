@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Xamarin.Forms;
+﻿using System.Collections.ObjectModel;
 using Robotics.Mobile.Core.Bluetooth.LE;
+using Xamarin.Forms;
 
-namespace MDKControl.ViewModels
+namespace MDKControl.Core.ViewModels
 {
     public class DeviceListViewModel : ViewModelBase
     {

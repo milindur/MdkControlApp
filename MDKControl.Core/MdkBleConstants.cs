@@ -1,6 +1,6 @@
 using System;
 
-namespace MDKControl
+namespace MDKControl.Core
 {
 
     public static class MdkBleConstants

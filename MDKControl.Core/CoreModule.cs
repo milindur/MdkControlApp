@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
-using MDKControl.Services;
+using MDKControl.Core.Services;
 
-namespace MDKControl
+namespace MDKControl.Core
 {
     public class CoreModule : Module
     {

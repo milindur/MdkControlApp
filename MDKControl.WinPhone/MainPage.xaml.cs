@@ -27,7 +27,7 @@ namespace MDKControl.WinPhone
         {
             this.InitializeComponent();
 
-            LoadApplication(new MDKControl.App());
+            LoadApplication(new Core.App());
         }
     }
 }

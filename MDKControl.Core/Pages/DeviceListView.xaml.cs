@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 
-namespace MDKControl.Pages
+namespace MDKControl.Core.Pages
 {
     public partial class DeviceListView : ContentPage
     {

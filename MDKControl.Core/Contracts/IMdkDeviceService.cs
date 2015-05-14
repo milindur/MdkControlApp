@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace MDKControl.Contracts
+namespace MDKControl.Core.Contracts
 {
     public interface IMdkDeviceService
     {

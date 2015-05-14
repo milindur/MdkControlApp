@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace MDKControl.ViewModels
+namespace MDKControl.Core.ViewModels
 {
     public interface IViewModel : INotifyPropertyChanged
     {

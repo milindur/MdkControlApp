@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using MDKControl.Tools;
+using MDKControl.Core.Tools;
 
-namespace MDKControl.ViewModels
+namespace MDKControl.Core.ViewModels
 {
     public abstract class ViewModelBase : IViewModel
     {

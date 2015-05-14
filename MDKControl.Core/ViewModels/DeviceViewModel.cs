@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MDKControl.ViewModels
+﻿namespace MDKControl.Core.ViewModels
 {
     public class DeviceViewModel : ViewModelBase
     {
