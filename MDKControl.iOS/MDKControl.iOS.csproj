@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MDKControl.Core\MDKControl.Core.csproj">
-      <Project>{efe39d51-63cb-4d8b-ab47-367e2fb40efb}</Project>
+      <Project>{EFE39D51-63CB-4D8B-AB47-367E2FB40EFB}</Project>
       <Name>MDKControl.Core</Name>
     </ProjectReference>
   </ItemGroup>

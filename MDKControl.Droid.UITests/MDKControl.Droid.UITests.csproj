@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MDKControl.Droid\MDKControl.Droid.csproj">
-      <Project>{222db2cc-3f3c-4c6a-a66e-ec76f896080f}</Project>
+      <Project>{222DB2CC-3F3C-4C6A-A66E-EC76F896080F}</Project>
       <Name>MDKControl.Droid</Name>
     </ProjectReference>
   </ItemGroup>
