@@ -3,6 +3,9 @@
 ###############################################################################
 * text eol=lf
 
+*.dll	binary
+*.exe	binary
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
@@ -61,3 +64,4 @@
 *.PDF   diff=astextplain
 *.rtf   diff=astextplain
 *.RTF   diff=astextplain
+
