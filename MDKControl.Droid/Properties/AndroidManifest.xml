@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="de.milindur.mdkcontrol">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.milindur.mdkcontrol" android:versionName="0.3-alpha1" android:versionCode="5" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="18" android:targetSdkVersion="21" />
-	<application android:label="MDK Control" android:icon="@drawable/icon"></application>
+	<application android:label="MDK Control" android:icon="@drawable/ic_launcher"></application>
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 </manifest>
