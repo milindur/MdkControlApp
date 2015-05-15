@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace MDKControl.Core.Models
 {
@@ -9,13 +10,14 @@ namespace MDKControl.Core.Models
             Address = address;
             SubAddress = subAddress;
             Command = command;
-            Data = (byte[])data.Clone();
+            Data = data != null ? (byte[])data.Clone() : null;
         }
 
         public byte Address { get; set; }
         public byte SubAddress { get; set; }
         public byte Command { get; set; }
         public byte[] Data { get; set; }
+        public byte Length { get { return Data != null ? (byte)Data.Length : (byte)0; } }
 
         public static bool TryParse(byte[] bytes, out MoCoBusFrame frame)
         {
@@ -46,14 +48,19 @@ namespace MDKControl.Core.Models
 
         public byte[] ToByteArray()
         {
-            var result = new byte[10 + Data.Length];
+            var result = new byte[10 + Length];
             result[5] = 0xff;
             result[6] = Address;
             result[7] = SubAddress;
             result[8] = Command;
-            result[9] = (byte)Data.Length;
-            Data.CopyTo(result, 10);
+            result[9] = (byte)Length;
+            if (Data != null) Data.CopyTo(result, 10);
             return result;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[MoCoBusFrame: Address={0}, SubAddress={1}, Command={2}, Data={3}]", Address, SubAddress, Command, BitConverter.ToString(Data));
         }
     }
 }

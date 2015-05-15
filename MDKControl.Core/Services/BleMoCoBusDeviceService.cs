@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace MDKControl.Core.Services
 {
     public delegate IMoCoBusDeviceService BleMoCoBusDeviceServiceFactory(Ble.IDevice device);
 
-    public class BleMoCoBusDeviceService : MoCoBusDeviceServiceBase, IMoCoBusDeviceService
+    public class BleMoCoBusDeviceService : MoCoBusDeviceServiceBase
     {
         private readonly Ble.IAdapter _adapter;
         private readonly AutoResetEvent _newRxBytesReceived = new AutoResetEvent(false);
@@ -65,20 +66,25 @@ namespace MDKControl.Core.Services
             _moCoBusTxCharacteristic = _moCoBusService.Characteristics
                 .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
 
-            if (_moCoBusRxCharacteristic != null)
+            if (_moCoBusRxCharacteristic != null && _moCoBusRxCharacteristic.CanUpdate)
             {
-                _moCoBusRxCharacteristic.ValueUpdated += (sss, eee) =>
-                {
-                    foreach (var b in eee.Characteristic.Value)
-                    {
-                        _rxBytesQueue.Enqueue(b);
-                    }
-                    _newRxBytesReceived.Set();
-                };
+                _moCoBusRxCharacteristic.ValueUpdated += MoCoBusRxCharacteristicOnValueUpdated;
                 _moCoBusRxCharacteristic.StartUpdates();
             }
 
             ConnectionState = ConnectionState.Connected;
+        }
+
+        private void MoCoBusRxCharacteristicOnValueUpdated(object sender, Ble.CharacteristicReadEventArgs e)
+        {
+            Debug.Assert(e.Characteristic.Value != null, "e.Characteristic.Value != null");
+            
+            foreach (var b in e.Characteristic.Value)
+            {
+                _rxBytesQueue.Enqueue(b);
+            }
+            Debug.WriteLine(string.Join(":", e.Characteristic.Value.Select(x => x.ToString("X2")).ToArray()));
+            _newRxBytesReceived.Set();
         }
 
         public override void Connect()

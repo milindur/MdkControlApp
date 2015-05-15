@@ -1,4 +1,6 @@
-﻿namespace MDKControl.Core.Models
+﻿using System;
+
+namespace MDKControl.Core.Models
 {
     public class MoCoBusMotorCommandFrame : MoCoBusFrame
     {
@@ -11,6 +13,11 @@
         {
             get { return (MoCoBusMotorCommand)base.Command; }
             set { base.Command = (byte)value; }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[MoCoBusMotorCommandFrame: Address={0}, Motor={1}, Command={2}, Data={3}]", Address, SubAddress, Command, BitConverter.ToString(Data));
         }
     }
 }
