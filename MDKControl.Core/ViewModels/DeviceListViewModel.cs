@@ -25,19 +25,19 @@ namespace MDKControl.Core.ViewModels
             _adapter.ScanTimeoutElapsed += (s, e) =>
             {
                 Device.BeginInvokeOnMainThread(() =>
-                {
-                    StopScan();
-                });
+                    {
+                        StopScan();
+                    });
             };
             _adapter.DeviceDiscovered += (s, e) =>
             {
                 Device.BeginInvokeOnMainThread(() =>
-                {
-                    if (_devices.All(d => d.ID != e.Device.ID))
                     {
-                        _devices.Add(e.Device);
-                    }
-                });
+                        if (_devices.All(d => d.ID != e.Device.ID))
+                        {
+                            _devices.Add(e.Device);
+                        }
+                    });
             };
             /*MessagingCenter.Subscribe<DeviceViewModel, IDevice>(this, "TodoSaved", (sender, model) =>
             {
@@ -91,17 +91,23 @@ namespace MDKControl.Core.ViewModels
 
                 if (_selectedDevice != null)
                 {
-                    var todovm = new DeviceViewModel();
-                    //Navigation.Push(ViewFactory.CreatePage(todovm));
-                    _selectedDevice = null;
+                    var device = _bleMoCoBusDeviceServiceFactory(_selectedDevice);
+                    device.ConnectionChanged += (s, e) =>
+                    {
+                        if (device.IsConnected)
+                        {
+                            device.Send(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
+                        }
+                    };
+                    device.Connect();
                 }
             }
         }
 
         public object SelectedItem
         {
-            get { return _selectedDevice; }
-            set { _selectedDevice = (IDevice)value; }
+            get { return SelectedDevice; }
+            set { SelectedDevice = (IDevice)value; }
         }
 
         public ICommand StartScanCommand

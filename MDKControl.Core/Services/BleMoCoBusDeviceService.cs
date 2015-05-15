@@ -27,19 +27,23 @@ namespace MDKControl.Core.Services
 
             _adapter.DeviceConnected += (s, e) =>
             {
-                if (e.Device.ID != _device.ID) return;
+                if (e.Device.ID != _device.ID)
+                    return;
 
                 _device = e.Device;
                 _device.ServicesDiscovered += (ss, ee) =>
                 {
                     _moCoBusService = _device.Services
                         .SingleOrDefault(svc => svc.ID == BleConstants.ServiceMoCoBus);
-                    if (_moCoBusService == null) return;
+                    if (_moCoBusService == null)
+                        return;
 
                     _moCoBusRxCharacteristic = _moCoBusService.Characteristics
                         .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicRx);
                     _moCoBusTxCharacteristic = _moCoBusService.Characteristics
                         .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
+
+                    ConnectionState = ConnectionState.Connected;
 
                     if (_moCoBusRxCharacteristic != null)
                     {
@@ -53,8 +57,8 @@ namespace MDKControl.Core.Services
                         };
                         _moCoBusRxCharacteristic.StartUpdates();
                     }
-
-                    ConnectionState = ConnectionState.Connected;
+                    
+                    //ConnectionState = ConnectionState.Connected;
                 };
 
                 _device.DiscoverServices();
@@ -93,15 +97,15 @@ namespace MDKControl.Core.Services
                 return null;
 
             return await Task.Factory.StartNew(() =>
-            {
-                _newRxBytesReceived.WaitOne();
-                MoCoBusFrame frame;
-                /*if (MoCoBusFrame.TryParse(_rxBytesQueue.ToArray(), out frame))
+                {
+                    _newRxBytesReceived.WaitOne();
+                    MoCoBusFrame frame;
+                    /*if (MoCoBusFrame.TryParse(_rxBytesQueue.ToArray(), out frame))
                 {
                     return frame;
                 }*/
-                return (MoCoBusFrame)null;
-            }).ConfigureAwait(false);
+                    return (MoCoBusFrame)null;
+                }).ConfigureAwait(false);
         }
     }
 }

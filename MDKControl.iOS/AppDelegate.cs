@@ -4,6 +4,11 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Xamarin.Forms.Platform.iOS;
+using MDKControl.Core;
+using Xamarin.Forms;
+using Autofac;
+using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.iOS
 {
@@ -11,7 +16,7 @@ namespace MDKControl.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : UIApplicationDelegate
+    public partial class AppDelegate : FormsApplicationDelegate
     {
         // class-level declarations
         UIWindow window;
@@ -25,6 +30,8 @@ namespace MDKControl.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            Forms.Init();
+            
             // create a new window instance based on the screen size
             window = new UIWindow(UIScreen.MainScreen.Bounds);
 
@@ -32,9 +39,23 @@ namespace MDKControl.iOS
             // window.RootViewController  = navigationController;
 
             // make the window visible
-            window.MakeKeyAndVisible();
+            //window.MakeKeyAndVisible();
 
-            return true;
+            var builder = new ContainerBuilder();
+
+            // shared modules
+            builder.RegisterModule<CoreModule>();
+
+            // platform-specific registrations
+            builder.RegisterInstance(Ble.Adapter.Current)
+                .As<Ble.IAdapter>()
+                .SingleInstance();
+
+            var container = builder.Build();
+
+            LoadApplication(container.Resolve<Xamarin.Forms.Application>());
+
+            return base.FinishedLaunching(app, options);
         }
     }
 }
