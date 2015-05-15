@@ -4,6 +4,7 @@ using System.Windows.Input;
 using MDKControl.Core.Services;
 using Robotics.Mobile.Core.Bluetooth.LE;
 using Xamarin.Forms;
+using System.Diagnostics;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -92,11 +93,12 @@ namespace MDKControl.Core.ViewModels
                 if (_selectedDevice != null)
                 {
                     var device = _bleMoCoBusDeviceServiceFactory(_selectedDevice);
-                    device.ConnectionChanged += (s, e) =>
+                    device.ConnectionChanged += async (s, e) =>
                     {
                         if (device.IsConnected)
                         {
-                            device.Send(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
+                            var res = await device.SendAndReceiveAsync(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
+                            Debug.WriteLine(res);
                         }
                     };
                     device.Connect();
