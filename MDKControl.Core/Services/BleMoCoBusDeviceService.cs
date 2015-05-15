@@ -14,7 +14,7 @@ namespace MDKControl.Core.Services
     {
         private readonly Ble.IAdapter _adapter;
         private readonly AutoResetEvent _newRxBytesReceived = new AutoResetEvent(false);
-        //private readonly ConcurrentQueue<byte> _rxBytesQueue = new ConcurrentQueue<byte>();
+        private readonly ConcurrentQueue<byte> _rxBytesQueue = new ConcurrentQueue<byte>();
         private Ble.IDevice _device;
         private Ble.ICharacteristic _moCoBusRxCharacteristic;
         private Ble.IService _moCoBusService;
@@ -25,51 +25,60 @@ namespace MDKControl.Core.Services
             _device = device;
             _adapter = adapter;
 
-            _adapter.DeviceConnected += (s, e) =>
+            _adapter.DeviceConnected += AdapterOnDeviceConnected;
+            _adapter.DeviceDisconnected += AdapterOnDeviceDisconnected;
+        }
+
+        private void AdapterOnDeviceConnected(object sender, Ble.DeviceConnectionEventArgs e)
+        {
+            if (e.Device.ID != _device.ID)
+                return;
+
+            _device = e.Device;
+            _device.ServicesDiscovered += DeviceOnServicesDiscovered;
+            _device.DiscoverServices();
+        }
+
+        private void DeviceOnServicesDiscovered(object sender, EventArgs e)
+        {
+            _moCoBusService = _device.Services
+                .SingleOrDefault(svc => svc.ID == BleConstants.ServiceMoCoBus);
+            if (_moCoBusService == null)
+                return;
+
+            _moCoBusService.CharacteristicsDiscovered += MoCoBusServiceOnCharacteristicsDiscovered;
+            _moCoBusService.DiscoverCharacteristics();
+        }
+
+        private void AdapterOnDeviceDisconnected(object sender, Ble.DeviceConnectionEventArgs e)
+        {
+            if (e.Device.ID == _device.ID)
             {
-                if (e.Device.ID != _device.ID)
-                    return;
+                ConnectionState = ConnectionState.Disconnected;
+            }
+        }
 
-                _device = e.Device;
-                _device.ServicesDiscovered += (ss, ee) =>
+        private void MoCoBusServiceOnCharacteristicsDiscovered(object sender, EventArgs e)
+        {
+            _moCoBusRxCharacteristic = _moCoBusService.Characteristics
+                .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicRx);
+            _moCoBusTxCharacteristic = _moCoBusService.Characteristics
+                .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
+
+            if (_moCoBusRxCharacteristic != null)
+            {
+                _moCoBusRxCharacteristic.ValueUpdated += (sss, eee) =>
                 {
-                    _moCoBusService = _device.Services
-                        .SingleOrDefault(svc => svc.ID == BleConstants.ServiceMoCoBus);
-                    if (_moCoBusService == null)
-                        return;
-
-                    _moCoBusRxCharacteristic = _moCoBusService.Characteristics
-                        .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicRx);
-                    _moCoBusTxCharacteristic = _moCoBusService.Characteristics
-                        .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
-
-                    ConnectionState = ConnectionState.Connected;
-
-                    if (_moCoBusRxCharacteristic != null)
+                    foreach (var b in eee.Characteristic.Value)
                     {
-                        _moCoBusRxCharacteristic.ValueUpdated += (sss, eee) =>
-                        {
-                            foreach (var b in eee.Characteristic.Value)
-                            {
-                                //_rxBytesQueue.Enqueue(b);
-                            }
-                            _newRxBytesReceived.Set();
-                        };
-                        _moCoBusRxCharacteristic.StartUpdates();
+                        _rxBytesQueue.Enqueue(b);
                     }
-                    
-                    //ConnectionState = ConnectionState.Connected;
+                    _newRxBytesReceived.Set();
                 };
+                _moCoBusRxCharacteristic.StartUpdates();
+            }
 
-                _device.DiscoverServices();
-            };
-            _adapter.DeviceDisconnected += (s, e) =>
-            {
-                if (e.Device.ID == _device.ID)
-                {
-                    ConnectionState = ConnectionState.Disconnected;
-                }
-            };
+            ConnectionState = ConnectionState.Connected;
         }
 
         public override void Connect()
@@ -100,10 +109,10 @@ namespace MDKControl.Core.Services
                 {
                     _newRxBytesReceived.WaitOne();
                     MoCoBusFrame frame;
-                    /*if (MoCoBusFrame.TryParse(_rxBytesQueue.ToArray(), out frame))
-                {
-                    return frame;
-                }*/
+                    if (MoCoBusFrame.TryParse(_rxBytesQueue.ToArray(), out frame))
+                    {
+                        return frame;
+                    }
                     return (MoCoBusFrame)null;
                 }).ConfigureAwait(false);
         }
