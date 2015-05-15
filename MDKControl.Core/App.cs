@@ -1,27 +1,15 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using MDKControl.Core.ViewModels;
+using MDKControl.Core.Views;
+using Xamarin.Forms;
 
 namespace MDKControl.Core
 {
     public class App : Application
     {
-        public App()
+        public App(DeviceListViewModel deviceListViewModel, Func<DeviceListViewModel, DeviceListView> deviceListViewFactory)
         {
-            // The root page of your application
-            MainPage = new ContentPage
-            {
-                Content = new StackLayout
-                {
-                    VerticalOptions = LayoutOptions.Center,
-                    Children =
-                    {
-                        new Label
-                        {
-                            XAlign = TextAlignment.Center,
-                            Text = "Welcome to Xamarin Forms!"
-                        }
-                    }
-                }
-            };
+            MainPage = new NavigationPage(deviceListViewFactory(deviceListViewModel));
         }
 
         protected override void OnStart()

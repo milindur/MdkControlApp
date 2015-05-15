@@ -21,6 +21,8 @@ namespace MDKControl.Core.ViewModels
             action(this as T);
         }
 
+        
+
         protected virtual bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (object.Equals(storage, value)) return false;

@@ -10,8 +10,6 @@
     <AssemblyName>MDKControl.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,25 +30,35 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Services\ConnectionState.cs" />
+    <Compile Include="Models\MoCoBusCameraCommand.cs" />
+    <Compile Include="Models\MoCoBusCameraCommandFrame.cs" />
+    <Compile Include="Services\MoCoBusDeviceServiceBase.cs" />
+    <Compile Include="Models\MoCoBusFrame.cs" />
+    <Compile Include="Models\MoCoBusMainCommand.cs" />
+    <Compile Include="Models\MoCoBusMainCommandFrame.cs" />
+    <Compile Include="Models\MoCoBusMotorCommand.cs" />
+    <Compile Include="Models\MoCoBusMotorCommandFrame.cs" />
+    <Compile Include="Models\MoCoBusStatusType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\PropertySupport.cs" />
     <Compile Include="ViewModels\DeviceListViewModel.cs" />
-    <Compile Include="Contracts\IMdkDeviceService.cs" />
-    <Compile Include="Services\MdkBleDeviceService.cs" />
+    <Compile Include="Services\IMoCoBusDeviceService.cs" />
+    <Compile Include="Services\BleMoCoBusDeviceService.cs" />
     <Compile Include="Tools\Timer.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="MdkBleConstants.cs" />
+    <Compile Include="Services\BleConstants.cs" />
     <Compile Include="App.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />
-    <Compile Include="Pages\DeviceListView.xaml.cs">
-      <DependentUpon>DeviceListView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\IViewModel.cs" />
+    <Compile Include="Views\DeviceListView.xaml.cs">
+      <DependentUpon>DeviceListView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
-    <EmbeddedResource Include="Pages\DeviceListView.xaml">
+    <EmbeddedResource Include="Views\DeviceListView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
