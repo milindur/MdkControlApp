@@ -1,12 +1,9 @@
 * text eol=lf
 
-*.dll	binary
-*.exe	binary
-*.jpg   binary
-*.png   binary
-*.gif   binary
-
+*.md  	text eol=lf
 *.cs    text eol=lf diff=csharp
+*.xaml  text eol=lf
+*.xml  	text eol=lf
 
 *.sln       text eol=lf merge=binary
 *.csproj    text eol=lf merge=binary
@@ -20,4 +17,10 @@
 *.modelproj text eol=lf merge=binary
 *.sqlproj   text eol=lf merge=binary
 *.wwaproj   text eol=lf merge=binary
+
+*.dll	binary
+*.exe	binary
+*.jpg   binary
+*.png   binary
+*.gif   binary
 
