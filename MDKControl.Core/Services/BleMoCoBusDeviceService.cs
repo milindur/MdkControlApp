@@ -15,7 +15,7 @@ namespace MDKControl.Core.Services
     {
         private readonly Ble.IAdapter _adapter;
         private readonly AutoResetEvent _newRxBytesReceived = new AutoResetEvent(false);
-        private readonly ConcurrentQueue<byte> _rxBytesQueue = new ConcurrentQueue<byte>();
+        private readonly ConcurrentQueue<byte[]> _rxBytesQueue = new ConcurrentQueue<byte[]>();
         private Ble.IDevice _device;
         private Ble.ICharacteristic _moCoBusRxCharacteristic;
         private Ble.IService _moCoBusService;
@@ -78,12 +78,9 @@ namespace MDKControl.Core.Services
         private void MoCoBusRxCharacteristicOnValueUpdated(object sender, Ble.CharacteristicReadEventArgs e)
         {
             Debug.Assert(e.Characteristic.Value != null, "e.Characteristic.Value != null");
-            
-            foreach (var b in e.Characteristic.Value)
-            {
-                _rxBytesQueue.Enqueue(b);
-            }
             Debug.WriteLine(string.Join(":", e.Characteristic.Value.Select(x => x.ToString("X2")).ToArray()));
+
+            _rxBytesQueue.Enqueue(e.Characteristic.Value);
             _newRxBytesReceived.Set();
         }
 
@@ -114,10 +111,13 @@ namespace MDKControl.Core.Services
             return await Task.Factory.StartNew(() =>
                 {
                     _newRxBytesReceived.WaitOne();
-                    MoCoBusFrame frame;
-                    if (MoCoBusFrame.TryParse(_rxBytesQueue.ToArray(), out frame))
-                    {
-                        return frame;
+                    byte[] bytes;
+                    if (_rxBytesQueue.TryDequeue(out bytes)) {
+                        MoCoBusFrame frame;
+                        if (MoCoBusFrame.TryParse(bytes, out frame))
+                        {
+                            return frame;
+                        }
                     }
                     return (MoCoBusFrame)null;
                 }).ConfigureAwait(false);
