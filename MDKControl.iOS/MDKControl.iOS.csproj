@@ -104,19 +104,16 @@
     <BundleResource Include="Resources\Default-568h%402x.png" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Robotics.Mobile.Core">
+      <HintPath>..\libs\Robotics.Mobile.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Robotics.Mobile.Core.iOS">
+      <HintPath>..\libs\Robotics.Mobile.Core.iOS.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Components\Monkey.Robotics-0.5.2\lib\ios-unified\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Robotics.Mobile.Core">
-      <HintPath>..\Components\Monkey.Robotics-0.5.2\lib\ios-unified\Robotics.Mobile.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Robotics.Mobile.Core.iOS">
-      <HintPath>..\Components\Monkey.Robotics-0.5.2\lib\ios-unified\Robotics.Mobile.Core.iOS.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
     </Reference>
@@ -144,10 +141,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.4.2.6359\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
-  <ItemGroup>
-    <XamarinComponentReference Include="Monkey.Robotics">
-      <Version>0.5.2</Version>
-      <Visible>False</Visible>
-    </XamarinComponentReference>
-  </ItemGroup>
 </Project>

@@ -39,15 +39,6 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Components\Monkey.Robotics-0.5.2\lib\android\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Robotics.Mobile.Core">
-      <HintPath>..\Components\Monkey.Robotics-0.5.2\lib\android\Robotics.Mobile.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Robotics.Mobile.Core.Droid">
-      <HintPath>..\Components\Monkey.Robotics-0.5.2\lib\android\Robotics.Mobile.Core.Droid.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -73,6 +64,12 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Robotics.Mobile.Core">
+      <HintPath>..\libs\Robotics.Mobile.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Robotics.Mobile.Core.Droid">
+      <HintPath>..\libs\Robotics.Mobile.Core.Droid.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -90,12 +87,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\values\Styles.xml" />
     <AndroidResource Include="Resources\layout\Splash.axml" />
-  </ItemGroup>
-  <ItemGroup>
-    <XamarinComponentReference Include="Monkey.Robotics">
-      <Version>0.5.2</Version>
-      <Visible>False</Visible>
-    </XamarinComponentReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MDKControl.Core\MDKControl.Core.csproj">
