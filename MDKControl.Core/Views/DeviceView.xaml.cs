@@ -1,11 +1,10 @@
 ﻿namespace MDKControl.Core.Views
 {
-    public partial class DeviceListView
+    public partial class DeviceView
     {
-        public DeviceListView()
+        public DeviceView()
         {
             InitializeComponent();
         }
     }
 }
-

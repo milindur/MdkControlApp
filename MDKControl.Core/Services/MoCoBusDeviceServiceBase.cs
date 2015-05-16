@@ -29,6 +29,8 @@ namespace MDKControl.Core.Services
 
         public abstract void Send(MoCoBusFrame frame);
 
+        public abstract void ClearReceiveBuffer();
+
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
             Send(frame);

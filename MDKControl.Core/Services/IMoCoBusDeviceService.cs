@@ -14,8 +14,10 @@ namespace MDKControl.Core.Services
         ConnectionState ConnectionState { get; }
         bool IsConnected { get; }
 
-        void Send(MoCoBusFrame frame);
+        void ClearReceiveBuffer();
+
         Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame);
+        void Send(MoCoBusFrame frame);
         Task<MoCoBusFrame> ReceiveAsync();
     }
 }

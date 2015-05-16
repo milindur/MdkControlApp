@@ -1,10 +1,11 @@
 ﻿using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
+using MDKControl.Core.Factories;
 using MDKControl.Core.Services;
 using MDKControl.Core.ViewModels;
-using Xamarin.Forms;
 using MDKControl.Core.Views;
+using Xamarin.Forms;
 
 namespace MDKControl.Core
 {
@@ -16,11 +17,24 @@ namespace MDKControl.Core
                 .AsSelf()
                 .As<Application>();
 
+            builder.RegisterType<ViewFactory>()
+                .As<IViewFactory>()
+                .SingleInstance();
+
+            builder.RegisterType<Navigator>()
+                .As<INavigator>()
+                .SingleInstance();
+
+            builder.Register(context => Application.Current.MainPage.Navigation)
+                .SingleInstance();
+
             builder.RegisterType<BleMoCoBusDeviceService>();
-            builder.RegisterGeneratedFactory<BleMoCoBusDeviceServiceFactory>(new TypedService(typeof(BleMoCoBusDeviceService)));
 
             builder.RegisterType<DeviceListViewModel>();
             builder.RegisterType<DeviceListView>();
+
+            builder.RegisterType<DeviceViewModel>();
+            builder.RegisterType<DeviceView>();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using MDKControl.Core.Factories;
 using MDKControl.Core.ViewModels;
 using MDKControl.Core.Views;
 using Xamarin.Forms;
@@ -7,9 +8,13 @@ namespace MDKControl.Core
 {
     public class App : Application
     {
-        public App(DeviceListViewModel deviceListViewModel, Func<DeviceListViewModel, DeviceListView> deviceListViewFactory)
+        public App(IViewFactory viewFactory)
         {
-            MainPage = new NavigationPage(deviceListViewFactory(deviceListViewModel));
+            viewFactory.Register<DeviceListViewModel, DeviceListView>();
+            viewFactory.Register<DeviceViewModel, DeviceView>();
+
+            var mainPage = viewFactory.Resolve<DeviceListViewModel>();
+            MainPage = new NavigationPage(mainPage);
         }
 
         protected override void OnStart()

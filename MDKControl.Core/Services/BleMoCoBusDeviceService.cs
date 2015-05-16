@@ -9,16 +9,14 @@ using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Core.Services
 {
-    public delegate IMoCoBusDeviceService BleMoCoBusDeviceServiceFactory(Ble.IDevice device);
-
     public class BleMoCoBusDeviceService : MoCoBusDeviceServiceBase
     {
         private readonly Ble.IAdapter _adapter;
         private readonly AutoResetEvent _newRxBytesReceived = new AutoResetEvent(false);
-        private readonly ConcurrentQueue<byte[]> _rxBytesQueue = new ConcurrentQueue<byte[]>();
+        private ConcurrentQueue<byte[]> _rxBytesQueue = new ConcurrentQueue<byte[]>();
         private Ble.IDevice _device;
-        private Ble.ICharacteristic _moCoBusRxCharacteristic;
         private Ble.IService _moCoBusService;
+        private Ble.ICharacteristic _moCoBusRxCharacteristic;
         private Ble.ICharacteristic _moCoBusTxCharacteristic;
 
         public BleMoCoBusDeviceService(Ble.IDevice device, Ble.IAdapter adapter)
@@ -32,12 +30,19 @@ namespace MDKControl.Core.Services
 
         private void AdapterOnDeviceConnected(object sender, Ble.DeviceConnectionEventArgs e)
         {
-            if (e.Device.ID != _device.ID)
-                return;
+            if (e.Device.ID != _device.ID) return;
 
             _device = e.Device;
             _device.ServicesDiscovered += DeviceOnServicesDiscovered;
             _device.DiscoverServices();
+        }
+
+        private void AdapterOnDeviceDisconnected(object sender, Ble.DeviceConnectionEventArgs e)
+        {
+            if (e.Device.ID != _device.ID) return;
+
+            _device = e.Device;
+            ConnectionState = ConnectionState.Disconnected;
         }
 
         private void DeviceOnServicesDiscovered(object sender, EventArgs e)
@@ -49,14 +54,6 @@ namespace MDKControl.Core.Services
 
             _moCoBusService.CharacteristicsDiscovered += MoCoBusServiceOnCharacteristicsDiscovered;
             _moCoBusService.DiscoverCharacteristics();
-        }
-
-        private void AdapterOnDeviceDisconnected(object sender, Ble.DeviceConnectionEventArgs e)
-        {
-            if (e.Device.ID == _device.ID)
-            {
-                ConnectionState = ConnectionState.Disconnected;
-            }
         }
 
         private void MoCoBusServiceOnCharacteristicsDiscovered(object sender, EventArgs e)
@@ -82,6 +79,7 @@ namespace MDKControl.Core.Services
 
             _rxBytesQueue.Enqueue(e.Characteristic.Value);
             _newRxBytesReceived.Set();
+            OnDataReceived();
         }
 
         public override void Connect()
@@ -92,6 +90,12 @@ namespace MDKControl.Core.Services
 
         public override void Disconnect()
         {
+            _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
+            _moCoBusRxCharacteristic = null;
+            _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
+            _moCoBusService = null;
+            _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
+
             _adapter.DisconnectDevice(_device);
         }
 
@@ -101,6 +105,11 @@ namespace MDKControl.Core.Services
                 return;
 
             _moCoBusTxCharacteristic.Write(frame.ToByteArray());
+        }
+
+        public override void ClearReceiveBuffer()
+        {
+            _rxBytesQueue = new ConcurrentQueue<byte[]>();
         }
 
         public override async Task<MoCoBusFrame> ReceiveAsync()

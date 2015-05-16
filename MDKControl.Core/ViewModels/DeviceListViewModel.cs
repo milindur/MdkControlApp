@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using MDKControl.Core.Services;
@@ -10,19 +11,23 @@ namespace MDKControl.Core.ViewModels
 {
     public class DeviceListViewModel : ViewModelBase
     {
+        private readonly INavigator _navigator;
         private readonly IAdapter _adapter;
-        private readonly BleMoCoBusDeviceServiceFactory _bleMoCoBusDeviceServiceFactory;
+        private readonly Func<IMoCoBusDeviceService, DeviceViewModel> _deviceViewModelFactory;
+        private readonly Func<IDevice, BleMoCoBusDeviceService> _moCoBusDeviceServiceFactory;
         private IDevice _selectedDevice;
         private ObservableCollection<IDevice> _devices = new ObservableCollection<IDevice>();
         private Command _startScanCommand;
         private Command _stopScanCommand;
         private bool _isScanning;
 
-        public DeviceListViewModel(IAdapter adapter, BleMoCoBusDeviceServiceFactory bleMoCoBusDeviceServiceFactory)
+        public DeviceListViewModel(INavigator navigator, IAdapter adapter, Func<IMoCoBusDeviceService, DeviceViewModel> deviceViewModelFactory, Func<IDevice, BleMoCoBusDeviceService> moCoBusDeviceServiceFactory)
         {
+            _navigator = navigator;
             _adapter = adapter;
-            _bleMoCoBusDeviceServiceFactory = bleMoCoBusDeviceServiceFactory;
-            
+            _deviceViewModelFactory = deviceViewModelFactory;
+            _moCoBusDeviceServiceFactory = moCoBusDeviceServiceFactory;
+
             _adapter.ScanTimeoutElapsed += (s, e) =>
             {
                 Device.BeginInvokeOnMainThread(() =>
@@ -92,14 +97,17 @@ namespace MDKControl.Core.ViewModels
 
                 if (_selectedDevice != null)
                 {
-                    var device = _bleMoCoBusDeviceServiceFactory(_selectedDevice);
+                    StopScan();
+
+                    _navigator.PushAsync(_deviceViewModelFactory(_moCoBusDeviceServiceFactory(_selectedDevice)));
+                    /*var device = _bleMoCoBusDeviceServiceFactory(_selectedDevice);
                     device.ConnectionChanged += DeviceConnectionChanged;
-                    device.Connect();
+                    device.Connect();*/
                 }
             }
         }
 
-        private async void DeviceConnectionChanged(object sender, System.EventArgs e)
+        /*private async void DeviceConnectionChanged(object sender, System.EventArgs e)
         {
             var device = (IMoCoBusDeviceService)sender;
             
@@ -108,7 +116,7 @@ namespace MDKControl.Core.ViewModels
                 var res = await device.SendAndReceiveAsync(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
                 if (res != null) Debug.WriteLine(res);
             }
-        }
+        }*/
 
         public object SelectedItem
         {
