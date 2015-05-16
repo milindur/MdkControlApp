@@ -93,16 +93,20 @@ namespace MDKControl.Core.ViewModels
                 if (_selectedDevice != null)
                 {
                     var device = _bleMoCoBusDeviceServiceFactory(_selectedDevice);
-                    device.ConnectionChanged += async (s, e) =>
-                    {
-                        if (device.IsConnected)
-                        {
-                            var res = await device.SendAndReceiveAsync(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
-                            Debug.WriteLine(res);
-                        }
-                    };
+                    device.ConnectionChanged += DeviceConnectionChanged;
                     device.Connect();
                 }
+            }
+        }
+
+        private async void DeviceConnectionChanged(object sender, System.EventArgs e)
+        {
+            var device = (IMoCoBusDeviceService)sender;
+            
+            if (device.IsConnected)
+            {
+                var res = await device.SendAndReceiveAsync(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
+                if (res != null) Debug.WriteLine(res);
             }
         }
 
