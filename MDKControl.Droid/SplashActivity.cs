@@ -13,7 +13,7 @@ namespace MDKControl.Droid
 
             SetContentView(Resource.Layout.Splash);
 
-            await Task.Delay(2000);
+            await Task.Delay(500);
 
             StartActivity(typeof(MainActivity));
         }

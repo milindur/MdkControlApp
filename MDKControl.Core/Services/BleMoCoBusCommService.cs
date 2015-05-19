@@ -9,7 +9,7 @@ using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Core.Services
 {
-    public class BleMoCoBusDeviceService : MoCoBusDeviceServiceBase
+    public class BleMoCoBusCommService : MoCoBusCommServiceBase
     {
         private readonly Ble.IAdapter _adapter;
         private readonly AutoResetEvent _newRxBytesReceived = new AutoResetEvent(false);
@@ -19,7 +19,7 @@ namespace MDKControl.Core.Services
         private Ble.ICharacteristic _moCoBusRxCharacteristic;
         private Ble.ICharacteristic _moCoBusTxCharacteristic;
 
-        public BleMoCoBusDeviceService(Ble.IDevice device, Ble.IAdapter adapter)
+        public BleMoCoBusCommService(Ble.IDevice device, Ble.IAdapter adapter)
         {
             _device = device;
             _adapter = adapter;
@@ -63,7 +63,7 @@ namespace MDKControl.Core.Services
             _moCoBusTxCharacteristic = _moCoBusService.Characteristics
                 .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
 
-            if (_moCoBusRxCharacteristic != null && _moCoBusRxCharacteristic.CanUpdate)
+            if (_moCoBusRxCharacteristic != null)
             {
                 _moCoBusRxCharacteristic.ValueUpdated += MoCoBusRxCharacteristicOnValueUpdated;
                 _moCoBusRxCharacteristic.StartUpdates();
@@ -90,12 +90,22 @@ namespace MDKControl.Core.Services
 
         public override void Disconnect()
         {
-            _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
-            _moCoBusRxCharacteristic = null;
-            _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
-            _moCoBusService = null;
-            _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
+            _moCoBusTxCharacteristic = null;
 
+            if (_moCoBusRxCharacteristic != null)
+            {
+                _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
+                _moCoBusRxCharacteristic.StopUpdates();
+                _moCoBusRxCharacteristic = null;
+            }
+
+            if (_moCoBusService != null)
+            {
+                _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
+                _moCoBusService = null;
+            }
+
+            _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
             _adapter.DisconnectDevice(_device);
         }
 

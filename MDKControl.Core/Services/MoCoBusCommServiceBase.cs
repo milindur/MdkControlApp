@@ -4,7 +4,7 @@ using MDKControl.Core.Models;
 
 namespace MDKControl.Core.Services
 {
-    public abstract class MoCoBusDeviceServiceBase : IMoCoBusDeviceService
+    public abstract class MoCoBusCommServiceBase : IMoCoBusCommService
     {
         private ConnectionState _connectionState = ConnectionState.Disconnected;
         public event EventHandler ConnectionChanged;

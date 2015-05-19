@@ -5,12 +5,17 @@
     x:Class="MDKControl.Core.Views.DeviceListView"
     Title="{Binding Title}">
   <ContentPage.ToolbarItems>
-    <!--Activated="OnClick"-->
     <ToolbarItem Text="Scan" Order="Primary" Priority="0" Command="{Binding StartScanCommand}" />
     <ToolbarItem Text="Stop" Order="Primary" Priority="1" Command="{Binding StopScanCommand}" />
   </ContentPage.ToolbarItems>
   <StackLayout Orientation="Vertical">
-    <ListView ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedItem}">
+    <ListView 
+        ItemsSource="{Binding Devices}" 
+        SelectedItem="{Binding SelectedItem}" 
+        IsPullToRefreshEnabled="True" 
+        IsRefreshing="{Binding IsScanning}" 
+        RefreshCommand="{Binding StartScanCommand}"
+        SeparatorVisibility="None">
       <ListView.ItemTemplate>
         <DataTemplate>
           <TextCell Text="{Binding Name}" />

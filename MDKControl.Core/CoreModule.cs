@@ -28,7 +28,7 @@ namespace MDKControl.Core
             builder.Register(context => Application.Current.MainPage.Navigation)
                 .SingleInstance();
 
-            builder.RegisterType<BleMoCoBusDeviceService>();
+            builder.RegisterType<BleMoCoBusCommService>();
 
             builder.RegisterType<DeviceListViewModel>();
             builder.RegisterType<DeviceListView>();

@@ -1,20 +1,25 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using MDKControl.Core.Services;
 using Robotics.Mobile.Core.Bluetooth.LE;
+using Xamarin.Forms;
 
 namespace MDKControl.Core.ViewModels
 {
     public class DeviceViewModel : ViewModelBase
     {
-        private readonly IMoCoBusDeviceService _deviceService;
+        private readonly IMoCoBusCommService _commService;
+        private readonly MoCoBusProtocolService _protocolService;
 
-        public DeviceViewModel(IMoCoBusDeviceService deviceService)
+        public DeviceViewModel(IMoCoBusCommService commService)
         {
-            _deviceService = deviceService;
-            _deviceService.ConnectionChanged += DeviceServiceOnConnectionChanged;
+            _commService = commService;
+            _commService.ConnectionChanged += CommServiceOnConnectionChanged;
+            _protocolService = new MoCoBusProtocolService(_commService, 3);
         }
 
-        private void DeviceServiceOnConnectionChanged(object sender, EventArgs e)
+        private void CommServiceOnConnectionChanged(object sender, EventArgs e)
         {
             OnPropertyChanged(() => IsConnected);
         }
@@ -23,21 +28,32 @@ namespace MDKControl.Core.ViewModels
         {
             get
             {
-                return _deviceService.ConnectionState == ConnectionState.Connecting
-                       || _deviceService.ConnectionState == ConnectionState.Connected;
+                return _commService.ConnectionState == ConnectionState.Connecting
+                       || _commService.ConnectionState == ConnectionState.Connected;
             }
             set
             {
-                if (_deviceService.ConnectionState == ConnectionState.Disconnected && value)
+                if (_commService.ConnectionState == ConnectionState.Disconnected && value)
                 {
-                    _deviceService.Connect();
+                    _commService.Connect();
                 }
-                else if (_deviceService.ConnectionState != ConnectionState.Disconnected && !value)
+                else if (_commService.ConnectionState != ConnectionState.Disconnected && !value)
                 {
-                    _deviceService.Disconnect();
+                    _commService.Disconnect();
                 }
                 OnPropertyChanged(() => IsConnected);
             }
+        }
+
+        public int FirmwareVersion { get; private set; }
+
+        private ICommand _testCommand;
+        public ICommand TestCommand { get { return _testCommand ?? (_testCommand = new Command(async () => await Test())); } }
+
+        private async Task Test()
+        {
+            FirmwareVersion = await _protocolService.GetFirmwareVersion();
+            OnPropertyChanged(() => FirmwareVersion);
         }
     }
 }

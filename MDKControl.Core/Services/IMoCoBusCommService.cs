@@ -4,7 +4,7 @@ using MDKControl.Core.Models;
 
 namespace MDKControl.Core.Services
 {
-    public interface IMoCoBusDeviceService
+    public interface IMoCoBusCommService
     {
         event EventHandler ConnectionChanged;
         event EventHandler DataReceived;

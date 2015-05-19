@@ -13,15 +13,15 @@ namespace MDKControl.Core.ViewModels
     {
         private readonly INavigator _navigator;
         private readonly IAdapter _adapter;
-        private readonly Func<IMoCoBusDeviceService, DeviceViewModel> _deviceViewModelFactory;
-        private readonly Func<IDevice, BleMoCoBusDeviceService> _moCoBusDeviceServiceFactory;
+        private readonly Func<IMoCoBusCommService, DeviceViewModel> _deviceViewModelFactory;
+        private readonly Func<IDevice, BleMoCoBusCommService> _moCoBusDeviceServiceFactory;
         private IDevice _selectedDevice;
         private ObservableCollection<IDevice> _devices = new ObservableCollection<IDevice>();
         private Command _startScanCommand;
         private Command _stopScanCommand;
         private bool _isScanning;
 
-        public DeviceListViewModel(INavigator navigator, IAdapter adapter, Func<IMoCoBusDeviceService, DeviceViewModel> deviceViewModelFactory, Func<IDevice, BleMoCoBusDeviceService> moCoBusDeviceServiceFactory)
+        public DeviceListViewModel(INavigator navigator, IAdapter adapter, Func<IMoCoBusCommService, DeviceViewModel> deviceViewModelFactory, Func<IDevice, BleMoCoBusCommService> moCoBusDeviceServiceFactory)
         {
             _navigator = navigator;
             _adapter = adapter;
@@ -109,7 +109,7 @@ namespace MDKControl.Core.ViewModels
 
         /*private async void DeviceConnectionChanged(object sender, System.EventArgs e)
         {
-            var device = (IMoCoBusDeviceService)sender;
+            var device = (IMoCoBusCommService)sender;
             
             if (device.IsConnected)
             {

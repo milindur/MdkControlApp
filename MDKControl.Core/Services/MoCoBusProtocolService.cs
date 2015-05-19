@@ -7,112 +7,116 @@ using MDKControl.Core.Models;
 
 namespace MDKControl.Core.Services
 {
-    public class MoCoBusService : IMoCoBusMainService
+    public class MoCoBusProtocolService : IMoCoBusProtocolMainService
     {
-        private readonly IMoCoBusDeviceService _deviceService;
+        private readonly IMoCoBusCommService _commService;
         private readonly byte _address;
 
-        public MoCoBusService(IMoCoBusDeviceService deviceService, byte address)
+        public MoCoBusProtocolService(IMoCoBusCommService commService, byte address)
         {
-            _deviceService = deviceService;
+            _commService = commService;
             _address = address;
         }
 
-        public async Task StartAsync()
+        public async Task Start()
         {
-            await _deviceService
+            await _commService
                 .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, null))
                 .ConfigureAwait(false);
         }
 
-        public async Task StopAsync()
+        public async Task Stop()
         {
-            await _deviceService
+            await _commService
                 .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Stop, null))
                 .ConfigureAwait(false);
         }
 
-        public Task SetProgramModeAsync(MoCoBusProgramMode mode)
+        public Task SetProgramMode(MoCoBusProgramMode mode)
         {
             throw new NotImplementedException();
         }
 
-        public Task SendAllMotorsToHomeAsync()
+        public Task SendAllMotorsToHome()
         {
             throw new NotImplementedException();
         }
 
-        public Task SendAllMotorsToProgramStartAsync()
+        public Task SendAllMotorsToProgramStart()
         {
             throw new NotImplementedException();
         }
 
-        public Task SetJoystickModeAsync(bool enable)
+        public Task SetJoystickMode(bool enable)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetJoystickWatchdogAsync(bool enable)
+        public Task SetJoystickWatchdog(bool enable)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetProgramStartPointAsync()
+        public Task SetProgramStartPoint()
         {
             throw new NotImplementedException();
         }
 
-        public Task SetProgramStopPointAsync()
+        public Task SetProgramStopPoint()
         {
             throw new NotImplementedException();
         }
 
-        public Task ReverseAllMotorsStartStopPointsAsync()
+        public Task ReverseAllMotorsStartStopPoints()
         {
             throw new NotImplementedException();
         }
 
-        public Task<uint> GetFirmwareVersionAsync()
+        public async Task<int> GetFirmwareVersion()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetFirmwareVersion, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusStatus.ParseStatus<int>(response);
+        }
+
+        public Task<MoCoBusProgramMode> GetProgramMode()
         {
             throw new NotImplementedException();
         }
 
-        public Task<MoCoBusProgramMode> GetProgramModeAsync()
+        public Task<MoCoBusRunStatus> GetRunStatus()
         {
             throw new NotImplementedException();
         }
 
-        public Task<MoCoBusRunStatus> GetRunStatusAsync()
+        public Task<TimeSpan> GetRunTime()
         {
             throw new NotImplementedException();
         }
 
-        public Task<TimeSpan> GetRunTimeAsync()
+        public Task<TimeSpan> GetTotalProgramRunTime()
         {
             throw new NotImplementedException();
         }
 
-        public Task<TimeSpan> GetTotalProgramRunTimeAsync()
+        public Task<float> GetProgramPercentComplete()
         {
             throw new NotImplementedException();
         }
 
-        public Task<float> GetProgramPercentCompleteAsync()
+        public Task<bool> IsProgramComplete()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsProgramCompleteAsync()
+        public Task<bool> GetJoystickMode()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> GetJoystickModeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> GetJoystickWatchdogStatusAsync()
+        public Task<bool> GetJoystickWatchdogStatus()
         {
             throw new NotImplementedException();
         }
