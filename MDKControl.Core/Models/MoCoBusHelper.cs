@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MDKControl.Core.Models
 {
-    public static class MoCoBusStatus
+    public static class MoCoBusHelper
     {
         public static dynamic ParseStatus(MoCoBusFrame frame)
         {

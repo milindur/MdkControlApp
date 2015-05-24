@@ -1,13 +1,18 @@
 ﻿using System.Threading.Tasks;
 using Android.App;
 using Android.OS;
+using MDKControl.Core;
+using Android.Content;
+using Microsoft.Practices.ServiceLocation;
+using MDKControl.Droid.Helpers;
+using MDKControl.Core.ViewModels;
 
 namespace MDKControl.Droid
 {
     [Activity(Label = "MDK Control", Icon = "@drawable/ic_launcher", Theme = "@style/Splash", MainLauncher = true, NoHistory = true)]
-    public class SplashActivity : Activity
+    public class SplashActivity : ActivityBaseEx
     {
-        protected override async void OnCreate(Bundle savedInstanceState)
+        protected async override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
@@ -15,7 +20,9 @@ namespace MDKControl.Droid
 
             await Task.Delay(500);
 
-            StartActivity(typeof(MainActivity));
+            App.Bootstrap();
+
+            StartActivity(typeof(DeviceListViewActivity));
         }
     }
 }

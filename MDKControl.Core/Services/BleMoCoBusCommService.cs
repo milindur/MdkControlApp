@@ -48,7 +48,7 @@ namespace MDKControl.Core.Services
         private void DeviceOnServicesDiscovered(object sender, EventArgs e)
         {
             _moCoBusService = _device.Services
-                .SingleOrDefault(svc => svc.ID == BleConstants.ServiceMoCoBus);
+                .FirstOrDefault(svc => svc.ID == BleConstants.ServiceMoCoBus);
             if (_moCoBusService == null)
                 return;
 
@@ -59,9 +59,9 @@ namespace MDKControl.Core.Services
         private void MoCoBusServiceOnCharacteristicsDiscovered(object sender, EventArgs e)
         {
             _moCoBusRxCharacteristic = _moCoBusService.Characteristics
-                .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicRx);
+                .FirstOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicRx);
             _moCoBusTxCharacteristic = _moCoBusService.Characteristics
-                .SingleOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
+                .FirstOrDefault(ch => ch.ID == BleConstants.ServiceMoCoBusCharacteristicTx);
 
             if (_moCoBusRxCharacteristic != null)
             {

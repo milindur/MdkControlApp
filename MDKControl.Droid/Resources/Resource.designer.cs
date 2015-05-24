@@ -28,9 +28,9 @@ namespace MDKControl.Droid
 		{
 			global::GalaSoft.MvvmLight.Resource.String.ApplicationName = global::MDKControl.Droid.Resource.String.ApplicationName;
 			global::GalaSoft.MvvmLight.Resource.String.Hello = global::MDKControl.Droid.Resource.String.Hello;
+			global::Reactive.Bindings.Resource.String.ApplicationName = global::MDKControl.Droid.Resource.String.ApplicationName;
+			global::Reactive.Bindings.Resource.String.Hello = global::MDKControl.Droid.Resource.String.Hello;
 			global::Robotics.Mobile.Core.Resource.String.library_name = global::MDKControl.Droid.Resource.String.library_name;
-			global::Xamarin.Forms.Platform.Resource.String.ApplicationName = global::MDKControl.Droid.Resource.String.ApplicationName;
-			global::Xamarin.Forms.Platform.Resource.String.Hello = global::MDKControl.Droid.Resource.String.Hello;
 		}
 		
 		public partial class Animation
@@ -1326,6 +1326,33 @@ namespace MDKControl.Droid
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f090051
+			public const int ConnectSwitch = 2131296337;
+			
+			// aapt resource value: 0x7f090054
+			public const int ConnectedLayout = 2131296340;
+			
+			// aapt resource value: 0x7f090053
+			public const int ConnectingLayout = 2131296339;
+			
+			// aapt resource value: 0x7f09004f
+			public const int DevicesList = 2131296335;
+			
+			// aapt resource value: 0x7f090052
+			public const int DisconnectedLayout = 2131296338;
+			
+			// aapt resource value: 0x7f090060
+			public const int Joystick = 2131296352;
+			
+			// aapt resource value: 0x7f090050
+			public const int RefreshButton = 2131296336;
+			
+			// aapt resource value: 0x7f090061
+			public const int ScanningStart = 2131296353;
+			
+			// aapt resource value: 0x7f090062
+			public const int ScanningStop = 2131296354;
+			
 			// aapt resource value: 0x7f090040
 			public const int action_bar = 2131296320;
 			
@@ -1521,6 +1548,39 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f090011
 			public const int showTitle = 2131296273;
 			
+			// aapt resource value: 0x7f090056
+			public const int sliderctrl_detail_current_position = 2131296342;
+			
+			// aapt resource value: 0x7f090055
+			public const int sliderctrl_detail_current_position_label = 2131296341;
+			
+			// aapt resource value: 0x7f09005b
+			public const int sliderctrl_detail_move_left = 2131296347;
+			
+			// aapt resource value: 0x7f09005c
+			public const int sliderctrl_detail_move_left_100 = 2131296348;
+			
+			// aapt resource value: 0x7f09005f
+			public const int sliderctrl_detail_move_right = 2131296351;
+			
+			// aapt resource value: 0x7f09005e
+			public const int sliderctrl_detail_move_right_100 = 2131296350;
+			
+			// aapt resource value: 0x7f090059
+			public const int sliderctrl_detail_position = 2131296345;
+			
+			// aapt resource value: 0x7f09005a
+			public const int sliderctrl_detail_position_set = 2131296346;
+			
+			// aapt resource value: 0x7f090058
+			public const int sliderctrl_detail_state = 2131296344;
+			
+			// aapt resource value: 0x7f090057
+			public const int sliderctrl_detail_state_label = 2131296343;
+			
+			// aapt resource value: 0x7f09005d
+			public const int sliderctrl_detail_stop = 2131296349;
+			
 			// aapt resource value: 0x7f090007
 			public const int split_action_bar = 2131296263;
 			
@@ -1674,19 +1734,25 @@ namespace MDKControl.Droid
 			public const int abc_simple_dropdown_hint = 2130903064;
 			
 			// aapt resource value: 0x7f030019
-			public const int select_dialog_item_material = 2130903065;
+			public const int DeviceListView = 2130903065;
 			
 			// aapt resource value: 0x7f03001a
-			public const int select_dialog_multichoice_material = 2130903066;
+			public const int DeviceView = 2130903066;
 			
 			// aapt resource value: 0x7f03001b
-			public const int select_dialog_singlechoice_material = 2130903067;
+			public const int select_dialog_item_material = 2130903067;
 			
 			// aapt resource value: 0x7f03001c
-			public const int Splash = 2130903068;
+			public const int select_dialog_multichoice_material = 2130903068;
 			
 			// aapt resource value: 0x7f03001d
-			public const int support_simple_spinner_dropdown_item = 2130903069;
+			public const int select_dialog_singlechoice_material = 2130903069;
+			
+			// aapt resource value: 0x7f03001e
+			public const int Splash = 2130903070;
+			
+			// aapt resource value: 0x7f03001f
+			public const int support_simple_spinner_dropdown_item = 2130903071;
 			
 			static Layout()
 			{
@@ -1698,14 +1764,30 @@ namespace MDKControl.Droid
 			}
 		}
 		
+		public partial class Menu
+		{
+			
+			// aapt resource value: 0x7f0c0000
+			public const int DeviceListOptionsMenu = 2131492864;
+			
+			static Menu()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Menu()
+			{
+			}
+		}
+		
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f0b0012
-			public const int ApplicationName = 2131427346;
+			// aapt resource value: 0x7f0b0013
+			public const int ApplicationName = 2131427347;
 			
-			// aapt resource value: 0x7f0b0011
-			public const int Hello = 2131427345;
+			// aapt resource value: 0x7f0b0012
+			public const int Hello = 2131427346;
 			
 			// aapt resource value: 0x7f0b0000
 			public const int abc_action_bar_home_description = 2131427328;
@@ -1758,8 +1840,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f0b0010
 			public const int abc_toolbar_collapse_description = 2131427344;
 			
-			// aapt resource value: 0x7f0b0013
-			public const int library_name = 2131427347;
+			// aapt resource value: 0x7f0b0011
+			public const int library_name = 2131427345;
 			
 			static String()
 			{

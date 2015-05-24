@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:background="@color/background_floating_material_dark">
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:text="Connect"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/bright_foreground_material_dark" />
+        <Switch
+            android:id="@+id/ConnectSwitch"
+            android:textOn="On"
+            android:textOff="Off"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/DisconnectedLayout"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:text="Disconnected"
+            android:gravity="center"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:textStyle="italic" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ConnectingLayout"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:text="Connecting..."
+            android:gravity="center"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:textStyle="italic" />
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/ConnectedLayout"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:columnCount="3"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+        <TextView
+            android:id="@+id/sliderctrl_detail_current_position_label"
+            android:text="Current Position"
+            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content"
+            android:layout_width="120dp" />
+        <TextView
+            android:id="@+id/sliderctrl_detail_current_position"
+            android:layout_toRightOf="@id/sliderctrl_detail_current_position_label"
+            android:layout_height="wrap_content"
+            android:layout_width="100dp" />
+        <TextView
+            android:id="@+id/sliderctrl_detail_state_label"
+            android:text="State"
+            android:layout_toRightOf="@id/sliderctrl_detail_current_position"
+            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <TextView
+            android:id="@+id/sliderctrl_detail_state"
+            android:layout_toRightOf="@id/sliderctrl_detail_state_label"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <EditText
+            android:id="@+id/sliderctrl_detail_position"
+            android:hint="Goto Position"
+            android:inputType="numberSigned"
+            android:layout_below="@id/sliderctrl_detail_current_position_label"
+            android:layout_toLeftOf="@+id/sliderctrl_detail_position_set"
+            android:layout_alignBaseline="@+id/sliderctrl_detail_position_set"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp" />
+        <Button
+            android:id="@+id/sliderctrl_detail_position_set"
+            android:text="Goto"
+            android:layout_below="@+id/sliderctrl_detail_current_position_label"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_width="80dp" />
+        <Button
+            android:id="@+id/sliderctrl_detail_move_left"
+            android:text="&lt;&lt;&lt;"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/sliderctrl_detail_position"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <Button
+            android:id="@+id/sliderctrl_detail_move_left_100"
+            android:text="&lt;&lt;"
+            android:layout_toRightOf="@+id/sliderctrl_detail_move_left"
+            android:layout_alignBaseline="@+id/sliderctrl_detail_move_left"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <Button
+            android:id="@+id/sliderctrl_detail_stop"
+            android:text="o"
+            android:layout_toRightOf="@+id/sliderctrl_detail_move_left_100"
+            android:layout_alignBaseline="@+id/sliderctrl_detail_move_left"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <Button
+            android:id="@+id/sliderctrl_detail_move_right_100"
+            android:text="&gt;&gt;"
+            android:layout_toRightOf="@+id/sliderctrl_detail_stop"
+            android:layout_alignBaseline="@+id/sliderctrl_detail_move_left"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <Button
+            android:id="@+id/sliderctrl_detail_move_right"
+            android:text="&gt;&gt;&gt;"
+            android:layout_toRightOf="@+id/sliderctrl_detail_move_right_100"
+            android:layout_alignBaseline="@+id/sliderctrl_detail_move_left"
+            android:layout_height="wrap_content"
+            android:layout_width="60dp" />
+        <MDKControl.Droid.Widgets.JoystickView
+            android:id="@+id/Joystick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sliderctrl_detail_move_left"
+            android:layout_weight="1" />
+    </RelativeLayout>
+</LinearLayout>
