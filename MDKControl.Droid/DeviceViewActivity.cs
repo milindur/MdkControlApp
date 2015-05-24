@@ -14,7 +14,7 @@ using Reactive.Bindings.Extensions;
 
 namespace MDKControl.Droid
 {
-    [Activity()]
+    [Activity(Label = "Device")]
     public class DeviceViewActivity : ActivityBaseEx
     {
         private Binding _isConnectedBinding;
@@ -34,6 +34,43 @@ namespace MDKControl.Droid
         }
 
         public DeviceViewModel Vm { get; private set; }
+
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
+            SetContentView(Resource.Layout.DeviceView);
+
+            Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
+
+            _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectSwitch.Checked, BindingMode.TwoWay);
+            _showDisconnectedBinding = this.SetBinding(() => Vm.IsDisconnected, () => DisconnectedLayout.Visibility)
+                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
+            _showConnectingBinding = this.SetBinding(() => Vm.IsConnecting, () => ConnectingLayout.Visibility)
+                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
+            _showConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectedLayout.Visibility)
+                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
+
+            Joystick.JoystickMove.SetCommand(Vm.JoystickCommand);
+        }
+
+        protected override void OnPause()
+        {
+            _isConnectedBinding.Detach();
+            _showDisconnectedBinding.Detach();
+            _showConnectingBinding.Detach();
+            _showConnectedBinding.Detach();
+
+            Vm.IsConnected = false;
+
+            base.OnPause();
+        }
 
         public Switch ConnectSwitch
         {
@@ -78,43 +115,6 @@ namespace MDKControl.Droid
                 return _joystick
                     ?? (_joystick = FindViewById<JoystickView>(Resource.Id.Joystick));
             }
-        }
-
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
-            SetContentView(Resource.Layout.DeviceView);
-
-            Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-
-            ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
-
-            _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectSwitch.Checked, BindingMode.TwoWay);
-            _showDisconnectedBinding = this.SetBinding(() => Vm.IsDisconnected, () => DisconnectedLayout.Visibility)
-                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
-            _showConnectingBinding = this.SetBinding(() => Vm.IsConnecting, () => ConnectingLayout.Visibility)
-                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
-            _showConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectedLayout.Visibility)
-                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
-
-            Joystick.JoystickMove.SetCommand(Vm.JoystickCommand);
-        }
-
-        protected override void OnPause()
-        {
-            _isConnectedBinding.Detach();
-            _showDisconnectedBinding.Detach();
-            _showConnectingBinding.Detach();
-            _showConnectedBinding.Detach();
-
-            Vm.IsConnected = false;
-
-            base.OnPause();
         }
     }
 }

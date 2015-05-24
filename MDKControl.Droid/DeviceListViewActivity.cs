@@ -12,12 +12,10 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace MDKControl.Droid
 {
-    [Activity(Label = "MDK Control", Icon = "@drawable/ic_launcher")]
+    [Activity(Label = "Device Selection", Icon = "@drawable/ic_launcher")]
     public class DeviceListViewActivity : ActivityBaseEx, AdapterView.IOnItemClickListener
     {
-        private Binding _isScanningBinding;
         private ListView _devicesList;
-        private Button _refreshButton;
 
         public DeviceListViewActivity()
         {
@@ -26,24 +24,6 @@ namespace MDKControl.Droid
         public DeviceListViewModel Vm
         {
             get { return ServiceLocator.Current.GetInstance<DeviceListViewModel>(); }
-        }
-
-        public ListView DevicesList
-        {
-            get
-            {
-                return _devicesList
-                    ?? (_devicesList = FindViewById<ListView>(Resource.Id.DevicesList));
-            }
-        }
-
-        public Button RefreshButton
-        {
-            get
-            {
-                return _refreshButton
-                    ?? (_refreshButton = FindViewById<Button>(Resource.Id.RefreshButton));
-            }
         }
 
         public void OnItemClick(AdapterView parent, View view, int position, long id)
@@ -56,12 +36,6 @@ namespace MDKControl.Droid
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.DeviceListView);
 
-            //Vm = GlobalNavigation.GetAndRemoveParameter<DeviceListViewModel>(Intent);
-
-            // Avoid aggressive linker problem which removes the Click event
-            RefreshButton.Click += (s, e) => {};
-            RefreshButton.SetCommand("Click", Vm.StartScanCommand);
-
             DevicesList.Adapter = Vm.Devices.GetAdapter(GetDevicesAdapter);
             DevicesList.OnItemClickListener = this;
         }
@@ -71,6 +45,11 @@ namespace MDKControl.Droid
             base.OnResume();
 
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -87,11 +66,8 @@ namespace MDKControl.Droid
                 {
                     if (e.PropertyName == "IsScanning")
                     {
-                        RunOnUiThread(() =>
-                            {
-                                menuScanningStart.SetVisible(!Vm.IsScanning);
-                                menuScanningStop.SetVisible(Vm.IsScanning);
-                            });
+                        menuScanningStart.SetVisible(!Vm.IsScanning);
+                        menuScanningStop.SetVisible(Vm.IsScanning);
                     }
                 };
 
@@ -121,6 +97,15 @@ namespace MDKControl.Droid
             title.Text = device.Name;
 
             return convertView;
+        }
+
+        public ListView DevicesList
+        {
+            get
+            {
+                return _devicesList
+                    ?? (_devicesList = FindViewById<ListView>(Resource.Id.DevicesList));
+            }
         }
     }
 }

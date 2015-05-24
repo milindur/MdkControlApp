@@ -1326,32 +1326,29 @@ namespace MDKControl.Droid
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f090051
-			public const int ConnectSwitch = 2131296337;
-			
-			// aapt resource value: 0x7f090054
-			public const int ConnectedLayout = 2131296340;
+			// aapt resource value: 0x7f090050
+			public const int ConnectSwitch = 2131296336;
 			
 			// aapt resource value: 0x7f090053
-			public const int ConnectingLayout = 2131296339;
+			public const int ConnectedLayout = 2131296339;
+			
+			// aapt resource value: 0x7f090052
+			public const int ConnectingLayout = 2131296338;
 			
 			// aapt resource value: 0x7f09004f
 			public const int DevicesList = 2131296335;
 			
-			// aapt resource value: 0x7f090052
-			public const int DisconnectedLayout = 2131296338;
+			// aapt resource value: 0x7f090051
+			public const int DisconnectedLayout = 2131296337;
+			
+			// aapt resource value: 0x7f09005f
+			public const int Joystick = 2131296351;
 			
 			// aapt resource value: 0x7f090060
-			public const int Joystick = 2131296352;
-			
-			// aapt resource value: 0x7f090050
-			public const int RefreshButton = 2131296336;
+			public const int ScanningStart = 2131296352;
 			
 			// aapt resource value: 0x7f090061
-			public const int ScanningStart = 2131296353;
-			
-			// aapt resource value: 0x7f090062
-			public const int ScanningStop = 2131296354;
+			public const int ScanningStop = 2131296353;
 			
 			// aapt resource value: 0x7f090040
 			public const int action_bar = 2131296320;
@@ -1548,38 +1545,38 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f090011
 			public const int showTitle = 2131296273;
 			
-			// aapt resource value: 0x7f090056
-			public const int sliderctrl_detail_current_position = 2131296342;
-			
 			// aapt resource value: 0x7f090055
-			public const int sliderctrl_detail_current_position_label = 2131296341;
+			public const int sliderctrl_detail_current_position = 2131296341;
 			
-			// aapt resource value: 0x7f09005b
-			public const int sliderctrl_detail_move_left = 2131296347;
-			
-			// aapt resource value: 0x7f09005c
-			public const int sliderctrl_detail_move_left_100 = 2131296348;
-			
-			// aapt resource value: 0x7f09005f
-			public const int sliderctrl_detail_move_right = 2131296351;
-			
-			// aapt resource value: 0x7f09005e
-			public const int sliderctrl_detail_move_right_100 = 2131296350;
-			
-			// aapt resource value: 0x7f090059
-			public const int sliderctrl_detail_position = 2131296345;
+			// aapt resource value: 0x7f090054
+			public const int sliderctrl_detail_current_position_label = 2131296340;
 			
 			// aapt resource value: 0x7f09005a
-			public const int sliderctrl_detail_position_set = 2131296346;
+			public const int sliderctrl_detail_move_left = 2131296346;
 			
-			// aapt resource value: 0x7f090058
-			public const int sliderctrl_detail_state = 2131296344;
+			// aapt resource value: 0x7f09005b
+			public const int sliderctrl_detail_move_left_100 = 2131296347;
 			
-			// aapt resource value: 0x7f090057
-			public const int sliderctrl_detail_state_label = 2131296343;
+			// aapt resource value: 0x7f09005e
+			public const int sliderctrl_detail_move_right = 2131296350;
 			
 			// aapt resource value: 0x7f09005d
-			public const int sliderctrl_detail_stop = 2131296349;
+			public const int sliderctrl_detail_move_right_100 = 2131296349;
+			
+			// aapt resource value: 0x7f090058
+			public const int sliderctrl_detail_position = 2131296344;
+			
+			// aapt resource value: 0x7f090059
+			public const int sliderctrl_detail_position_set = 2131296345;
+			
+			// aapt resource value: 0x7f090057
+			public const int sliderctrl_detail_state = 2131296343;
+			
+			// aapt resource value: 0x7f090056
+			public const int sliderctrl_detail_state_label = 2131296342;
+			
+			// aapt resource value: 0x7f09005c
+			public const int sliderctrl_detail_stop = 2131296348;
 			
 			// aapt resource value: 0x7f090007
 			public const int split_action_bar = 2131296263;

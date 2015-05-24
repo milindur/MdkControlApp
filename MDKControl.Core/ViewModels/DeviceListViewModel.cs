@@ -8,11 +8,13 @@ using MDKControl.Core.Services;
 using Robotics.Mobile.Core.Bluetooth.LE;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Helpers;
 
 namespace MDKControl.Core.ViewModels
 {
     public class DeviceListViewModel : ViewModelBase
     {
+        private readonly IDispatcherHelper _dispatcherHelper;
         private readonly INavigationService _navigationService;
         private readonly IAdapter _adapter;
         private readonly Func<IDevice, DeviceViewModel> _deviceViewModelFactory;
@@ -22,10 +24,12 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand<IDevice> _selectDeviceCommand;
         private bool _isScanning;
 
-        public DeviceListViewModel(INavigationService navigationService, 
+        public DeviceListViewModel(IDispatcherHelper dispatcherHelper, 
+            INavigationService navigationService, 
             IAdapter adapter, 
             Func<IDevice, DeviceViewModel> deviceViewModelFactory)
         {
+            _dispatcherHelper = dispatcherHelper;
             _navigationService = navigationService;
             _adapter = adapter;
             _deviceViewModelFactory = deviceViewModelFactory;
@@ -52,9 +56,12 @@ namespace MDKControl.Core.ViewModels
             private set
             {
                 _isScanning = value;
-                ((RelayCommand)StartScanCommand).RaiseCanExecuteChanged();
-                ((RelayCommand)StopScanCommand).RaiseCanExecuteChanged();
-                RaisePropertyChanged(() => IsScanning);
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        ((RelayCommand)StartScanCommand).RaiseCanExecuteChanged();
+                        ((RelayCommand)StopScanCommand).RaiseCanExecuteChanged();
+                        RaisePropertyChanged(() => IsScanning);
+                    });
             }
         }
 
@@ -66,7 +73,10 @@ namespace MDKControl.Core.ViewModels
                 if (_devices == value)
                     return;
                 _devices = value;
-                RaisePropertyChanged();
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => Devices);
+                    });
             }
         }
 
