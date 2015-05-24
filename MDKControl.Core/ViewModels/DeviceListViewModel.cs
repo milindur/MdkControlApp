@@ -49,10 +49,7 @@ namespace MDKControl.Core.ViewModels
 
         public bool IsScanning
         {
-            get
-            {
-                return _isScanning;
-            }
+            get { return _isScanning; }
             private set
             {
                 _isScanning = value;
@@ -85,26 +82,28 @@ namespace MDKControl.Core.ViewModels
             get { return _startScanCommand ?? (_startScanCommand = new RelayCommand(StartScan, () => !IsScanning)); }
         }
 
-        private void StartScan()
-        {
-            IsScanning = true;
-            _adapter.StartScanningForDevices(BleConstants.ServiceMoCoBus);
-        }
-
         public RelayCommand StopScanCommand
         {
             get { return _stopScanCommand ?? (_stopScanCommand = new RelayCommand(StopScan, () => IsScanning)); }
+        }
+
+        public RelayCommand<IDevice> SelectDeviceCommand
+        {
+            get { return _selectDeviceCommand ?? (_selectDeviceCommand = new RelayCommand<IDevice>(SelectDevice)); }
+        }
+
+        private void StartScan()
+        {
+            Devices.Clear();
+
+            IsScanning = true;
+            _adapter.StartScanningForDevices(BleConstants.ServiceMoCoBus);
         }
 
         private void StopScan()
         {
             IsScanning = false;
             _adapter.StopScanningForDevices();
-        }
-
-        public RelayCommand<IDevice> SelectDeviceCommand
-        {
-            get { return _selectDeviceCommand ?? (_selectDeviceCommand = new RelayCommand<IDevice>(SelectDevice)); }
         }
 
         private void SelectDevice(IDevice device)
