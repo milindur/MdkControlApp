@@ -120,11 +120,11 @@
       <Project>{EFE39D51-63CB-4D8B-AB47-367E2FB40EFB}</Project>
       <Name>MDKControl.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\vs\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core\Robotics.Mobile.Core.csproj">
+    <ProjectReference Include="..\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core\Robotics.Mobile.Core.csproj">
       <Project>{65733427-B647-4556-A87C-20937496780A}</Project>
       <Name>Robotics.Mobile.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\vs\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core.Droid\Robotics.Mobile.Core.Droid.csproj">
+    <ProjectReference Include="..\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core.Droid\Robotics.Mobile.Core.Droid.csproj">
       <Project>{0040B1B9-6E22-438A-A6A7-A5A00B2B89B1}</Project>
       <Name>Robotics.Mobile.Core.Droid</Name>
     </ProjectReference>

@@ -1,0 +1,4 @@
+[submodule "Monkey.Robotics"]
+	path = Monkey.Robotics
+	url = https://github.com/milindur/Monkey.Robotics.git
+	branch = enhancements
