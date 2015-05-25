@@ -5,18 +5,25 @@ using Android.Util;
 using Android.Graphics;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using System.Reactive;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Reactive.Concurrency;
 
 namespace MDKControl.Droid.Widgets
 {
     public class JoystickView : View
     {
+        private readonly EventLoopScheduler _scheduler = new EventLoopScheduler(); 
+        private readonly Subject<Unit> _joystickStartSubject = new Subject<Unit>();
+        private readonly Subject<Unit> _joystickStopSubject = new Subject<Unit>();
         private readonly Subject<MDKControl.Core.Models.Point> _joystickMoveSubject = new Subject<MDKControl.Core.Models.Point>();
 
         private RectF _bounds = new RectF();
-        private Paint _paint;
+        private Paint _paintGrid;
 
-        private MDKControl.Core.Models.Point _joystickPosition = new MDKControl.Core.Models.Point(0, 0, 0); 
-        
+        private MDKControl.Core.Models.Point _joystickPosition = new MDKControl.Core.Models.Point(0, 0, 0);
+
         public JoystickView(Context context)
             : base(context)
         {
@@ -31,7 +38,7 @@ namespace MDKControl.Droid.Widgets
             Focusable = true;
         }
 
-        public JoystickView(Context context, IAttributeSet attrs) 
+        public JoystickView(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
             Initialize();
@@ -40,19 +47,21 @@ namespace MDKControl.Droid.Widgets
 
         private void Initialize()
         {
-            _paint = new Paint(PaintFlags.AntiAlias);
-            _paint.Color = Color.Red;
-            _paint.SetStyle(Paint.Style.Stroke);
-            _paint.StrokeWidth = 5;
+            _paintGrid = new Paint(PaintFlags.AntiAlias) { Color = Color.Red };
+            _paintGrid.SetStyle(Paint.Style.Stroke);
+            _paintGrid.SetPathEffect(new DashPathEffect(new float[] { 10, 20 }, 0));
+            _paintGrid.StrokeWidth = 5;
         }
 
-        public MDKControl.Core.Models.Point JoystickPosition 
+        public MDKControl.Core.Models.Point JoystickPosition
         {
-            get { return _joystickPosition; } 
-            set { _joystickPosition = value; } 
+            get { return _joystickPosition; }
+            set { _joystickPosition = value; }
         }
 
-        public IObservable<MDKControl.Core.Models.Point> JoystickMove { get { return _joystickMoveSubject.AsObservable(); } }
+        public IObservable<Unit> JoystickStart { get { return _joystickStartSubject.ObserveOn(_scheduler); } }
+        public IObservable<Unit> JoystickStop { get { return _joystickStopSubject.ObserveOn(_scheduler); } }
+        public IObservable<MDKControl.Core.Models.Point> JoystickMove { get { return _joystickMoveSubject.ObserveOn(_scheduler); } }
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
@@ -63,11 +72,11 @@ namespace MDKControl.Droid.Widgets
         {
             base.OnSizeChanged(w, h, oldw, oldh);
 
-            var xpad = (float) (PaddingLeft + PaddingRight);
-            var ypad = (float) (PaddingTop + PaddingBottom);
+            var xpad = (float)(PaddingLeft + PaddingRight);
+            var ypad = (float)(PaddingTop + PaddingBottom);
 
-            var ww = (float) w - xpad;
-            var hh = (float) h - ypad;
+            var ww = (float)w - xpad;
+            var hh = (float)h - ypad;
 
             _bounds = new RectF(0.0f, 0.0f, ww, hh);
             _bounds.OffsetTo(PaddingLeft, PaddingTop);
@@ -75,7 +84,7 @@ namespace MDKControl.Droid.Widgets
 
         protected override void OnDraw(Canvas canvas)
         {
-            canvas.DrawRect(_bounds, _paint);
+            canvas.DrawRect(_bounds, _paintGrid);
         }
 
         public override bool OnTouchEvent(MotionEvent e)
@@ -83,7 +92,7 @@ namespace MDKControl.Droid.Widgets
             var x = 0f;
             var y = 0f;
             var z = 0f;
-            
+
             if (e.PointerCount == 1)
             {
                 x = e.GetX();
@@ -115,7 +124,11 @@ namespace MDKControl.Droid.Widgets
             {
                 return true;
             }
-            
+
+            /*x = (float)Math.Round(x / 5f) * 5f;
+            y = (float)Math.Round(y / 5f) * 5f;
+            z = (float)Math.Round(z / 5f) * 5f;*/
+
             switch (e.Action)
             {
                 case MotionEventActions.Down:
@@ -137,19 +150,18 @@ namespace MDKControl.Droid.Widgets
 
         protected void OnJoystickStart()
         {
-            //JoystickStart?.Invoke(this, EventArgs.Empty);
+            _joystickStartSubject.OnNext(Unit.Default);
         }
 
         protected void OnJoystickStop()
         {
-            //JoystickStop?.Invoke(this, EventArgs.Empty);
+            _joystickStopSubject.OnNext(Unit.Default);
         }
 
         protected void OnJoystickMove(float x, float y, float z)
         {
             _joystickPosition = new MDKControl.Core.Models.Point(x, y, z);
-            _joystickMoveSubject.OnNext(_joystickPosition); 
+            _joystickMoveSubject.OnNext(_joystickPosition);
         }
     }
 }
-    

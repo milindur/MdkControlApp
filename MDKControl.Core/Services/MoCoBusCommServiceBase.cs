@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
+using System.Threading;
 
 namespace MDKControl.Core.Services
 {
     public abstract class MoCoBusCommServiceBase : IMoCoBusCommService
     {
+        public SemaphoreSlim _sendReceiveSemaphore = new SemaphoreSlim(1, 1);
         private ConnectionState _connectionState = ConnectionState.Disconnected;
         public event EventHandler ConnectionChanged;
         public event EventHandler DataReceived;
@@ -33,8 +35,19 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            Send(frame);
-            return await ReceiveAsync().ConfigureAwait(false);
+            try
+            {
+                _sendReceiveSemaphore.Wait();
+
+                ClearReceiveBuffer();
+
+                Send(frame);
+                return await ReceiveAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                _sendReceiveSemaphore.Release();
+            }
         }
 
         public abstract Task<MoCoBusFrame> ReceiveAsync();

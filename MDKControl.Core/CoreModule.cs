@@ -25,6 +25,9 @@ namespace MDKControl.Core
             builder.RegisterType<MoCoBusProtocolMotorService>()
                 .As<IMoCoBusProtocolMotorService>();
 
+            builder.RegisterGeneratedFactory<MoCoBusProtocolMotorServiceFactoryDelegate>(
+                new TypedService(typeof(IMoCoBusProtocolMotorService)));
+
             builder.RegisterType<DeviceListViewModel>()
                 .SingleInstance();
             

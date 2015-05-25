@@ -42,6 +42,7 @@ namespace MDKControl.Core.Models
                 return (T)status;
             }
 
+            return default(T);
             throw new InvalidCastException();
         }
     }

@@ -116,9 +116,13 @@ namespace MDKControl.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> GetJoystickWatchdogStatus()
+        public async Task<bool> GetJoystickWatchdogStatus()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetJoystickWatchdogStatus, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<byte>(response) == 1;
         }
     }
 }

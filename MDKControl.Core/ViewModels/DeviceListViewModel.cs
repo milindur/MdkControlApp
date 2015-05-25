@@ -25,9 +25,9 @@ namespace MDKControl.Core.ViewModels
         private bool _isScanning;
 
         public DeviceListViewModel(IDispatcherHelper dispatcherHelper, 
-            INavigationService navigationService, 
-            IAdapter adapter, 
-            Func<IDevice, DeviceViewModel> deviceViewModelFactory)
+                                   INavigationService navigationService, 
+                                   IAdapter adapter, 
+                                   Func<IDevice, DeviceViewModel> deviceViewModelFactory)
         {
             _dispatcherHelper = dispatcherHelper;
             _navigationService = navigationService;
@@ -42,7 +42,10 @@ namespace MDKControl.Core.ViewModels
             {
                 if (_devices.All(d => d.ID != e.Device.ID))
                 {
-                    _devices.Add(e.Device);
+                    _dispatcherHelper.RunOnUIThread(() =>
+                        {
+                            _devices.Add(e.Device);
+                        });
                 }
             };
         }

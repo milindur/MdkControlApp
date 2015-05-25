@@ -49,12 +49,6 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Robotics.Mobile.Core">
-      <HintPath>..\libs\Robotics.Mobile.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Robotics.Mobile.Core.Droid">
-      <HintPath>..\libs\Robotics.Mobile.Core.Droid.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -125,6 +119,14 @@
     <ProjectReference Include="..\MDKControl.Core\MDKControl.Core.csproj">
       <Project>{EFE39D51-63CB-4D8B-AB47-367E2FB40EFB}</Project>
       <Name>MDKControl.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\vs\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core\Robotics.Mobile.Core.csproj">
+      <Project>{65733427-B647-4556-A87C-20937496780A}</Project>
+      <Name>Robotics.Mobile.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\vs\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core.Droid\Robotics.Mobile.Core.Droid.csproj">
+      <Project>{0040B1B9-6E22-438A-A6A7-A5A00B2B89B1}</Project>
+      <Name>Robotics.Mobile.Core.Droid</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

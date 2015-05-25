@@ -49,6 +49,10 @@ namespace MDKControl.Droid
 
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
 
+            DisconnectedLayout.Visibility = ViewStates.Visible;
+            ConnectingLayout.Visibility = ViewStates.Gone;
+            ConnectedLayout.Visibility = ViewStates.Gone;
+
             _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectSwitch.Checked, BindingMode.TwoWay);
             _showDisconnectedBinding = this.SetBinding(() => Vm.IsDisconnected, () => DisconnectedLayout.Visibility)
                 .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
@@ -57,7 +61,9 @@ namespace MDKControl.Droid
             _showConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectedLayout.Visibility)
                 .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
 
-            Joystick.JoystickMove.SetCommand(Vm.JoystickCommand);
+            Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
+            Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
+            Joystick.JoystickMove.SetCommand(Vm.MoveJoystickCommand);
         }
 
         protected override void OnPause()
