@@ -1,19 +1,19 @@
 ﻿using System;
 using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Autofac;
+using Autofac.Extras.CommonServiceLocator;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core;
-using MDKControl.Core.ViewModels;
-using Ble = Robotics.Mobile.Core.Bluetooth.LE;
-using Autofac.Extras.CommonServiceLocator;
-using Microsoft.Practices.ServiceLocation;
-using Android.Content;
 using MDKControl.Core.Helpers;
+using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
+using Microsoft.Practices.ServiceLocation;
+using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Droid
 {

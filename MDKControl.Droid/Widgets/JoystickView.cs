@@ -1,14 +1,14 @@
 ﻿using System;
-using Android.Views;
-using Android.Content;
-using Android.Util;
-using Android.Graphics;
-using System.Reactive.Subjects;
-using System.Reactive.Linq;
-using System.Reactive;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Reactive;
 using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
+using Android.Content;
+using Android.Graphics;
+using Android.Util;
+using Android.Views;
 
 namespace MDKControl.Droid.Widgets
 {

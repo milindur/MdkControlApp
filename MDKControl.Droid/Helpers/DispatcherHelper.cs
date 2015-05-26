@@ -1,6 +1,6 @@
 ﻿using System;
-using MDKControl.Core.Helpers;
 using Android.App;
+using MDKControl.Core.Helpers;
 
 namespace MDKControl.Droid.Helpers
 {
