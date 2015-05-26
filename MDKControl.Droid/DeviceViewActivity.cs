@@ -1,20 +1,21 @@
 ﻿using System;
 using Android.App;
+using Android.Content.PM;
 using Android.OS;
+using Android.Views;
 using Android.Widget;
+using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
-using GalaSoft.MvvmLight.Helpers;
-using Android.Views;
-using Microsoft.Practices.ServiceLocation;
 using MDKControl.Droid.Widgets;
+using Microsoft.Practices.ServiceLocation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
 namespace MDKControl.Droid
 {
-    [Activity(Label = "Device")]
+    [Activity(Label = "Device", ScreenOrientation = ScreenOrientation.Portrait)]
     public class DeviceViewActivity : ActivityBaseEx
     {
         private Binding _isConnectedBinding;

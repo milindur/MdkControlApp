@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.App;
+using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -7,12 +8,12 @@ using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
-using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 using Microsoft.Practices.ServiceLocation;
+using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Droid
 {
-    [Activity(Label = "Device Selection", Icon = "@drawable/ic_launcher")]
+    [Activity(Label = "Device Selection", ScreenOrientation = ScreenOrientation.Portrait)]
     public class DeviceListViewActivity : ActivityBaseEx, AdapterView.IOnItemClickListener
     {
         private ListView _devicesList;
