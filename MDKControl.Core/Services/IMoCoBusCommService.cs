@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
+using System.Threading;
 
 namespace MDKControl.Core.Services
 {
@@ -17,7 +18,9 @@ namespace MDKControl.Core.Services
         void ClearReceiveBuffer();
 
         Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame);
+        Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token);
         void Send(MoCoBusFrame frame);
         Task<MoCoBusFrame> ReceiveAsync();
+        Task<MoCoBusFrame> ReceiveAsync(CancellationToken token);
     }
 }

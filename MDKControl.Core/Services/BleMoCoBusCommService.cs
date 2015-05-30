@@ -30,7 +30,8 @@ namespace MDKControl.Core.Services
 
         private void AdapterOnDeviceConnected(object sender, Ble.DeviceConnectionEventArgs e)
         {
-            if (e.Device.ID != _device.ID) return;
+            if (e.Device.ID != _device.ID)
+                return;
 
             _device = e.Device;
             _device.ServicesDiscovered += DeviceOnServicesDiscovered;
@@ -39,7 +40,8 @@ namespace MDKControl.Core.Services
 
         private void AdapterOnDeviceDisconnected(object sender, Ble.DeviceConnectionEventArgs e)
         {
-            if (e.Device.ID != _device.ID) return;
+            if (e.Device.ID != _device.ID)
+                return;
 
             _device = e.Device;
             ConnectionState = ConnectionState.Disconnected;
@@ -124,22 +126,36 @@ namespace MDKControl.Core.Services
 
         public override async Task<MoCoBusFrame> ReceiveAsync()
         {
+            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(500));
+            return await ReceiveAsync(cts.Token).ConfigureAwait(false);
+        }
+
+        public override async Task<MoCoBusFrame> ReceiveAsync(CancellationToken token)
+        {
             if (!IsConnected || _moCoBusRxCharacteristic == null)
                 return null;
 
             return await Task.Factory.StartNew(() =>
                 {
-                    _newRxBytesReceived.WaitOne();
+                    if (_rxBytesQueue.IsEmpty)
+                    {
+                        Debug.WriteLine("ReceiveAsync: Waiting for answer!");
+                        _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(200));
+                    }
+
                     byte[] bytes;
-                    if (_rxBytesQueue.TryDequeue(out bytes)) {
+                    while (_rxBytesQueue.TryDequeue(out bytes))
+                    {
                         MoCoBusFrame frame;
                         if (MoCoBusFrame.TryParse(bytes, out frame))
                         {
                             return frame;
                         }
                     }
-                    return (MoCoBusFrame)null;
-                }).ConfigureAwait(false);
+
+                    Debug.WriteLine("ReceiveAsync: Timeout!");
+                    throw new TimeoutException();
+                }, token).ConfigureAwait(false);
         }
     }
 }

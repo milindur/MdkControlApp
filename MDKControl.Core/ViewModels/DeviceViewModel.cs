@@ -22,6 +22,7 @@ namespace MDKControl.Core.ViewModels
         private readonly IMoCoBusCommService _commService;
         private readonly IMoCoBusProtocolService _protocolService;
         private CancellationTokenSource _joystickWatchdogTaskTokenSource;
+        private Point _joystickCurrentPoint;
 
         public DeviceViewModel(IDispatcherHelper dispatcherHelper, 
                                IDevice device, 
@@ -43,7 +44,7 @@ namespace MDKControl.Core.ViewModels
             StopJoystickCommand.Subscribe(StopJoystick);
 
             MoveJoystickCommand = new ReactiveCommand<Point>();
-            MoveJoystickCommand.Sample(TimeSpan.FromMilliseconds(50)).Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(MoveJoystick);
+            MoveJoystickCommand.Sample(TimeSpan.FromMilliseconds(100)).Throttle(TimeSpan.FromMilliseconds(80)).Subscribe(MoveJoystick);
         }
 
         private void CommServiceOnConnectionChanged(object sender, EventArgs e)
@@ -96,19 +97,50 @@ namespace MDKControl.Core.ViewModels
             var token = _joystickWatchdogTaskTokenSource.Token;
             Task.Factory.StartNew(async () =>
                 {
-                    while (true)
+                    try
                     {
-                        token.ThrowIfCancellationRequested();
-                        try 
+                        while (true)
                         {
-                            await Task.Delay(300);
-                            Debug.WriteLine("Trigger Watchdog!");
-                            await _protocolService.Main.GetJoystickWatchdogStatus();
+                            await Task.Delay(100, token);
+                            token.ThrowIfCancellationRequested();
+
+                            try
+                            {
+                                Debug.WriteLine("Trigger Watchdog!");
+                                await _protocolService.Main.GetJoystickWatchdogStatus();
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("Trigger Watchdog: {0}", ex);
+                            }
+
+                            try
+                            {
+                                Debug.WriteLine("MoveJoystickTask");
+                                var point = _joystickCurrentPoint;
+                                await _protocolService.Motor2.SetContinuousSpeed(point.X).ConfigureAwait(false);
+                                await _protocolService.Motor3.SetContinuousSpeed(point.Y).ConfigureAwait(false);
+                                await _protocolService.Motor1.SetContinuousSpeed(point.Z).ConfigureAwait(false);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("MoveJoystickTask: {0}", ex);
+                            }
                         }
-                        catch (Exception ex) 
-                        {
-                            Debug.WriteLine("Trigger Watchdog: {0}", ex);
-                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+
+                    try
+                    {
+                        await _protocolService.Motor2.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await _protocolService.Motor3.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await _protocolService.Motor1.SetContinuousSpeed(0).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("StopJoystick: {0}", ex);
                     }
                 }, _joystickWatchdogTaskTokenSource.Token);
         }
@@ -124,20 +156,12 @@ namespace MDKControl.Core.ViewModels
             _joystickWatchdogTaskTokenSource = null;
         }
 
-        public async void MoveJoystick(Point point)
+        public void MoveJoystick(Point point)
         {
-            Debug.WriteLine("Joystick: {0}", point);
-            
-            try
-            {
-                await _protocolService.Motor1.SetContinuousSpeed(point.Z).ConfigureAwait(false);
-                await _protocolService.Motor2.SetContinuousSpeed(point.X).ConfigureAwait(false);
-                await _protocolService.Motor3.SetContinuousSpeed(point.Y).ConfigureAwait(false);
-            }
-            catch (Exception ex) 
-            {
-                Debug.WriteLine("MoveJoystick: {0}", ex);
-            }
+            if (_joystickWatchdogTaskTokenSource == null)
+                return;
+
+            _joystickCurrentPoint = point;
         }
     }
 }

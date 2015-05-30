@@ -1,17 +1,24 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
-using System.Threading;
+using Nito.AsyncEx;
+using System.Diagnostics;
 
 namespace MDKControl.Core.Services
 {
     public abstract class MoCoBusCommServiceBase : IMoCoBusCommService
     {
-        public SemaphoreSlim _sendReceiveSemaphore = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _sendReceiveSemaphore = new SemaphoreSlim(1, 1);
+        private readonly AsyncLock _mutex = new AsyncLock();
+
         private ConnectionState _connectionState = ConnectionState.Disconnected;
+
         public event EventHandler ConnectionChanged;
         public event EventHandler DataReceived;
+
         public abstract void Connect();
+
         public abstract void Disconnect();
 
         public virtual ConnectionState ConnectionState
@@ -35,22 +42,39 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            try
-            {
-                _sendReceiveSemaphore.Wait();
+            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(500));
+            return await SendAndReceiveAsync(frame, cts.Token);
+        }
 
-                ClearReceiveBuffer();
-
-                Send(frame);
-                return await ReceiveAsync().ConfigureAwait(false);
-            }
-            finally
+        public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token)
+        {
+            using (await _mutex.LockAsync(token).ConfigureAwait(false))
             {
-                _sendReceiveSemaphore.Release();
+                for (var retry = 0; retry < 3; retry++)
+                {
+                    try
+                    {
+                        ClearReceiveBuffer();
+
+                        Send(frame);
+                        return await ReceiveAsync(token).ConfigureAwait(false);
+                    }
+                    catch (TimeoutException)
+                    {
+                        Debug.WriteLine("SendAndReceiveAsync: Timeout!");
+                    }
+
+                    Debug.WriteLine("SendAndReceiveAsync: Retry!");
+                    await Task.Delay(50);
+                }
             }
+
+            throw new TimeoutException();
         }
 
         public abstract Task<MoCoBusFrame> ReceiveAsync();
+
+        public abstract Task<MoCoBusFrame> ReceiveAsync(CancellationToken token);
 
         protected virtual void OnConnectionChanged()
         {
