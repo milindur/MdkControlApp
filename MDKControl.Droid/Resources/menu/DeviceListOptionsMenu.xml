@@ -1,10 +1,10 @@
 ﻿<menu xmlns:android="http://schemas.android.com/apk/res/android" >
   <item android:id="@+id/ScanningStart"
         android:title="Scan"
-        android:orderInCategory="3"
+        android:orderInCategory="1"
         android:showAsAction="always|withText" />
   <item android:id="@+id/ScanningStop"
         android:title="Stop"
-        android:orderInCategory="4"
+        android:orderInCategory="2"
         android:showAsAction="always|withText" />
 </menu>
