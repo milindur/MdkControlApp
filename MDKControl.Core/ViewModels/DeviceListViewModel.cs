@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
-using GalaSoft.MvvmLight.Command;
-using MDKControl.Core.Services;
-using Robotics.Mobile.Core.Bluetooth.LE;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.Helpers;
+using MDKControl.Core.Services;
+using Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -19,6 +20,7 @@ namespace MDKControl.Core.ViewModels
         private readonly IAdapter _adapter;
         private readonly Func<IDevice, DeviceViewModel> _deviceViewModelFactory;
         private ObservableCollection<IDevice> _devices = new ObservableCollection<IDevice>();
+        private Dictionary<Guid, DeviceViewModel> _deviceViewModels = new Dictionary<Guid, DeviceViewModel>();
         private RelayCommand _startScanCommand;
         private RelayCommand _stopScanCommand;
         private RelayCommand<IDevice> _selectDeviceCommand;
@@ -99,6 +101,12 @@ namespace MDKControl.Core.ViewModels
         {
             Devices.Clear();
 
+            foreach (var vm in _deviceViewModels.Values)
+            {
+                vm.Cleanup();
+            }
+            _deviceViewModels.Clear();
+
             IsScanning = true;
             _adapter.StartScanningForDevices(BleConstants.ServiceMoCoBus);
         }
@@ -112,7 +120,14 @@ namespace MDKControl.Core.ViewModels
         private void SelectDevice(IDevice device)
         {
             StopScan();
-            _navigationService.NavigateTo(ViewModelLocator.DeviceViewKey, _deviceViewModelFactory(device));
+
+            DeviceViewModel vm;
+            if (!_deviceViewModels.TryGetValue(device.ID, out vm))
+            {
+                vm = _deviceViewModelFactory(device);
+                _deviceViewModels.Add(device.ID, vm);
+            }
+            _navigationService.NavigateTo(ViewModelLocator.DeviceViewKey, vm);
         }
     }
 }

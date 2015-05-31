@@ -76,8 +76,15 @@ namespace MDKControl.Core.Services
 
         private void MoCoBusRxCharacteristicOnValueUpdated(object sender, Ble.CharacteristicReadEventArgs e)
         {
-            Debug.Assert(e.Characteristic.Value != null, "e.Characteristic.Value != null");
-            Debug.WriteLine(string.Join(":", e.Characteristic.Value.Select(x => x.ToString("X2")).ToArray()));
+            try
+            {
+                if (e.Characteristic == null || e.Characteristic.Value == null)
+                    return;
+            }
+            catch (Exception)
+            {
+                return;
+            }
 
             _rxBytesQueue.Enqueue(e.Characteristic.Value);
             _newRxBytesReceived.Set();
@@ -126,7 +133,7 @@ namespace MDKControl.Core.Services
 
         public override async Task<MoCoBusFrame> ReceiveAsync()
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(500));
+            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(1000));
             return await ReceiveAsync(cts.Token).ConfigureAwait(false);
         }
 
@@ -140,7 +147,7 @@ namespace MDKControl.Core.Services
                     if (_rxBytesQueue.IsEmpty)
                     {
                         Debug.WriteLine("ReceiveAsync: Waiting for answer!");
-                        _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(200));
+                        _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(250));
                     }
 
                     byte[] bytes;

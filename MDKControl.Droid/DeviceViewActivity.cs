@@ -29,6 +29,7 @@ namespace MDKControl.Droid
 
         private Switch _connectSwitch;
         private JoystickView _joystick;
+        private Button _testButton;
 
         public DeviceViewActivity()
         {
@@ -42,6 +43,9 @@ namespace MDKControl.Droid
             SetContentView(Resource.Layout.DeviceView);
 
             Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
+
+            TestButton.Click += (o, e) => {};
+            TestButton.SetCommand("Click", Vm.TestCommand);
         }
 
         protected override void OnResume()
@@ -74,9 +78,16 @@ namespace MDKControl.Droid
             _showConnectingBinding.Detach();
             _showConnectedBinding.Detach();
 
-            Vm.IsConnected = false;
+            Vm.StopJoystick(null);
 
             base.OnPause();
+        }
+
+        protected override void OnApplicationStop()
+        {
+            Vm.Cleanup();
+
+            base.OnApplicationStop();
         }
 
         public Switch ConnectSwitch
@@ -121,6 +132,15 @@ namespace MDKControl.Droid
             {
                 return _joystick
                     ?? (_joystick = FindViewById<JoystickView>(Resource.Id.Joystick));
+            }
+        }
+
+        public Button TestButton
+        {
+            get 
+            {
+                return _testButton
+                    ?? (_testButton = FindViewById<Button>(Resource.Id.sliderctrl_detail_position_set));
             }
         }
     }

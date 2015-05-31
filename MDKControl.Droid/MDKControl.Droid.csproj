@@ -108,6 +108,7 @@
     <Compile Include="Helpers\ActivityBaseEx.cs" />
     <Compile Include="Widgets\JoystickView.cs" />
     <Compile Include="Helpers\DispatcherHelper.cs" />
+    <Compile Include="RunningViewActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -123,6 +124,7 @@
     <AndroidResource Include="Resources\layout\DeviceListView.axml" />
     <AndroidResource Include="Resources\layout\DeviceView.axml" />
     <AndroidResource Include="Resources\menu\DeviceListOptionsMenu.xml" />
+    <AndroidResource Include="Resources\layout\RunningView.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MDKControl.Core\MDKControl.Core.csproj">

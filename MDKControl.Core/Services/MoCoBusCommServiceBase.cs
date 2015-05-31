@@ -9,7 +9,6 @@ namespace MDKControl.Core.Services
 {
     public abstract class MoCoBusCommServiceBase : IMoCoBusCommService
     {
-        private readonly SemaphoreSlim _sendReceiveSemaphore = new SemaphoreSlim(1, 1);
         private readonly AsyncLock _mutex = new AsyncLock();
 
         private ConnectionState _connectionState = ConnectionState.Disconnected;
@@ -42,8 +41,8 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(500));
-            return await SendAndReceiveAsync(frame, cts.Token);
+            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(1000));
+            return await SendAndReceiveAsync(frame, cts.Token).ConfigureAwait(false);
         }
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token)
@@ -65,7 +64,7 @@ namespace MDKControl.Core.Services
                     }
 
                     Debug.WriteLine("SendAndReceiveAsync: Retry!");
-                    await Task.Delay(50);
+                    await Task.Delay(50).ConfigureAwait(false);
                 }
             }
 

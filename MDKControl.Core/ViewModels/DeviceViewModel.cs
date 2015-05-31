@@ -1,35 +1,45 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using MDKControl.Core.Services;
-using Robotics.Mobile.Core.Bluetooth.LE;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using MDKControl.Core.Helpers;
-using Reactive.Bindings;
-using MDKControl.Core.Models;
-using System.Reactive.Linq;
 using System.Diagnostics;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Helpers;
+using MDKControl.Core.Models;
+using MDKControl.Core.Services;
+using Reactive.Bindings;
+using Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Core.ViewModels
 {
     public class DeviceViewModel : ViewModelBase
     {
         private readonly IDispatcherHelper _dispatcherHelper;
+        private readonly INavigationService _navigationService;
         private readonly IDevice _device;
         private readonly IMoCoBusCommService _commService;
         private readonly IMoCoBusProtocolService _protocolService;
-        private CancellationTokenSource _joystickWatchdogTaskTokenSource;
+
         private Point _joystickCurrentPoint;
 
+        private bool _joystickIsRunning = false;
+        private Task _joystickTask;
+        private CancellationTokenSource _joystickTaskCancellationTokenSource;
+
+        private RelayCommand _testCommand;
+
         public DeviceViewModel(IDispatcherHelper dispatcherHelper, 
+                               INavigationService navigationService, 
                                IDevice device, 
                                Func<IDevice, IMoCoBusCommService> moCoBusCommServiceFactory, 
                                Func<IMoCoBusCommService, byte, IMoCoBusProtocolService> moCoBusProtocolServiceFactory)
         {
             _dispatcherHelper = dispatcherHelper;
+            _navigationService = navigationService;
             _device = device;
 
             _commService = moCoBusCommServiceFactory(device);
@@ -37,7 +47,7 @@ namespace MDKControl.Core.ViewModels
 
             _protocolService = moCoBusProtocolServiceFactory(_commService, 3);
 
-            StartJoystickCommand = new ReactiveCommand();
+            StartJoystickCommand = new ReactiveCommand<Point>();
             StartJoystickCommand.Subscribe(StartJoystick);
 
             StopJoystickCommand = new ReactiveCommand();
@@ -83,20 +93,33 @@ namespace MDKControl.Core.ViewModels
 
         public int FirmwareVersion { get; private set; }
 
-        public ReactiveCommand StartJoystickCommand { get; private set; }
+        public ReactiveCommand<Point> StartJoystickCommand { get; private set; }
 
         public ReactiveCommand StopJoystickCommand { get; private set; }
 
         public ReactiveCommand<Point> MoveJoystickCommand { get; private set; }
 
-        public void StartJoystick(object unit)
+        public RelayCommand TestCommand
         {
+            get { return _testCommand ?? (_testCommand = new RelayCommand(Test)); }
+        }
+
+        public void StartJoystick(Point point)
+        {
+            if (_joystickIsRunning)
+                return;
+
+            _joystickIsRunning = true;
+            
             Debug.WriteLine("Start Joystick");
 
-            _joystickWatchdogTaskTokenSource = new CancellationTokenSource();
-            var token = _joystickWatchdogTaskTokenSource.Token;
-            Task.Factory.StartNew(async () =>
+            _joystickCurrentPoint = point;
+
+            _joystickTaskCancellationTokenSource = new CancellationTokenSource();
+            _joystickTask = Task.Factory.StartNew(async () =>
                 {
+                    var token = _joystickTaskCancellationTokenSource.Token;
+
                     try
                     {
                         while (true)
@@ -106,21 +129,29 @@ namespace MDKControl.Core.ViewModels
 
                             try
                             {
-                                Debug.WriteLine("Trigger Watchdog!");
+                                Debug.WriteLine("MoveJoystickTask: Trigger Watchdog!");
                                 await _protocolService.Main.GetJoystickWatchdogStatus();
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                break;
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("Trigger Watchdog: {0}", ex);
+                                Debug.WriteLine("MoveJoystickTask: {0}", ex);
                             }
 
                             try
                             {
-                                Debug.WriteLine("MoveJoystickTask");
-                                var point = _joystickCurrentPoint;
-                                await _protocolService.Motor2.SetContinuousSpeed(point.X).ConfigureAwait(false);
-                                await _protocolService.Motor3.SetContinuousSpeed(point.Y).ConfigureAwait(false);
-                                await _protocolService.Motor1.SetContinuousSpeed(point.Z).ConfigureAwait(false);
+                                Debug.WriteLine("MoveJoystickTask: Move!");
+                                var currentPoint = _joystickCurrentPoint;
+                                await _protocolService.Motor2.SetContinuousSpeed(currentPoint.X).ConfigureAwait(false);
+                                await _protocolService.Motor3.SetContinuousSpeed(currentPoint.Y).ConfigureAwait(false);
+                                await _protocolService.Motor1.SetContinuousSpeed(currentPoint.Z).ConfigureAwait(false);
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                break;
                             }
                             catch (Exception ex)
                             {
@@ -129,6 +160,9 @@ namespace MDKControl.Core.ViewModels
                         }
                     }
                     catch (OperationCanceledException)
+                    {
+                    }
+                    catch (Exception)
                     {
                     }
 
@@ -142,26 +176,45 @@ namespace MDKControl.Core.ViewModels
                     {
                         Debug.WriteLine("StopJoystick: {0}", ex);
                     }
-                }, _joystickWatchdogTaskTokenSource.Token);
+
+                    _joystickIsRunning = false;
+                }, _joystickTaskCancellationTokenSource.Token);
         }
 
         public void StopJoystick(object unit)
         {
-            if (_joystickWatchdogTaskTokenSource == null)
+            if (_joystickTaskCancellationTokenSource == null)
                 return;
 
             Debug.WriteLine("Stop Joystick");
 
-            _joystickWatchdogTaskTokenSource.Cancel();
-            _joystickWatchdogTaskTokenSource = null;
+            _joystickTaskCancellationTokenSource.Cancel();
+            _joystickTaskCancellationTokenSource = null;
+
+            _joystickTask.Wait();
+            _joystickTask = null;
         }
 
         public void MoveJoystick(Point point)
         {
-            if (_joystickWatchdogTaskTokenSource == null)
+            if (!_joystickIsRunning)
                 return;
 
             _joystickCurrentPoint = point;
+        }
+
+        private void Test()
+        {
+            _navigationService.NavigateTo(ViewModelLocator.RunningViewKey, this);
+        }
+
+
+        public override void Cleanup()
+        {
+            StopJoystick(null);
+            IsConnected = false;
+
+            base.Cleanup();
         }
     }
 }

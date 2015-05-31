@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
+using System.Diagnostics;
 
 namespace MDKControl.Core.Services
 {
@@ -20,6 +21,8 @@ namespace MDKControl.Core.Services
 
         public async Task SetContinuousSpeed(float speed)
         {
+            Debug.WriteLine("MoCoBusProtocolMotorService ({0}): SetContinuousSpeed({1})", _motor, speed);
+
             speed = speed * 5000f / 100f;
 
             await _commService
