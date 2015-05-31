@@ -20,7 +20,6 @@ namespace MDKControl.Core.ViewModels
     {
         private readonly IDispatcherHelper _dispatcherHelper;
         private readonly INavigationService _navigationService;
-        private readonly IDevice _device;
         private readonly IMoCoBusCommService _commService;
         private readonly IMoCoBusProtocolService _protocolService;
 
@@ -40,7 +39,6 @@ namespace MDKControl.Core.ViewModels
         {
             _dispatcherHelper = dispatcherHelper;
             _navigationService = navigationService;
-            _device = device;
 
             _commService = moCoBusCommServiceFactory(device);
             _commService.ConnectionChanged += CommServiceOnConnectionChanged;

@@ -9,8 +9,6 @@ namespace MDKControl.Core.Services
 {
     public class MoCoBusProtocolService : IMoCoBusProtocolService
     {
-        private readonly IMoCoBusCommService _commService;
-        private readonly byte _address;
         private readonly IMoCoBusProtocolMainService _mainService;
         private readonly IMoCoBusProtocolCameraService _cameraService;
         private readonly IMoCoBusProtocolMotorService _motorService1;
@@ -19,8 +17,6 @@ namespace MDKControl.Core.Services
 
         public MoCoBusProtocolService(IMoCoBusCommService commService, byte address)
         {
-            _commService = commService;
-            _address = address;
             _mainService = new MoCoBusProtocolMainService(commService, address);
             _cameraService = new MoCoBusProtocolCameraService(commService, address);
             _motorService1 = new MoCoBusProtocolMotorService(commService, address, 1);
