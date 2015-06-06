@@ -13,6 +13,7 @@ using MDKControl.Core.Models;
 using MDKControl.Core.Services;
 using Reactive.Bindings;
 using Robotics.Mobile.Core.Bluetooth.LE;
+using Microsoft.Practices.ServiceLocation;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -29,7 +30,12 @@ namespace MDKControl.Core.ViewModels
         private Task _joystickTask;
         private CancellationTokenSource _joystickTaskCancellationTokenSource;
 
-        private RelayCommand _testCommand;
+        private RelayCommand _setStartCommand;
+        private RelayCommand _setStopCommand;
+        private RelayCommand _swapStartStopCommand;
+        private RelayCommand _gotoStartCommand;
+        private RelayCommand _gotoStopCommand;
+        private RelayCommand _startProgramCommand;
 
         public DeviceViewModel(IDispatcherHelper dispatcherHelper, 
                                INavigationService navigationService, 
@@ -97,9 +103,34 @@ namespace MDKControl.Core.ViewModels
 
         public ReactiveCommand<Point> MoveJoystickCommand { get; private set; }
 
-        public RelayCommand TestCommand
+        public RelayCommand SetStartCommand
         {
-            get { return _testCommand ?? (_testCommand = new RelayCommand(Test)); }
+            get { return _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart)); }
+        }
+
+        public RelayCommand SetStopCommand
+        {
+            get { return _setStopCommand ?? (_setStopCommand = new RelayCommand(SetStop)); }
+        }
+
+        public RelayCommand SwapStartStopCommand
+        {
+            get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop)); }
+        }
+
+        public RelayCommand GotoStartCommand
+        {
+            get { return _gotoStartCommand ?? (_gotoStartCommand = new RelayCommand(GotoStart)); }
+        }
+
+        public RelayCommand GotoStopCommand
+        {
+            get { return _gotoStopCommand ?? (_gotoStopCommand = new RelayCommand(GotoStop, () => false)); }
+        }
+
+        public RelayCommand StartProgramCommand
+        {
+            get { return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(StartProgram)); }
         }
 
         public void StartJoystick(Point point)
@@ -172,14 +203,14 @@ namespace MDKControl.Core.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("StopJoystick: {0}", ex);
+                        Debug.WriteLine("MoveJoystickTask: {0}", ex);
                     }
 
                     _joystickIsRunning = false;
                 }, _joystickTaskCancellationTokenSource.Token);
         }
 
-        public void StopJoystick(object unit)
+        public async void StopJoystick(object unit)
         {
             if (_joystickTaskCancellationTokenSource == null)
                 return;
@@ -187,9 +218,9 @@ namespace MDKControl.Core.ViewModels
             Debug.WriteLine("Stop Joystick");
 
             _joystickTaskCancellationTokenSource.Cancel();
-            _joystickTaskCancellationTokenSource = null;
+            await _joystickTask;
 
-            _joystickTask.Wait();
+            _joystickTaskCancellationTokenSource = null;
             _joystickTask = null;
         }
 
@@ -201,11 +232,36 @@ namespace MDKControl.Core.ViewModels
             _joystickCurrentPoint = point;
         }
 
-        private void Test()
+        private async void SetStart()
         {
-            _navigationService.NavigateTo(ViewModelLocator.RunningViewKey, this);
+            await _protocolService.Main.SetProgramStartPoint();
         }
 
+        private async void SetStop()
+        {
+            await _protocolService.Main.SetProgramStopPoint();
+        }
+
+        private async  void SwapStartStop()
+        {
+            await _protocolService.Main.ReverseAllMotorsStartStopPoints();
+        }
+
+        private async void GotoStart()
+        {
+            await _protocolService.Main.SendAllMotorsToProgramStart();
+        }
+
+        private void GotoStop()
+        {
+        }
+
+        private async void StartProgram()
+        {
+            //_navigationService.NavigateTo(ViewModelLocator.RunningViewKey, this);
+
+            await _protocolService.Main.Start();
+        }
 
         public override void Cleanup()
         {

@@ -35,14 +35,18 @@ namespace MDKControl.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task SendAllMotorsToHome()
+        public async Task SendAllMotorsToHome()
         {
-            throw new NotImplementedException();
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SendAllMotorsToHome, null))
+                .ConfigureAwait(false);
         }
 
-        public Task SendAllMotorsToProgramStart()
+        public async Task SendAllMotorsToProgramStart()
         {
-            throw new NotImplementedException();
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SendAllMotorsToProgramStart, null))
+                .ConfigureAwait(false);
         }
 
         public Task SetJoystickMode(bool enable)
@@ -57,19 +61,25 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
-        public Task SetProgramStartPoint()
+        public async Task SetProgramStartPoint()
         {
-            throw new NotImplementedException();
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramStartPoint, null))
+                .ConfigureAwait(false);
         }
 
-        public Task SetProgramStopPoint()
+        public async Task SetProgramStopPoint()
         {
-            throw new NotImplementedException();
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramStopPoint, null))
+                .ConfigureAwait(false);
         }
 
-        public Task ReverseAllMotorsStartStopPoints()
+        public async Task ReverseAllMotorsStartStopPoints()
         {
-            throw new NotImplementedException();
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.ReverseAllMotorsStartStopPoints, null))
+                .ConfigureAwait(false);
         }
 
         public async Task<int> GetFirmwareVersion()

@@ -6,6 +6,7 @@
         Reserved,
 
         Start,
+        Pause,
         Stop,
         DebugLed,
         TimingMaster,

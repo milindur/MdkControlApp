@@ -29,7 +29,12 @@ namespace MDKControl.Droid
 
         private Switch _connectSwitch;
         private JoystickView _joystick;
-        private Button _testButton;
+        private Button _setStartButton;
+        private Button _setStopButton;
+        private Button _swapStartStopButton;
+        private Button _gotoStartButton;
+        private Button _gotoStopButton;
+        private Button _startProgramButton;
 
         public DeviceViewActivity()
         {
@@ -44,8 +49,19 @@ namespace MDKControl.Droid
 
             Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
 
-            TestButton.Click += (o, e) => {};
-            TestButton.SetCommand("Click", Vm.TestCommand);
+            GotoStartButton.Click += (o, e) => {};
+            GotoStartButton.SetCommand("Click", Vm.GotoStartCommand);
+            GotoStopButton.Click += (o, e) => {};
+            GotoStopButton.SetCommand("Click", Vm.GotoStopCommand);
+            StartProgramButton.Click += (o, e) => {};
+            StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
+
+            SetStartButton.Click += (o, e) => {};
+            SetStartButton.SetCommand("Click", Vm.SetStartCommand);
+            SetStopButton.Click += (o, e) => {};
+            SetStopButton.SetCommand("Click", Vm.SetStopCommand);
+            SwapStartStopButton.Click += (o, e) => {};
+            SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
         }
 
         protected override void OnResume()
@@ -135,12 +151,57 @@ namespace MDKControl.Droid
             }
         }
 
-        public Button TestButton
+        public Button GotoStartButton
         {
             get 
             {
-                return _testButton
-                    ?? (_testButton = FindViewById<Button>(Resource.Id.sliderctrl_detail_position_set));
+                return _gotoStartButton
+                    ?? (_gotoStartButton = FindViewById<Button>(Resource.Id.GotoStart));
+            }
+        }
+
+        public Button GotoStopButton
+        {
+            get 
+            {
+                return _gotoStopButton
+                    ?? (_gotoStopButton = FindViewById<Button>(Resource.Id.GotoStop));
+            }
+        }
+
+        public Button StartProgramButton
+        {
+            get 
+            {
+                return _startProgramButton
+                    ?? (_startProgramButton = FindViewById<Button>(Resource.Id.StartProgram));
+            }
+        }
+
+        public Button SetStartButton
+        {
+            get 
+            {
+                return _setStartButton
+                    ?? (_setStartButton = FindViewById<Button>(Resource.Id.SetStart));
+            }
+        }
+
+        public Button SetStopButton
+        {
+            get 
+            {
+                return _setStopButton
+                    ?? (_setStopButton = FindViewById<Button>(Resource.Id.SetStop));
+            }
+        }
+
+        public Button SwapStartStopButton
+        {
+            get 
+            {
+                return _swapStartStopButton
+                    ?? (_swapStartStopButton = FindViewById<Button>(Resource.Id.SwapStartStop));
             }
         }
     }
