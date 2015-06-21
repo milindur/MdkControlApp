@@ -33,9 +33,14 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _setStartCommand;
         private RelayCommand _setStopCommand;
         private RelayCommand _swapStartStopCommand;
-        private RelayCommand _gotoStartCommand;
-        private RelayCommand _gotoStopCommand;
+        private RelayCommand _setRefStartCommand;
+        private RelayCommand _setRefStopCommand;
         private RelayCommand _startProgramCommand;
+        private RelayCommand _pauseProgramCommand;
+        private RelayCommand _stopProgramCommand;
+        private RelayCommand _setModeSmsCommand;
+        private RelayCommand _setModePanoCommand;
+        private RelayCommand _setModeAstroCommand;
 
         public DeviceViewModel(IDispatcherHelper dispatcherHelper, 
                                INavigationService navigationService, 
@@ -115,22 +120,47 @@ namespace MDKControl.Core.ViewModels
 
         public RelayCommand SwapStartStopCommand
         {
-            get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop)); }
+            get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop, () => false)); }
         }
 
-        public RelayCommand GotoStartCommand
+        public RelayCommand SetRefStartCommand
         {
-            get { return _gotoStartCommand ?? (_gotoStartCommand = new RelayCommand(GotoStart)); }
+            get { return _setRefStartCommand ?? (_setRefStartCommand = new RelayCommand(SetRefStart)); }
         }
 
-        public RelayCommand GotoStopCommand
+        public RelayCommand SetRefStopCommand
         {
-            get { return _gotoStopCommand ?? (_gotoStopCommand = new RelayCommand(GotoStop, () => false)); }
+            get { return _setRefStopCommand ?? (_setRefStopCommand = new RelayCommand(SetRefStop)); }
         }
 
         public RelayCommand StartProgramCommand
         {
             get { return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(StartProgram)); }
+        }
+
+        public RelayCommand PauseProgramCommand
+        {
+            get { return _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram)); }
+        }
+
+        public RelayCommand StopProgramCommand
+        {
+            get { return _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram)); }
+        }
+
+        public RelayCommand SetModeSmsCommand
+        {
+            get { return _setModeSmsCommand ?? (_setModeSmsCommand = new RelayCommand(SetModeSms)); }
+        }
+
+        public RelayCommand SetModePanoCommand
+        {
+            get { return _setModePanoCommand ?? (_setModePanoCommand = new RelayCommand(SetModePano)); }
+        }
+
+        public RelayCommand SetModeAstroCommand
+        {
+            get { return _setModeAstroCommand ?? (_setModeAstroCommand = new RelayCommand(SetModeAstro)); }
         }
 
         public void StartJoystick(Point point)
@@ -247,13 +277,16 @@ namespace MDKControl.Core.ViewModels
             await _protocolService.Main.ReverseAllMotorsStartStopPoints();
         }
 
-        private async void GotoStart()
+        private async void SetRefStart()
         {
-            await _protocolService.Main.SendAllMotorsToProgramStart();
+            await _protocolService.Motor2.SetStartHere();
+            await _protocolService.Motor3.SetStartHere();
         }
 
-        private void GotoStop()
+        private async void SetRefStop()
         {
+            await _protocolService.Motor2.SetStopHere();
+            await _protocolService.Motor3.SetStopHere();
         }
 
         private async void StartProgram()
@@ -261,6 +294,31 @@ namespace MDKControl.Core.ViewModels
             //_navigationService.NavigateTo(ViewModelLocator.RunningViewKey, this);
 
             await _protocolService.Main.Start();
+        }
+
+        private async void PauseProgram()
+        {
+            await _protocolService.Main.Pause();
+        }
+
+        private async void StopProgram()
+        {
+            await _protocolService.Main.Stop();
+        }
+
+        private async void SetModeSms()
+        {
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
+        }
+
+        private async void SetModePano()
+        {
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
+        }
+
+        private async void SetModeAstro()
+        {
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
         }
 
         public override void Cleanup()

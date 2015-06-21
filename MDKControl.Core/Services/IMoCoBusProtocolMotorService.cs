@@ -9,5 +9,8 @@ namespace MDKControl.Core.Services
     public interface IMoCoBusProtocolMotorService
     {
         Task SetContinuousSpeed(float speed);
+        Task SetStartHere();
+        Task SetStopHere();
+
     }
 }

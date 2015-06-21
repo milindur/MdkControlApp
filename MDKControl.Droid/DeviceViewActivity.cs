@@ -28,13 +28,23 @@ namespace MDKControl.Droid
         private ViewGroup _connectedLayout;
 
         private Switch _connectSwitch;
+
         private JoystickView _joystick;
+
         private Button _setStartButton;
         private Button _setStopButton;
         private Button _swapStartStopButton;
-        private Button _gotoStartButton;
-        private Button _gotoStopButton;
+
+        private Button _setRefStartButton;
+        private Button _setRefStopButton;
+
         private Button _startProgramButton;
+        private Button _pauseProgramButton;
+        private Button _stopProgramButton;
+
+        private Button _setModeSmsButton;
+        private Button _setModePanoButton;
+        private Button _setModeAstroButton;
 
         public DeviceViewActivity()
         {
@@ -49,12 +59,24 @@ namespace MDKControl.Droid
 
             Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
 
-            GotoStartButton.Click += (o, e) => {};
-            GotoStartButton.SetCommand("Click", Vm.GotoStartCommand);
-            GotoStopButton.Click += (o, e) => {};
-            GotoStopButton.SetCommand("Click", Vm.GotoStopCommand);
+            SetRefStartButton.Click += (o, e) => {};
+            SetRefStartButton.SetCommand("Click", Vm.SetRefStartCommand);
+            SetRefStopButton.Click += (o, e) => {};
+            SetRefStopButton.SetCommand("Click", Vm.SetRefStopCommand);
+
             StartProgramButton.Click += (o, e) => {};
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
+            PauseProgramButton.Click += (o, e) => {};
+            PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
+            StopProgramButton.Click += (o, e) => {};
+            StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
+
+            SetModeSmsButton.Click += (o, e) => {};
+            SetModeSmsButton.SetCommand("Click", Vm.SetModeSmsCommand);
+            SetModePanoButton.Click += (o, e) => {};
+            SetModePanoButton.SetCommand("Click", Vm.SetModePanoCommand);
+            SetModeAstroButton.Click += (o, e) => {};
+            SetModeAstroButton.SetCommand("Click", Vm.SetModeAstroCommand);
 
             SetStartButton.Click += (o, e) => {};
             SetStartButton.SetCommand("Click", Vm.SetStartCommand);
@@ -151,21 +173,21 @@ namespace MDKControl.Droid
             }
         }
 
-        public Button GotoStartButton
+        public Button SetRefStartButton
         {
             get 
             {
-                return _gotoStartButton
-                    ?? (_gotoStartButton = FindViewById<Button>(Resource.Id.GotoStart));
+                return _setRefStartButton
+                    ?? (_setRefStartButton = FindViewById<Button>(Resource.Id.SetRefStart));
             }
         }
 
-        public Button GotoStopButton
+        public Button SetRefStopButton
         {
             get 
             {
-                return _gotoStopButton
-                    ?? (_gotoStopButton = FindViewById<Button>(Resource.Id.GotoStop));
+                return _setRefStopButton
+                    ?? (_setRefStopButton = FindViewById<Button>(Resource.Id.SetRefStop));
             }
         }
 
@@ -178,12 +200,57 @@ namespace MDKControl.Droid
             }
         }
 
+        public Button PauseProgramButton
+        {
+            get 
+            {
+                return _pauseProgramButton
+                    ?? (_pauseProgramButton = FindViewById<Button>(Resource.Id.PauseProgram));
+            }
+        }
+
+        public Button StopProgramButton
+        {
+            get 
+            {
+                return _stopProgramButton
+                    ?? (_stopProgramButton = FindViewById<Button>(Resource.Id.StopProgram));
+            }
+        }
+
         public Button SetStartButton
         {
             get 
             {
                 return _setStartButton
                     ?? (_setStartButton = FindViewById<Button>(Resource.Id.SetStart));
+            }
+        }
+
+        public Button SetModeSmsButton
+        {
+            get 
+            {
+                return _setModeSmsButton
+                    ?? (_setModeSmsButton = FindViewById<Button>(Resource.Id.SetModeSms));
+            }
+        }
+
+        public Button SetModePanoButton
+        {
+            get 
+            {
+                return _setModePanoButton
+                    ?? (_setModePanoButton = FindViewById<Button>(Resource.Id.SetModePano));
+            }
+        }
+
+        public Button SetModeAstroButton
+        {
+            get 
+            {
+                return _setModeAstroButton
+                    ?? (_setModeAstroButton = FindViewById<Button>(Resource.Id.SetModeAstro));
             }
         }
 

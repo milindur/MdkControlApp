@@ -4,6 +4,8 @@ namespace MDKControl.Core.Models
     {
         ShootMoveShoot,
         TimelapseContinous,
-        VideoContinous
+        VideoContinous,
+        Panorama = 100,
+        Astro
     }
 }

@@ -37,9 +37,11 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
-        public Task SetProgramMode(MoCoBusProgramMode mode)
+        public async Task SetProgramMode(MoCoBusProgramMode mode)
         {
-            throw new NotImplementedException();
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramMode, new byte[] { (byte)mode }))
+                .ConfigureAwait(false);
         }
 
         public async Task SendAllMotorsToHome()

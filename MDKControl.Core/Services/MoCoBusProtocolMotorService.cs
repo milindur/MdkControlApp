@@ -29,5 +29,19 @@ namespace MDKControl.Core.Services
                 .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.SetContinuousSpeed, BitConverter.GetBytes(speed).Reverse().ToArray()))
                 .ConfigureAwait(false);
         }
+
+        public async Task SetStartHere()
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.SetStartHere, null))
+                .ConfigureAwait(false);
+        }
+
+        public async Task SetStopHere()
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.SetStopHere, null))
+                .ConfigureAwait(false);
+        }
     }
 }
