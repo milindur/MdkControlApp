@@ -409,7 +409,7 @@ Global
 		$9.inheritsSet = Mono
 		$9.inheritsScope = application/xml
 		$9.scope = application/xml
-		version = 0.3-alpha3
+		version = 0.4-alpha1
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,7 +16,7 @@
     <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>MDKControl.Droid</AssemblyName>
     <TargetFrameworkVersion>v4.3</TargetFrameworkVersion>
-    <ReleaseVersion>0.3-alpha3</ReleaseVersion>
+    <ReleaseVersion>0.4-alpha1</ReleaseVersion>
     <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
