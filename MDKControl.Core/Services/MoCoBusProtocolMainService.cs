@@ -23,6 +23,13 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task Pause()
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Pause, null))
+                .ConfigureAwait(false);
+        }
+
         public async Task Stop()
         {
             await _commService

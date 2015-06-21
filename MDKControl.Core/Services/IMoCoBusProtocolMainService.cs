@@ -7,6 +7,7 @@ namespace MDKControl.Core.Services
     public interface IMoCoBusProtocolMainService
     {
         Task Start();
+        Task Pause();
         Task Stop();
 
         Task SetProgramMode(MoCoBusProgramMode mode);
