@@ -32,6 +32,8 @@ namespace MDKControl.Core
                 .SingleInstance();
             
             builder.RegisterType<DeviceViewModel>();
+
+            builder.RegisterType<ModeAstroViewModel>();
         }
     }
 }

@@ -14,6 +14,7 @@ using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
+using MDKControl.Droid.Activities;
 
 namespace MDKControl.Droid
 {

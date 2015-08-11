@@ -13,7 +13,7 @@ using Microsoft.Practices.ServiceLocation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
-namespace MDKControl.Droid
+namespace MDKControl.Droid.Activities
 {
     [Activity(Label = "Running", ScreenOrientation = ScreenOrientation.Portrait)]
     public class RunningViewActivity : ActivityBaseEx

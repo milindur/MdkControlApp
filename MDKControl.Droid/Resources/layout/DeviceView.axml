@@ -66,6 +66,45 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:paddingTop="0dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp">
+            <Button
+                android:id="@+id/SetModeSms"
+                android:text="SMS"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+            <Button
+                android:id="@+id/SetModePano"
+                android:text="PANO"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+            <Button
+                android:id="@+id/SetModeAstro"
+                android:text="ASTRO"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/ConnectedFragmentContainer"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
+<!--<LinearLayout
+        android:id="@+id/ConnectedLayout"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:paddingTop="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
@@ -161,5 +200,5 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="4dp" />
-    </LinearLayout>
+    </LinearLayout>-->
 </LinearLayout>

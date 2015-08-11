@@ -7,13 +7,16 @@ using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.ViewModels;
+using MDKControl.Droid.Fragments;
 using MDKControl.Droid.Helpers;
 using MDKControl.Droid.Widgets;
 using Microsoft.Practices.ServiceLocation;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System.Reactive.Linq;
+using MDKControl.Core.Models;
 
-namespace MDKControl.Droid
+namespace MDKControl.Droid.Activities
 {
     [Activity(Label = "Device", ScreenOrientation = ScreenOrientation.Portrait)]
     public class DeviceViewActivity : ActivityBaseEx
@@ -22,25 +25,13 @@ namespace MDKControl.Droid
         private Binding _showDisconnectedBinding;
         private Binding _showConnectingBinding;
         private Binding _showConnectedBinding;
+        private Binding _programModeBinding;
 
         private ViewGroup _disconnectedLayout;
         private ViewGroup _connectingLayout;
         private ViewGroup _connectedLayout;
 
         private Switch _connectSwitch;
-
-        private JoystickView _joystick;
-
-        private Button _setStartButton;
-        private Button _setStopButton;
-        private Button _swapStartStopButton;
-
-        private Button _setRefStartButton;
-        private Button _setRefStopButton;
-
-        private Button _startProgramButton;
-        private Button _pauseProgramButton;
-        private Button _stopProgramButton;
 
         private Button _setModeSmsButton;
         private Button _setModePanoButton;
@@ -59,18 +50,6 @@ namespace MDKControl.Droid
 
             Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
 
-            SetRefStartButton.Click += (o, e) => {};
-            SetRefStartButton.SetCommand("Click", Vm.SetRefStartCommand);
-            SetRefStopButton.Click += (o, e) => {};
-            SetRefStopButton.SetCommand("Click", Vm.SetRefStopCommand);
-
-            StartProgramButton.Click += (o, e) => {};
-            StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
-            PauseProgramButton.Click += (o, e) => {};
-            PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
-            StopProgramButton.Click += (o, e) => {};
-            StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
-
             SetModeSmsButton.Click += (o, e) => {};
             SetModeSmsButton.SetCommand("Click", Vm.SetModeSmsCommand);
             SetModePanoButton.Click += (o, e) => {};
@@ -78,12 +57,7 @@ namespace MDKControl.Droid
             SetModeAstroButton.Click += (o, e) => {};
             SetModeAstroButton.SetCommand("Click", Vm.SetModeAstroCommand);
 
-            SetStartButton.Click += (o, e) => {};
-            SetStartButton.SetCommand("Click", Vm.SetStartCommand);
-            SetStopButton.Click += (o, e) => {};
-            SetStopButton.SetCommand("Click", Vm.SetStopCommand);
-            SwapStartStopButton.Click += (o, e) => {};
-            SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
+            ShowModeSmsFragment();
         }
 
         protected override void OnResume()
@@ -104,9 +78,8 @@ namespace MDKControl.Droid
             _showConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectedLayout.Visibility)
                 .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
 
-            Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
-            Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
-            Joystick.JoystickMove.SetCommand(Vm.MoveJoystickCommand);
+            _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
+                .WhenSourceChanges(OnProgramModeChanged);
         }
 
         protected override void OnPause()
@@ -116,7 +89,9 @@ namespace MDKControl.Droid
             _showConnectingBinding.Detach();
             _showConnectedBinding.Detach();
 
-            Vm.StopJoystick(null);
+            _programModeBinding.Detach();
+
+            Vm.StopJoystick();
 
             base.OnPause();
         }
@@ -126,6 +101,56 @@ namespace MDKControl.Droid
             Vm.Cleanup();
 
             base.OnApplicationStop();
+        }
+
+        private void ShowModeSmsFragment()
+        {
+            var ft = FragmentManager.BeginTransaction();
+            ft.Replace(Resource.Id.ConnectedFragmentContainer, new ModeSmsViewFragment());
+            ft.SetTransition(FragmentTransit.FragmentFade);
+            ft.Commit();
+
+            SetModeSmsButton.Enabled = false;
+        }
+
+        private void ShowModeAstroFragment()
+        {
+            var ft = FragmentManager.BeginTransaction();
+            ft.Replace(Resource.Id.ConnectedFragmentContainer, new ModeAstroViewFragment());
+            ft.SetTransition(FragmentTransit.FragmentFade);
+            ft.Commit();
+
+            SetModeAstroButton.Enabled = false;
+        }
+
+        private void ShowModePanoFragment()
+        {
+            var ft = FragmentManager.BeginTransaction();
+            ft.Replace(Resource.Id.ConnectedFragmentContainer, new ModePanoViewFragment());
+            ft.SetTransition(FragmentTransit.FragmentFade);
+            ft.Commit();
+
+            SetModePanoButton.Enabled = false;
+        }
+
+        private void OnProgramModeChanged()
+        {
+            SetModeAstroButton.Enabled = true;
+            SetModePanoButton.Enabled = true;
+            SetModeSmsButton.Enabled = true;
+
+            if (Vm.ProgramMode == MoCoBusProgramMode.ShootMoveShoot)
+            {
+                ShowModeSmsFragment();
+            }
+            else if (Vm.ProgramMode == MoCoBusProgramMode.Astro)
+            {
+                ShowModeAstroFragment();
+            }
+            else if (Vm.ProgramMode == MoCoBusProgramMode.Panorama)
+            {
+                ShowModePanoFragment();
+            }
         }
 
         public Switch ConnectSwitch
@@ -164,69 +189,6 @@ namespace MDKControl.Droid
             }
         }
 
-        public JoystickView Joystick
-        {
-            get 
-            {
-                return _joystick
-                    ?? (_joystick = FindViewById<JoystickView>(Resource.Id.Joystick));
-            }
-        }
-
-        public Button SetRefStartButton
-        {
-            get 
-            {
-                return _setRefStartButton
-                    ?? (_setRefStartButton = FindViewById<Button>(Resource.Id.SetRefStart));
-            }
-        }
-
-        public Button SetRefStopButton
-        {
-            get 
-            {
-                return _setRefStopButton
-                    ?? (_setRefStopButton = FindViewById<Button>(Resource.Id.SetRefStop));
-            }
-        }
-
-        public Button StartProgramButton
-        {
-            get 
-            {
-                return _startProgramButton
-                    ?? (_startProgramButton = FindViewById<Button>(Resource.Id.StartProgram));
-            }
-        }
-
-        public Button PauseProgramButton
-        {
-            get 
-            {
-                return _pauseProgramButton
-                    ?? (_pauseProgramButton = FindViewById<Button>(Resource.Id.PauseProgram));
-            }
-        }
-
-        public Button StopProgramButton
-        {
-            get 
-            {
-                return _stopProgramButton
-                    ?? (_stopProgramButton = FindViewById<Button>(Resource.Id.StopProgram));
-            }
-        }
-
-        public Button SetStartButton
-        {
-            get 
-            {
-                return _setStartButton
-                    ?? (_setStartButton = FindViewById<Button>(Resource.Id.SetStart));
-            }
-        }
-
         public Button SetModeSmsButton
         {
             get 
@@ -251,24 +213,6 @@ namespace MDKControl.Droid
             {
                 return _setModeAstroButton
                     ?? (_setModeAstroButton = FindViewById<Button>(Resource.Id.SetModeAstro));
-            }
-        }
-
-        public Button SetStopButton
-        {
-            get 
-            {
-                return _setStopButton
-                    ?? (_setStopButton = FindViewById<Button>(Resource.Id.SetStop));
-            }
-        }
-
-        public Button SwapStartStopButton
-        {
-            get 
-            {
-                return _swapStartStopButton
-                    ?? (_swapStartStopButton = FindViewById<Button>(Resource.Id.SwapStartStop));
             }
         }
     }

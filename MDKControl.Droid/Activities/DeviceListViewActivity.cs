@@ -11,7 +11,7 @@ using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
-namespace MDKControl.Droid
+namespace MDKControl.Droid.Activities
 {
     [Activity(Label = "Device Selection", ScreenOrientation = ScreenOrientation.Portrait)]
     public class DeviceListViewActivity : ActivityBaseEx, AdapterView.IOnItemClickListener
