@@ -7,6 +7,7 @@ namespace MDKControl.Core.Services
     public interface IMoCoBusProtocolMainService
     {
         Task Start();
+        Task Start(byte arg);
         Task Pause();
         Task Stop();
 

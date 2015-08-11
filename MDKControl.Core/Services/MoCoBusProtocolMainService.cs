@@ -23,6 +23,13 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task Start(byte arg)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, new byte[] { arg }))
+                .ConfigureAwait(false);
+        }
+
         public async Task Pause()
         {
             await _commService
@@ -100,14 +107,22 @@ namespace MDKControl.Core.Services
             return MoCoBusHelper.ParseStatus<int>(response);
         }
 
-        public Task<MoCoBusProgramMode> GetProgramMode()
+        public async Task<MoCoBusProgramMode> GetProgramMode()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramMode, null))
+                .ConfigureAwait(false);
+
+            return (MoCoBusProgramMode)MoCoBusHelper.ParseStatus<byte>(response);
         }
 
-        public Task<MoCoBusRunStatus> GetRunStatus()
+        public async Task<MoCoBusRunStatus> GetRunStatus()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramMode, null))
+                .ConfigureAwait(false);
+
+            return (MoCoBusRunStatus)MoCoBusHelper.ParseStatus<byte>(response);
         }
 
         public Task<TimeSpan> GetRunTime()
@@ -120,14 +135,22 @@ namespace MDKControl.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<float> GetProgramPercentComplete()
+        public async Task<float> GetProgramPercentComplete()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramComplete, null))
+                .ConfigureAwait(false);
+
+            return (float)MoCoBusHelper.ParseStatus<byte>(response);
         }
 
-        public Task<bool> IsProgramComplete()
+        public async Task<bool> IsProgramComplete()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramComplete, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<byte>(response) == 1;
         }
 
         public Task<bool> GetJoystickMode()
