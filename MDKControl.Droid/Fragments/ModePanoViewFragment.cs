@@ -29,8 +29,6 @@ namespace MDKControl.Droid.Fragments
         private Button _pauseProgramButton;
         private Button _stopProgramButton;
 
-        private JoystickView _joystick;
-
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -61,10 +59,6 @@ namespace MDKControl.Droid.Fragments
             PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
             StopProgramButton.Click += (o, e) => {};
             StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
-
-            Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
-            Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
-            Joystick.JoystickMove.SetCommand(Vm.MoveJoystickCommand);
         }
 
         public ModePanoViewModel Vm
@@ -72,15 +66,6 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return ((DeviceViewActivity)Activity).Vm.ModePanoViewModel;
-            }
-        }
-
-        public JoystickView Joystick
-        {
-            get
-            {
-                return _joystick
-                ?? (_joystick = View.FindViewById<JoystickView>(Resource.Id.Joystick));
             }
         }
 

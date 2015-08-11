@@ -65,6 +65,12 @@ namespace MDKControl.Droid
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f07000b
+			public const int Cancel = 2131165195;
+			
+			// aapt resource value: 0x7f07000a
+			public const int Close = 2131165194;
+			
 			// aapt resource value: 0x7f070001
 			public const int ConnectSwitch = 2131165185;
 			
@@ -86,20 +92,20 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070009
 			public const int Joystick = 2131165193;
 			
-			// aapt resource value: 0x7f070014
-			public const int MinutesPicker = 2131165204;
-			
-			// aapt resource value: 0x7f07000c
-			public const int PauseProgram = 2131165196;
-			
 			// aapt resource value: 0x7f070016
-			public const int ScanningStart = 2131165206;
+			public const int MinutesPicker = 2131165206;
+			
+			// aapt resource value: 0x7f07000e
+			public const int PauseProgram = 2131165198;
+			
+			// aapt resource value: 0x7f070018
+			public const int ScanningStart = 2131165208;
+			
+			// aapt resource value: 0x7f070019
+			public const int ScanningStop = 2131165209;
 			
 			// aapt resource value: 0x7f070017
-			public const int ScanningStop = 2131165207;
-			
-			// aapt resource value: 0x7f070015
-			public const int SecondsPicker = 2131165205;
+			public const int SecondsPicker = 2131165207;
 			
 			// aapt resource value: 0x7f070007
 			public const int SetModeAstro = 2131165191;
@@ -110,32 +116,32 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070005
 			public const int SetModeSms = 2131165189;
 			
-			// aapt resource value: 0x7f070011
-			public const int SetRefStart = 2131165201;
-			
-			// aapt resource value: 0x7f070012
-			public const int SetRefStop = 2131165202;
-			
-			// aapt resource value: 0x7f07000e
-			public const int SetStart = 2131165198;
-			
-			// aapt resource value: 0x7f07000f
-			public const int SetStop = 2131165199;
-			
 			// aapt resource value: 0x7f070013
-			public const int StartProgram = 2131165203;
+			public const int SetRefStart = 2131165203;
 			
-			// aapt resource value: 0x7f07000a
-			public const int StartProgramNorth = 2131165194;
-			
-			// aapt resource value: 0x7f07000b
-			public const int StartProgramSouth = 2131165195;
-			
-			// aapt resource value: 0x7f07000d
-			public const int StopProgram = 2131165197;
+			// aapt resource value: 0x7f070014
+			public const int SetRefStop = 2131165204;
 			
 			// aapt resource value: 0x7f070010
-			public const int SwapStartStop = 2131165200;
+			public const int SetStart = 2131165200;
+			
+			// aapt resource value: 0x7f070011
+			public const int SetStop = 2131165201;
+			
+			// aapt resource value: 0x7f070015
+			public const int StartProgram = 2131165205;
+			
+			// aapt resource value: 0x7f07000c
+			public const int StartProgramNorth = 2131165196;
+			
+			// aapt resource value: 0x7f07000d
+			public const int StartProgramSouth = 2131165197;
+			
+			// aapt resource value: 0x7f07000f
+			public const int StopProgram = 2131165199;
+			
+			// aapt resource value: 0x7f070012
+			public const int SwapStartStop = 2131165202;
 			
 			static Id()
 			{

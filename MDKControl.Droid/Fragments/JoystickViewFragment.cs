@@ -21,12 +21,17 @@ namespace MDKControl.Droid.Fragments
     public class JoystickViewFragment : DialogFragment
     {
         private JoystickView _joystick;
+        private Button _closeButton;
+        private Button _cancelButton;
+
+        public event EventHandler Canceled;
+        public event EventHandler Closed;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            SetStyle(DialogFragmentStyle.NoFrame, 0);
+            SetStyle(DialogFragmentStyle.NoTitle, 0);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -37,6 +42,19 @@ namespace MDKControl.Droid.Fragments
         public override void OnActivityCreated(Bundle savedInstanceState)
         {
             base.OnActivityCreated(savedInstanceState);
+
+            CloseButton.Click += (o, e) => 
+                { 
+                    var handler = Closed;
+                    if (handler != null) handler(this, EventArgs.Empty);
+                    Dismiss();  
+                };
+            CancelButton.Click += (o, e) => 
+                { 
+                    var handler = Canceled;
+                    if (handler != null) handler(this, EventArgs.Empty);
+                    Dismiss(); 
+                };
 
             Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
             Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
@@ -59,6 +77,24 @@ namespace MDKControl.Droid.Fragments
                     ?? (_joystick = View.FindViewById<JoystickView>(Resource.Id.Joystick));
             }
         }
+
+        public Button CloseButton
+        {
+            get
+            {
+                return _closeButton
+                    ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
+            }
+        }
+
+        public Button CancelButton
+        {
+            get
+            {
+                return _cancelButton
+                    ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
+            }
+        }
     }
 }
-
+    

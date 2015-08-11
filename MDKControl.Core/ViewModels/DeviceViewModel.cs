@@ -105,9 +105,6 @@ namespace MDKControl.Core.ViewModels
             get { return _programMode; }
             set
             {
-                /*if (_programMode == value)
-                    return;*/
-                
                 _programMode = value;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -175,6 +172,7 @@ namespace MDKControl.Core.ViewModels
             ModeAstroViewModel.Cleanup();
             ModePanoViewModel.Cleanup();
             ModeSmsViewModel.Cleanup();
+            JoystickViewModel.Cleanup();
 
             IsConnected = false;
 

@@ -142,5 +142,13 @@ namespace MDKControl.Core.ViewModels
 
             _joystickCurrentPoint = point;
         }
+
+
+        public override void Cleanup()
+        {
+            StopJoystick(null);
+            
+            base.Cleanup();
+        }
     }
 }

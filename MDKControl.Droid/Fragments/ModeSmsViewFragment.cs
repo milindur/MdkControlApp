@@ -27,8 +27,6 @@ namespace MDKControl.Droid.Fragments
         private Button _pauseProgramButton;
         private Button _stopProgramButton;
 
-        private JoystickView _joystick;
-
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -43,28 +41,37 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            /*StartProgramButton.Click += (o, e) => 
+            SetStartButton.Click += (o, e) => 
                 {
                     var dlg = new JoystickViewFragment();
+                    dlg.SetCommand("Closed", Vm.SetStartCommand);
                     dlg.ShowsDialog = true;
                     dlg.Show(FragmentManager, "dlg");
-                };*/
-            SetStartButton.Click += (o, e) => {};
-            SetStartButton.SetCommand("Click", Vm.SetStartCommand);
-            SetStopButton.Click += (o, e) => {};
-            SetStopButton.SetCommand("Click", Vm.SetStopCommand);
+
+                    Console.WriteLine("Foo");
+                };
+            //SetStartButton.SetCommand("Click", Vm.SetStartCommand);
+
+            SetStopButton.Click += (o, e) => 
+                {
+                    var dlg = new JoystickViewFragment();
+                    dlg.SetCommand("Closed", Vm.SetStopCommand);
+                    dlg.ShowsDialog = true;
+                    dlg.Show(FragmentManager, "dlg");
+
+                    Console.WriteLine("Foo");
+                };
+            //SetStopButton.SetCommand("Click", Vm.SetStopCommand);
+
             SwapStartStopButton.Click += (o, e) => {};
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
+
             StartProgramButton.Click += (o, e) => {};
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
             PauseProgramButton.Click += (o, e) => {};
             PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
             StopProgramButton.Click += (o, e) => {};
             StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
-
-            Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
-            Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
-            Joystick.JoystickMove.SetCommand(Vm.MoveJoystickCommand);
         }
 
         public ModeSmsViewModel Vm
@@ -72,15 +79,6 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return ((DeviceViewActivity)Activity).Vm.ModeSmsViewModel;
-            }
-        }
-
-        public JoystickView Joystick
-        {
-            get
-            {
-                return _joystick
-                ?? (_joystick = View.FindViewById<JoystickView>(Resource.Id.Joystick));
             }
         }
 
