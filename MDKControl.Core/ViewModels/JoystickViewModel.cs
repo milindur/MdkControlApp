@@ -224,6 +224,7 @@ namespace MDKControl.Core.ViewModels
         public override void Cleanup()
         {
             StopJoystick(null);
+            StopSlider(null);
             
             base.Cleanup();
         }

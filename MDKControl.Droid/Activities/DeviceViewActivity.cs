@@ -91,7 +91,8 @@ namespace MDKControl.Droid.Activities
 
             _programModeBinding.Detach();
 
-            Vm.StopJoystick();
+            Vm.JoystickViewModel.StopJoystick(null);
+            Vm.JoystickViewModel.StopSlider(null);
 
             base.OnPause();
         }

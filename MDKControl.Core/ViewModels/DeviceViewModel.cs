@@ -138,33 +138,19 @@ namespace MDKControl.Core.ViewModels
         private async void SetModeSms()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
-            await UpdateDeviceState().ConfigureAwait(false);
+            await UpdateDeviceState();
         }
 
         private async void SetModePano()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
-            await UpdateDeviceState().ConfigureAwait(false);
+            await UpdateDeviceState();
         }
 
         private async void SetModeAstro()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
-            await UpdateDeviceState().ConfigureAwait(false);
-        }
-
-        public async void StopJoystick()
-        {
-            try
-            {
-                await _protocolService.Motor2.SetContinuousSpeed(0).ConfigureAwait(false);
-                await _protocolService.Motor3.SetContinuousSpeed(0).ConfigureAwait(false);
-                await _protocolService.Motor1.SetContinuousSpeed(0).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("StopJoystick: {0}", ex);
-            }
+            await UpdateDeviceState();
         }
 
         public override void Cleanup()
