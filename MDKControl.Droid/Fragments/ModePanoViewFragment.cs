@@ -43,16 +43,35 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            SetStartButton.Click += (o, e) => {};
-            SetStartButton.SetCommand("Click", Vm.SetStartCommand);
-            SetStopButton.Click += (o, e) => {};
-            SetStopButton.SetCommand("Click", Vm.SetStopCommand);
+            SetStartButton.Click += (o, e) => 
+                {
+                    var dlg = JoystickViewFragment.NewInstance("Set Start");
+                    dlg.SetCommand("Closed", Vm.SetStartCommand);
+                    dlg.Show(FragmentManager, "dlg");
+                };
+            SetStopButton.Click += (o, e) => 
+                {
+                    var dlg = JoystickViewFragment.NewInstance("Set Stop");
+                    dlg.SetCommand("Closed", Vm.SetStopCommand);
+                    dlg.Show(FragmentManager, "dlg");
+                };
+
             SwapStartStopButton.Click += (o, e) => {};
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
-            SetRefStartButton.Click += (o, e) => {};
-            SetRefStartButton.SetCommand("Click", Vm.SetRefStartCommand);
-            SetRefStopButton.Click += (o, e) => {};
-            SetRefStopButton.SetCommand("Click", Vm.SetRefStopCommand);
+
+            SetRefStartButton.Click += (o, e) => 
+                {
+                    var dlg = JoystickViewFragment.NewInstance("Set Fov Start");
+                    dlg.SetCommand("Closed", Vm.SetRefStartCommand);
+                    dlg.Show(FragmentManager, "dlg");
+                };
+            SetRefStopButton.Click += (o, e) => 
+                {
+                    var dlg = JoystickViewFragment.NewInstance("Set Fov Stop");
+                    dlg.SetCommand("Closed", Vm.SetRefStopCommand);
+                    dlg.Show(FragmentManager, "dlg");
+                };
+
             StartProgramButton.Click += (o, e) => {};
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
             PauseProgramButton.Click += (o, e) => {};

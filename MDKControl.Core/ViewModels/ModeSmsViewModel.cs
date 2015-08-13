@@ -24,10 +24,76 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
+        private float _exposureTime = 2.0f;
+        private float _intervalTime = 3.0f;
+        private float _durationTime = 300.0f;
+
         public ModeSmsViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
             _protocolService = protocolService;
+        }
+
+        public float ExposureTime
+        {
+            get { return _exposureTime; }
+            set
+            {
+                _exposureTime = value;
+                if (_intervalTime < _exposureTime + 1f)
+                    _intervalTime = _exposureTime + 1f;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => IntervalTime);
+                        RaisePropertyChanged(() => DurationTime);
+                        RaisePropertyChanged(() => MaxShots);
+                    });
+            }
+        }
+
+        public float IntervalTime
+        {
+            get { return _intervalTime; }
+            set
+            {
+                _intervalTime = value;
+                if (_intervalTime < _exposureTime + 1f)
+                    _intervalTime = _exposureTime + 1f;
+                _exposureTime = _intervalTime - 1f;
+                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => IntervalTime);
+                        RaisePropertyChanged(() => DurationTime);
+                        RaisePropertyChanged(() => MaxShots);
+                    });
+            }
+        }
+
+        public float DurationTime
+        {
+            get { return _durationTime; }
+            set
+            {
+                _durationTime = value;
+                if (_durationTime < _intervalTime)
+                    _durationTime = _intervalTime;
+                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => IntervalTime);
+                        RaisePropertyChanged(() => DurationTime);
+                        RaisePropertyChanged(() => MaxShots);
+                    });
+            }
+        }
+
+        public ushort MaxShots
+        {
+            get { return (ushort)(_durationTime / _intervalTime); }
         }
 
         public RelayCommand SetStartCommand
@@ -42,7 +108,7 @@ namespace MDKControl.Core.ViewModels
 
         public RelayCommand SwapStartStopCommand
         {
-            get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop, () => false)); }
+            get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop)); }
         }
 
         public RelayCommand StartProgramCommand
@@ -77,6 +143,19 @@ namespace MDKControl.Core.ViewModels
 
         private async void StartProgram()
         {
+            var exposure = (int)(ExposureTime * 1000);
+            var interval = (int)(IntervalTime * 1000);
+
+            ushort preDelay = 100;
+            ushort focusTime = 100;
+            uint exposureTime = 100;
+            ushort postDelay = (ushort)(exposure - preDelay - focusTime - exposureTime);
+
+            await _protocolService.Camera.SetFocusTime(focusTime);
+            await _protocolService.Camera.SetTriggerTime(exposureTime);
+            await _protocolService.Camera.SetExposureDelayTime(postDelay);
+            await _protocolService.Camera.SetMaxShots(MaxShots);
+
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
             await _protocolService.Main.Start();
         }

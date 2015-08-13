@@ -18,24 +18,27 @@ using Reactive.Bindings.Extensions;
 
 namespace MDKControl.Droid.Fragments
 {
-    public class JoystickViewFragment : DialogFragment
+    public class TimeViewFragment : DialogFragment
     {
-        private JoystickView _joystick;
-        private SliderView _slider;
         private Button _closeButton;
         private Button _cancelButton;
+        private NumberPicker _hoursPicker;
+        private NumberPicker _minutesPicker;
+        private NumberPicker _secondsPicker;
 
         public event EventHandler Canceled;
-        public event EventHandler Closed;
+        public event EventHandler<int> Closed;
 
-        private string _closeLabel = "Close";
+        private string _titleLabel = "Exposure";
+        private int _value;
 
-        public static JoystickViewFragment NewInstance(string closeLabel) 
+        public static TimeViewFragment NewInstance(string titleLabel, int value) 
         {
             var args = new Bundle();
-            args.PutString("closeLabel", closeLabel);
+            args.PutString("titleLabel", titleLabel);
+            args.PutInt("value", value);
 
-            var f = new JoystickViewFragment();
+            var f = new TimeViewFragment();
             f.Arguments = args;
             f.ShowsDialog = true;
 
@@ -46,17 +49,17 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnCreate(savedInstanceState);
 
-            _closeLabel = Arguments.GetString("closeLabel");
+            _titleLabel = Arguments.GetString("titleLabel");
+            _value = Arguments.GetInt("value");
 
-            SetStyle(DialogFragmentStyle.NoTitle, 0);
+            SetStyle(DialogFragmentStyle.Normal, 0);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            var view = inflater.Inflate(Resource.Layout.JoystickView, container, false);
-
-            view.FindViewById<Button>(Resource.Id.Close).Text = _closeLabel;
-
+            Dialog.SetTitle(_titleLabel);
+            
+            var view = inflater.Inflate(Resource.Layout.TimeView, container, false);
             return view;
         }
 
@@ -64,10 +67,19 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
+            SecondsPicker.MinValue = 0;
+            SecondsPicker.MaxValue = 59;
+            MinutesPicker.MinValue = 0;
+            MinutesPicker.MaxValue = 59;
+            HoursPicker.MinValue = 0;
+            HoursPicker.MaxValue = 24;
+
+            Value = _value;
+
             CloseButton.Click += (o, e) => 
                 { 
                     var handler = Closed;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    if (handler != null) handler(this, Value);
                     Dismiss();  
                 };
             CancelButton.Click += (o, e) => 
@@ -76,39 +88,46 @@ namespace MDKControl.Droid.Fragments
                     if (handler != null) handler(this, EventArgs.Empty);
                     Dismiss(); 
                 };
-
-            Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
-            Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
-            Joystick.JoystickMove.SetCommand(Vm.MoveJoystickCommand);
-
-            Slider.SliderStart.SetCommand(Vm.StartSliderCommand);
-            Slider.SliderStop.SetCommand(Vm.StopSliderCommand);
-            Slider.SliderMove.SetCommand(Vm.MoveSliderCommand);
         }
 
-        public JoystickViewModel Vm
+        protected int Value
         {
-            get
+            get { return HoursPicker.Value * 60 * 60 + MinutesPicker.Value * 60 + SecondsPicker.Value; }
+            set 
             {
-                return ((DeviceViewActivity)Activity).Vm.JoystickViewModel;
+                var tmp = value;
+                SecondsPicker.Value = tmp % 60;
+                tmp /= 60;
+                MinutesPicker.Value = tmp % 60;
+                tmp /= 60;
+                HoursPicker.Value = tmp;
             }
         }
 
-        public JoystickView Joystick
+        public NumberPicker HoursPicker
         {
             get
             {
-                return _joystick
-                    ?? (_joystick = View.FindViewById<JoystickView>(Resource.Id.Joystick));
+                return _hoursPicker
+                    ?? (_hoursPicker = View.FindViewById<NumberPicker>(Resource.Id.Hours));
             }
         }
 
-        public SliderView Slider
+        public NumberPicker MinutesPicker
         {
             get
             {
-                return _slider
-                    ?? (_slider = View.FindViewById<SliderView>(Resource.Id.Slider));
+                return _minutesPicker
+                    ?? (_minutesPicker = View.FindViewById<NumberPicker>(Resource.Id.Minutes));
+            }
+        }
+
+        public NumberPicker SecondsPicker
+        {
+            get
+            {
+                return _secondsPicker
+                    ?? (_secondsPicker = View.FindViewById<NumberPicker>(Resource.Id.Seconds));
             }
         }
 

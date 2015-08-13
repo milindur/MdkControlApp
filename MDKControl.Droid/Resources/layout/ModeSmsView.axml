@@ -29,7 +29,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
         <Button
             android:id="@+id/StartProgram"
             android:text="Start"
@@ -48,5 +49,86 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
+                android:text="Exposure"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/ExposureTime"
+                android:text=""
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
+                android:ems="4"
+                android:textAlignment="center"
+                android:editable="false"
+                android:focusable="false"
+                android:clickable="true" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
+                android:text="Interval"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/IntervalTime"
+                android:text=""
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
+                android:ems="4"
+                android:textAlignment="center"
+                android:editable="false"
+                android:focusable="false"
+                android:clickable="true" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
+                android:text="Duration"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/DurationTime"
+                android:text=""
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:inputType="numberDecimal"
+                android:maxLength="6"
+                android:ems="4"
+                android:textAlignment="center"
+                android:editable="false"
+                android:focusable="false"
+                android:clickable="true" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

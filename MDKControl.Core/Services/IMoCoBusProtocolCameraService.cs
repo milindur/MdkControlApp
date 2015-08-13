@@ -7,6 +7,9 @@ namespace MDKControl.Core.Services
 {
 	public interface IMoCoBusProtocolCameraService
 	{
+        Task SetFocusTime(ushort time);
+        Task SetTriggerTime(uint time);
+        Task SetExposureDelayTime(ushort time);
+        Task SetMaxShots(ushort shots);
 	}
-
 }
