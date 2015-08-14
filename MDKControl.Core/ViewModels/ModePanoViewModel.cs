@@ -26,8 +26,8 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
-        private float _exposureTime = 1.0f;
-        private float _delayTime = 1.0f;
+        private decimal _exposureTime = 0.1m;
+        private decimal _delayTime = 0.5m;
 
         public ModePanoViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
         {
@@ -35,7 +35,7 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
-        public float ExposureTime
+        public decimal ExposureTime
         {
             get { return _exposureTime; }
             set
@@ -49,14 +49,14 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public float DelayTime
+        public decimal DelayTime
         {
             get { return _delayTime; }
             set
             {
                 _delayTime = value;
-                if (_delayTime < 1f)
-                    _delayTime = 1f;
+                if (_delayTime < 0.1m)
+                    _delayTime = 0.1m;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -136,8 +136,8 @@ namespace MDKControl.Core.ViewModels
         {
             ushort preDelay = 100;
             ushort focusTime = 100;
-            uint exposureTime = (uint)(ExposureTime * 1000);
-            ushort postDelay = (ushort)((DelayTime * 1000) - preDelay - focusTime);
+            var exposureTime = (uint)(ExposureTime * 1000m);
+            var postDelay = (ushort)(DelayTime * 1000m);
 
             await _protocolService.Camera.SetFocusTime(focusTime);
             await _protocolService.Camera.SetTriggerTime(exposureTime);

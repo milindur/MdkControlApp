@@ -53,14 +53,14 @@ namespace MDKControl.Droid.Fragments
 
             ExposureTimeEditText.Click += (o, e) => 
                 {
-                    var dlg = TimeViewFragment.NewInstance("Exposure", (int)Vm.ExposureTime);
+                    var dlg = TimeViewFragment.NewInstance("Exposure", Vm.ExposureTime);
                     dlg.Closed += (oo, ee) => { Vm.ExposureTime = ee; };
                     dlg.Show(FragmentManager, "dlg");
                 };
 
             DelayTimeEditText.Click += (o, e) => 
                 {
-                    var dlg = TimeViewFragment.NewInstance("Delay", (int)Vm.DelayTime);
+                    var dlg = TimeViewFragment.NewInstance("Delay", Vm.DelayTime);
                     dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
                     dlg.Show(FragmentManager, "dlg");
                 };
@@ -100,19 +100,19 @@ namespace MDKControl.Droid.Fragments
             PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
             StopProgramButton.Click += (o, e) => {};
             StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
-        
+
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
-                { 
-                    ExposureTimeEditText.Text = string.Format("{0:F0}s", Vm.ExposureTime); 
-                });
+                    { 
+                        ExposureTimeEditText.Text = string.Format("{0:F1}s", Vm.ExposureTime); 
+                    });
             _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
                 .WhenSourceChanges(() =>
-                { 
-                    DelayTimeEditText.Text = string.Format("{0:F0}s", Vm.DelayTime); 
-                });
+                    { 
+                        DelayTimeEditText.Text = string.Format("{0:F1}s", Vm.DelayTime); 
+                    });
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
@@ -128,6 +128,7 @@ namespace MDKControl.Droid.Fragments
             base.OnDestroy();
 
             _activity = null;
+
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
         }

@@ -25,18 +25,19 @@ namespace MDKControl.Droid.Fragments
         private NumberPicker _hoursPicker;
         private NumberPicker _minutesPicker;
         private NumberPicker _secondsPicker;
+        private NumberPicker _hundrethsPicker;
 
         public event EventHandler Canceled;
-        public event EventHandler<int> Closed;
+        public event EventHandler<decimal> Closed;
 
         private string _titleLabel = "Exposure";
-        private int _value;
+        private decimal _value;
 
-        public static TimeViewFragment NewInstance(string titleLabel, int value) 
+        public static TimeViewFragment NewInstance(string titleLabel, decimal value) 
         {
             var args = new Bundle();
             args.PutString("titleLabel", titleLabel);
-            args.PutInt("value", value);
+            args.PutFloat("value", (float)value);
 
             var f = new TimeViewFragment();
             f.Arguments = args;
@@ -50,7 +51,7 @@ namespace MDKControl.Droid.Fragments
             base.OnCreate(savedInstanceState);
 
             _titleLabel = Arguments.GetString("titleLabel");
-            _value = Arguments.GetInt("value");
+            _value = (decimal)Arguments.GetFloat("value");
 
             SetStyle(DialogFragmentStyle.Normal, 0);
         }
@@ -59,14 +60,15 @@ namespace MDKControl.Droid.Fragments
         {
             Dialog.SetTitle(_titleLabel);
             
-            var view = inflater.Inflate(Resource.Layout.TimeView, container, false);
-            return view;
+            return inflater.Inflate(Resource.Layout.TimeView, container, false);
         }
 
         public override void OnActivityCreated(Bundle savedInstanceState)
         {
             base.OnActivityCreated(savedInstanceState);
 
+            HundrethsPicker.MinValue = 0;
+            HundrethsPicker.MaxValue = 9;
             SecondsPicker.MinValue = 0;
             SecondsPicker.MaxValue = 59;
             MinutesPicker.MinValue = 0;
@@ -90,15 +92,19 @@ namespace MDKControl.Droid.Fragments
                 };
         }
 
-        protected int Value
+        protected decimal Value
         {
-            get { return HoursPicker.Value * 60 * 60 + MinutesPicker.Value * 60 + SecondsPicker.Value; }
+            get { return HoursPicker.Value * 60m * 60m + MinutesPicker.Value * 60m + SecondsPicker.Value + HundrethsPicker.Value / 10m; }
             set 
             {
-                var tmp = value;
+                var tmp = (int)(value * 10m);
+                HundrethsPicker.Value = tmp % 10;
+                tmp /= 10;
                 SecondsPicker.Value = tmp % 60;
                 tmp /= 60;
                 MinutesPicker.Value = tmp % 60;
+                tmp /= 60;
+                HoursPicker.Value = tmp;
                 tmp /= 60;
                 HoursPicker.Value = tmp;
             }
@@ -128,6 +134,15 @@ namespace MDKControl.Droid.Fragments
             {
                 return _secondsPicker
                     ?? (_secondsPicker = View.FindViewById<NumberPicker>(Resource.Id.Seconds));
+            }
+        }
+
+        public NumberPicker HundrethsPicker
+        {
+            get
+            {
+                return _hundrethsPicker
+                    ?? (_hundrethsPicker = View.FindViewById<NumberPicker>(Resource.Id.Hundredths));
             }
         }
 

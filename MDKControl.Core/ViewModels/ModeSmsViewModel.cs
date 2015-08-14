@@ -24,10 +24,13 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
-        private float _exposureTime = 1.0f;
-        private float _delayTime = 2.0f;
-        private float _intervalTime = 3.0f;
-        private float _durationTime = 300.0f;
+        private const decimal _minMotionTime = 1.5m;
+        private const decimal _preDelayTime = 0.1m;
+        private const decimal _focusTime = 0.1m;
+        private decimal _exposureTime = 0.1m;
+        private decimal _postDelayTime = 1.2m;
+        private decimal _intervalTime = 3.0m;
+        private decimal _durationTime = 300.0m;
 
         public ModeSmsViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
         {
@@ -35,15 +38,20 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
-        public float ExposureTime
+        public decimal ExposureTime
         {
             get { return _exposureTime; }
             set
             {
                 _exposureTime = value;
-                if (_intervalTime < _exposureTime + _delayTime)
-                    _intervalTime = _exposureTime + _delayTime;
-                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+
+                if (_exposureTime < 0.1m)
+                    _exposureTime = 0.1m;
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
+                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime;
+
+                _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
+
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -55,17 +63,20 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public float DelayTime
+        public decimal DelayTime
         {
-            get { return _delayTime; }
+            get { return _postDelayTime; }
             set
             {
-                _delayTime = value;
-                if (_delayTime < 1f)
-                    _delayTime = 1f;
-                if (_intervalTime < _exposureTime + _delayTime)
-                    _intervalTime = _exposureTime + _delayTime;
-                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+                _postDelayTime = value;
+
+                if (_postDelayTime < 0.1m)
+                    _postDelayTime = 0.1m;
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
+                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime;
+
+                _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
+
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -77,22 +88,28 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public float IntervalTime
+        public decimal IntervalTime
         {
             get { return _intervalTime; }
             set
             {
                 _intervalTime = value;
-                if (_intervalTime < _exposureTime + _delayTime)
+
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
                 {
-                    if (_intervalTime < _exposureTime + 1f)
-                    {
-                        _delayTime = 1f;
-                        _intervalTime = _exposureTime + _delayTime;
-                    }
+                    _postDelayTime = _intervalTime - _preDelayTime - _focusTime - _exposureTime - _minMotionTime;
+                    if (_postDelayTime < 0.1m)
+                        _postDelayTime = 0.1m;
+                    if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
+                        _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime;
                 }
-                _delayTime = _intervalTime - _exposureTime;
-                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+                else
+                {
+                    _postDelayTime = _intervalTime - _preDelayTime - _focusTime - _exposureTime - _minMotionTime;                
+                }
+
+                _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
+
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -104,15 +121,18 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public float DurationTime
+        public decimal DurationTime
         {
             get { return _durationTime; }
             set
             {
                 _durationTime = value;
+
                 if (_durationTime < _intervalTime)
                     _durationTime = _intervalTime;
-                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+
+                _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
+
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -130,9 +150,12 @@ namespace MDKControl.Core.ViewModels
             set
             {
                 var tmp = value;
+
                 if (tmp < 2)
                     tmp = 2;
+                
                 _durationTime = (tmp - 1) * _intervalTime;
+
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -191,14 +214,17 @@ namespace MDKControl.Core.ViewModels
 
         private async void StartProgram()
         {
-            ushort preDelay = 100;
-            ushort focusTime = 100;
-            uint exposureTime = (uint)(ExposureTime * 1000);
-            ushort postDelay = (ushort)((DelayTime * 1000) - preDelay - focusTime);
+            var preDelay = (ushort)(_preDelayTime * 1000m);
+            var focusTime = (ushort)(_focusTime * 1000m);
+            var exposureTime = (uint)(_exposureTime * 1000m);
+            var postDelay = (ushort)(_postDelayTime * 1000m);
+            var interval = (uint)(_intervalTime * 1000m);
 
             await _protocolService.Camera.SetFocusTime(focusTime);
             await _protocolService.Camera.SetTriggerTime(exposureTime);
             await _protocolService.Camera.SetExposureDelayTime(postDelay);
+            await _protocolService.Camera.SetInterval(interval);
+
             await _protocolService.Camera.SetMaxShots(MaxShots);
 
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);

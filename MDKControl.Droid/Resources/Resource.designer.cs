@@ -101,6 +101,9 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f07001d
 			public const int Hours = 2131165213;
 			
+			// aapt resource value: 0x7f070020
+			public const int Hundredths = 2131165216;
+			
 			// aapt resource value: 0x7f07001a
 			public const int IntervalTime = 2131165210;
 			
@@ -119,11 +122,11 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070010
 			public const int PauseProgram = 2131165200;
 			
-			// aapt resource value: 0x7f070020
-			public const int ScanningStart = 2131165216;
-			
 			// aapt resource value: 0x7f070021
-			public const int ScanningStop = 2131165217;
+			public const int ScanningStart = 2131165217;
+			
+			// aapt resource value: 0x7f070022
+			public const int ScanningStop = 2131165218;
 			
 			// aapt resource value: 0x7f07001f
 			public const int Seconds = 2131165215;

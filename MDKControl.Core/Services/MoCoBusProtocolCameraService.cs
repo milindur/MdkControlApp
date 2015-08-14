@@ -30,6 +30,13 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task SetInterval(uint time)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.SetInterval, BitConverter.GetBytes(time).Reverse().ToArray()))
+                .ConfigureAwait(false);
+        }
+
         public async Task SetExposureDelayTime(ushort time)
         {
             await _commService
