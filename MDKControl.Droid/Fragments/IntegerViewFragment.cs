@@ -18,27 +18,25 @@ using Reactive.Bindings.Extensions;
 
 namespace MDKControl.Droid.Fragments
 {
-    public class TimeViewFragment : DialogFragment
+    public class IntegerViewFragment : DialogFragment
     {
         private Button _closeButton;
         private Button _cancelButton;
-        private NumberPicker _hoursPicker;
-        private NumberPicker _minutesPicker;
-        private NumberPicker _secondsPicker;
+        private NumberPicker _numberPicker;
 
         public event EventHandler Canceled;
         public event EventHandler<int> Closed;
 
-        private string _titleLabel = "Exposure";
+        private string _titleLabel = "Shots";
         private int _value;
 
-        public static TimeViewFragment NewInstance(string titleLabel, int value) 
+        public static IntegerViewFragment NewInstance(string titleLabel, int value) 
         {
             var args = new Bundle();
             args.PutString("titleLabel", titleLabel);
             args.PutInt("value", value);
 
-            var f = new TimeViewFragment();
+            var f = new IntegerViewFragment();
             f.Arguments = args;
             f.ShowsDialog = true;
 
@@ -59,7 +57,7 @@ namespace MDKControl.Droid.Fragments
         {
             Dialog.SetTitle(_titleLabel);
             
-            var view = inflater.Inflate(Resource.Layout.TimeView, container, false);
+            var view = inflater.Inflate(Resource.Layout.IntegerView, container, false);
             return view;
         }
 
@@ -67,67 +65,40 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            SecondsPicker.MinValue = 0;
-            SecondsPicker.MaxValue = 59;
-            MinutesPicker.MinValue = 0;
-            MinutesPicker.MaxValue = 59;
-            HoursPicker.MinValue = 0;
-            HoursPicker.MaxValue = 24;
+            NumberPicker.MinValue = 0;
+            NumberPicker.MaxValue = 99999;
 
             Value = _value;
 
             CloseButton.Click += (o, e) => 
                 { 
-                    Dismiss();  
                     var handler = Closed;
                     if (handler != null) handler(this, Value);
+                    Dismiss();  
                 };
             CancelButton.Click += (o, e) => 
                 { 
-                    Dismiss(); 
                     var handler = Canceled;
                     if (handler != null) handler(this, EventArgs.Empty);
+                    Dismiss(); 
                 };
         }
 
         protected int Value
         {
-            get { return HoursPicker.Value * 60 * 60 + MinutesPicker.Value * 60 + SecondsPicker.Value; }
+            get { return NumberPicker.Value; }
             set 
             {
-                var tmp = value;
-                SecondsPicker.Value = tmp % 60;
-                tmp /= 60;
-                MinutesPicker.Value = tmp % 60;
-                tmp /= 60;
-                HoursPicker.Value = tmp;
+                NumberPicker.Value = value;
             }
         }
 
-        public NumberPicker HoursPicker
+        public NumberPicker NumberPicker
         {
             get
             {
-                return _hoursPicker
-                    ?? (_hoursPicker = View.FindViewById<NumberPicker>(Resource.Id.Hours));
-            }
-        }
-
-        public NumberPicker MinutesPicker
-        {
-            get
-            {
-                return _minutesPicker
-                    ?? (_minutesPicker = View.FindViewById<NumberPicker>(Resource.Id.Minutes));
-            }
-        }
-
-        public NumberPicker SecondsPicker
-        {
-            get
-            {
-                return _secondsPicker
-                    ?? (_secondsPicker = View.FindViewById<NumberPicker>(Resource.Id.Seconds));
+                return _numberPicker
+                    ?? (_numberPicker = View.FindViewById<NumberPicker>(Resource.Id.Number));
             }
         }
 

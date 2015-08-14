@@ -20,6 +20,8 @@ namespace MDKControl.Droid.Fragments
 {
     public class ModeAstroViewFragment : Fragment
     {
+        private Activity _activity;
+
         private Button _startProgramNorthButton;
         private Button _startProgramSouthButton;
         private Button _pauseProgramButton;
@@ -49,11 +51,25 @@ namespace MDKControl.Droid.Fragments
             StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
         }
 
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+
+            _activity = activity;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _activity = null;
+        }
+
         public ModeAstroViewModel Vm
         {
             get
             {
-                return ((DeviceViewActivity)Activity).Vm.ModeAstroViewModel;
+                return ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
             }
         }
 

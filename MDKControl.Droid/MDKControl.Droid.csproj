@@ -119,6 +119,7 @@
     <Compile Include="Fragments\JoystickViewFragment.cs" />
     <Compile Include="Widgets\SliderView.cs" />
     <Compile Include="Fragments\TimeViewFragment.cs" />
+    <Compile Include="Fragments\IntegerViewFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -140,6 +141,7 @@
     <AndroidResource Include="Resources\layout\ModePanoView.axml" />
     <AndroidResource Include="Resources\layout\JoystickView.axml" />
     <AndroidResource Include="Resources\layout\TimeView.axml" />
+    <AndroidResource Include="Resources\layout\IntegerView.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MDKControl.Core\MDKControl.Core.csproj">

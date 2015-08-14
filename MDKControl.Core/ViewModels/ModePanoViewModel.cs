@@ -26,10 +26,43 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
+        private float _exposureTime = 1.0f;
+        private float _delayTime = 1.0f;
+
         public ModePanoViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
             _protocolService = protocolService;
+        }
+
+        public float ExposureTime
+        {
+            get { return _exposureTime; }
+            set
+            {
+                _exposureTime = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
+                    });
+            }
+        }
+
+        public float DelayTime
+        {
+            get { return _delayTime; }
+            set
+            {
+                _delayTime = value;
+                if (_delayTime < 1f)
+                    _delayTime = 1f;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
+                    });
+            }
         }
 
         public RelayCommand SetStartCommand
@@ -101,6 +134,15 @@ namespace MDKControl.Core.ViewModels
 
         private async void StartProgram()
         {
+            ushort preDelay = 100;
+            ushort focusTime = 100;
+            uint exposureTime = (uint)(ExposureTime * 1000);
+            ushort postDelay = (ushort)((DelayTime * 1000) - preDelay - focusTime);
+
+            await _protocolService.Camera.SetFocusTime(focusTime);
+            await _protocolService.Camera.SetTriggerTime(exposureTime);
+            await _protocolService.Camera.SetExposureDelayTime(postDelay);
+
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
             await _protocolService.Main.Start();
         }

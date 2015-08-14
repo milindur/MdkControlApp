@@ -24,7 +24,8 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
-        private float _exposureTime = 2.0f;
+        private float _exposureTime = 1.0f;
+        private float _delayTime = 2.0f;
         private float _intervalTime = 3.0f;
         private float _durationTime = 300.0f;
 
@@ -40,11 +41,35 @@ namespace MDKControl.Core.ViewModels
             set
             {
                 _exposureTime = value;
-                if (_intervalTime < _exposureTime + 1f)
-                    _intervalTime = _exposureTime + 1f;
+                if (_intervalTime < _exposureTime + _delayTime)
+                    _intervalTime = _exposureTime + _delayTime;
+                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
+                        RaisePropertyChanged(() => IntervalTime);
+                        RaisePropertyChanged(() => DurationTime);
+                        RaisePropertyChanged(() => MaxShots);
+                    });
+            }
+        }
+
+        public float DelayTime
+        {
+            get { return _delayTime; }
+            set
+            {
+                _delayTime = value;
+                if (_delayTime < 1f)
+                    _delayTime = 1f;
+                if (_intervalTime < _exposureTime + _delayTime)
+                    _intervalTime = _exposureTime + _delayTime;
+                _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
                         RaisePropertyChanged(() => MaxShots);
@@ -58,13 +83,20 @@ namespace MDKControl.Core.ViewModels
             set
             {
                 _intervalTime = value;
-                if (_intervalTime < _exposureTime + 1f)
-                    _intervalTime = _exposureTime + 1f;
-                _exposureTime = _intervalTime - 1f;
+                if (_intervalTime < _exposureTime + _delayTime)
+                {
+                    if (_intervalTime < _exposureTime + 1f)
+                    {
+                        _delayTime = 1f;
+                        _intervalTime = _exposureTime + _delayTime;
+                    }
+                }
+                _delayTime = _intervalTime - _exposureTime;
                 _durationTime = (float)(Math.Ceiling(_durationTime / _intervalTime) * _intervalTime);
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
                         RaisePropertyChanged(() => MaxShots);
@@ -84,6 +116,7 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
                         RaisePropertyChanged(() => MaxShots);
@@ -93,7 +126,22 @@ namespace MDKControl.Core.ViewModels
 
         public ushort MaxShots
         {
-            get { return (ushort)(_durationTime / _intervalTime); }
+            get { return (ushort)(Math.Ceiling(_durationTime / _intervalTime) + 1); }
+            set
+            {
+                var tmp = value;
+                if (tmp < 2)
+                    tmp = 2;
+                _durationTime = (tmp - 1) * _intervalTime;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => DelayTime);
+                        RaisePropertyChanged(() => IntervalTime);
+                        RaisePropertyChanged(() => DurationTime);
+                        RaisePropertyChanged(() => MaxShots);
+                    });
+            }
         }
 
         public RelayCommand SetStartCommand
@@ -143,13 +191,10 @@ namespace MDKControl.Core.ViewModels
 
         private async void StartProgram()
         {
-            var exposure = (int)(ExposureTime * 1000);
-            var interval = (int)(IntervalTime * 1000);
-
             ushort preDelay = 100;
             ushort focusTime = 100;
-            uint exposureTime = 100;
-            ushort postDelay = (ushort)(exposure - preDelay - focusTime - exposureTime);
+            uint exposureTime = (uint)(ExposureTime * 1000);
+            ushort postDelay = (ushort)((DelayTime * 1000) - preDelay - focusTime);
 
             await _protocolService.Camera.SetFocusTime(focusTime);
             await _protocolService.Camera.SetTriggerTime(exposureTime);

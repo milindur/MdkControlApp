@@ -20,6 +20,11 @@ namespace MDKControl.Droid.Fragments
 {
     public class ModePanoViewFragment : Fragment
     {
+        private Activity _activity;
+
+        private Binding _exposureTimeBinding;
+        private Binding _delayTimeBinding;
+        
         private Button _setStartButton;
         private Button _setStopButton;
         private Button _swapStartStopButton;
@@ -28,6 +33,9 @@ namespace MDKControl.Droid.Fragments
         private Button _startProgramButton;
         private Button _pauseProgramButton;
         private Button _stopProgramButton;
+
+        private EditText _exposureTimeEditText;
+        private EditText _delayTimeEditText;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,6 +50,20 @@ namespace MDKControl.Droid.Fragments
         public override void OnActivityCreated(Bundle savedInstanceState)
         {
             base.OnActivityCreated(savedInstanceState);
+
+            ExposureTimeEditText.Click += (o, e) => 
+                {
+                    var dlg = TimeViewFragment.NewInstance("Exposure", (int)Vm.ExposureTime);
+                    dlg.Closed += (oo, ee) => { Vm.ExposureTime = ee; };
+                    dlg.Show(FragmentManager, "dlg");
+                };
+
+            DelayTimeEditText.Click += (o, e) => 
+                {
+                    var dlg = TimeViewFragment.NewInstance("Delay", (int)Vm.DelayTime);
+                    dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
+                    dlg.Show(FragmentManager, "dlg");
+                };
 
             SetStartButton.Click += (o, e) => 
                 {
@@ -78,13 +100,43 @@ namespace MDKControl.Droid.Fragments
             PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
             StopProgramButton.Click += (o, e) => {};
             StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
+        
+            _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
+                .WhenSourceChanges(() =>
+                { 
+                    ExposureTimeEditText.Text = string.Format("{0:F0}s", Vm.ExposureTime); 
+                });
+            _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
+                .WhenSourceChanges(() =>
+                { 
+                    DelayTimeEditText.Text = string.Format("{0:F0}s", Vm.DelayTime); 
+                });
+            _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
+        }
+
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+
+            _activity = activity;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _activity = null;
+            _exposureTimeBinding.Detach();
+            _delayTimeBinding.Detach();
         }
 
         public ModePanoViewModel Vm
         {
             get
             {
-                return ((DeviceViewActivity)Activity).Vm.ModePanoViewModel;
+                return ((DeviceViewActivity)_activity).Vm.ModePanoViewModel;
             }
         }
 
@@ -157,6 +209,24 @@ namespace MDKControl.Droid.Fragments
             {
                 return _stopProgramButton
                     ?? (_stopProgramButton = View.FindViewById<Button>(Resource.Id.StopProgram));
+            }
+        }
+
+        public EditText ExposureTimeEditText
+        {
+            get
+            {
+                return _exposureTimeEditText
+                    ?? (_exposureTimeEditText = View.FindViewById<EditText>(Resource.Id.ExposureTime));
+            }
+        }
+
+        public EditText DelayTimeEditText
+        {
+            get
+            {
+                return _delayTimeEditText
+                    ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.DelayTime));
             }
         }
     }

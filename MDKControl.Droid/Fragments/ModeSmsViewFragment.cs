@@ -20,6 +20,14 @@ namespace MDKControl.Droid.Fragments
 {
     public class ModeSmsViewFragment : Fragment
     {
+        private Activity _activity;
+
+        private Binding _exposureTimeBinding;
+        private Binding _delayTimeBinding;
+        private Binding _intervalTimeBinding;
+        private Binding _durationTimeBinding;
+        private Binding _maxShotsBinding;
+
         private Button _setStartButton;
         private Button _setStopButton;
         private Button _swapStartStopButton;
@@ -28,8 +36,10 @@ namespace MDKControl.Droid.Fragments
         private Button _stopProgramButton;
 
         private EditText _exposureTimeEditText;
+        private EditText _delayTimeEditText;
         private EditText _intervalTimeEditText;
         private EditText _durationTimeEditText;
+        private EditText _maxShotsEditText;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -52,6 +62,13 @@ namespace MDKControl.Droid.Fragments
                     dlg.Show(FragmentManager, "dlg");
                 };
             
+            DelayTimeEditText.Click += (o, e) => 
+                {
+                    var dlg = TimeViewFragment.NewInstance("Delay", (int)Vm.DelayTime);
+                    dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
+                    dlg.Show(FragmentManager, "dlg");
+                };
+
             IntervalTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Interval", (int)Vm.IntervalTime);
@@ -63,6 +80,13 @@ namespace MDKControl.Droid.Fragments
                 {
                     var dlg = TimeViewFragment.NewInstance("Duration", (int)Vm.DurationTime);
                     dlg.Closed += (oo, ee) => { Vm.DurationTime = ee; };
+                    dlg.Show(FragmentManager, "dlg");
+                };
+
+            MaxShotsEditText.Click += (o, e) => 
+                {
+                    var dlg = IntegerViewFragment.NewInstance("Shots", Vm.MaxShots);
+                    dlg.Closed += (oo, ee) => { Vm.MaxShots = (ushort)ee; };
                     dlg.Show(FragmentManager, "dlg");
                 };
 
@@ -89,24 +113,66 @@ namespace MDKControl.Droid.Fragments
             StopProgramButton.Click += (o, e) => {};
             StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
 
-            this.SetBinding(() => Vm.ExposureTime, () => ExposureTimeEditText.Text, BindingMode.OneWay)
-                .ConvertSourceToTarget(f => string.Format("{0:F0} s", f))
-                .ForceUpdateValueFromSourceToTarget();
+            _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
+                .WhenSourceChanges(() =>
+                    { 
+                        ExposureTimeEditText.Text = string.Format("{0:F0}s", Vm.ExposureTime); 
+                    });
+            _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
 
-            this.SetBinding(() => Vm.IntervalTime, () => IntervalTimeEditText.Text, BindingMode.OneWay)
-                .ConvertSourceToTarget(f => string.Format("{0:F0} s", f))
-                .ForceUpdateValueFromSourceToTarget();
+            _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
+                .WhenSourceChanges(() =>
+                    { 
+                        DelayTimeEditText.Text = string.Format("{0:F0}s", Vm.DelayTime); 
+                    });
+            _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
 
-            this.SetBinding(() => Vm.DurationTime, () => DurationTimeEditText.Text, BindingMode.OneWay)
-                .ConvertSourceToTarget(f => string.Format("{0:F1} m", f / 60.0f))
-                .ForceUpdateValueFromSourceToTarget();
+            _intervalTimeBinding = this.SetBinding(() => Vm.IntervalTime)
+                .WhenSourceChanges(() =>
+                    {
+                        IntervalTimeEditText.Text = string.Format("{0:F0}s", Vm.IntervalTime);
+                    });
+            _intervalTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _durationTimeBinding = this.SetBinding(() => Vm.DurationTime)
+                .WhenSourceChanges(() =>
+                    {
+                        DurationTimeEditText.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), Vm.DurationTime % 60);
+                    });
+            _durationTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _maxShotsBinding = this.SetBinding(() => Vm.MaxShots)
+                .WhenSourceChanges(() =>
+                    {
+                        MaxShotsEditText.Text = string.Format("{0}", Vm.MaxShots);
+                    });
+            _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
+        }
+
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+
+            _activity = activity;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _activity = null;
+            _exposureTimeBinding.Detach();
+            _delayTimeBinding.Detach();
+            _intervalTimeBinding.Detach();
+            _durationTimeBinding.Detach();
+            _maxShotsBinding.Detach();
         }
 
         public ModeSmsViewModel Vm
         {
             get
             {
-                return ((DeviceViewActivity)Activity).Vm.ModeSmsViewModel;
+                return ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
             }
         }
 
@@ -173,6 +239,15 @@ namespace MDKControl.Droid.Fragments
             }
         }
 
+        public EditText DelayTimeEditText
+        {
+            get
+            {
+                return _delayTimeEditText
+                    ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.DelayTime));
+            }
+        }
+
         public EditText IntervalTimeEditText
         {
             get
@@ -188,6 +263,15 @@ namespace MDKControl.Droid.Fragments
             {
                 return _durationTimeEditText
                     ?? (_durationTimeEditText = View.FindViewById<EditText>(Resource.Id.DurationTime));
+            }
+        }
+
+        public EditText MaxShotsEditText
+        {
+            get
+            {
+                return _maxShotsEditText
+                    ?? (_maxShotsEditText = View.FindViewById<EditText>(Resource.Id.MaxShots));
             }
         }
     }

@@ -11,29 +11,7 @@
         android:orientation="horizontal"
         android:gravity="center">
         <NumberPicker
-            android:id="@+id/Hours"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:orientation="vertical" />
-        <TextView
-            android:text=" : "
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_weight="0" />
-        <NumberPicker
-            android:id="@+id/Minutes"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:orientation="vertical" />
-        <TextView
-            android:text=" : "
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_weight="0" />
-        <NumberPicker
-            android:id="@+id/Seconds"
+            android:id="@+id/Number"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
