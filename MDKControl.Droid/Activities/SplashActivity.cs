@@ -7,7 +7,6 @@ using MDKControl.Core;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
-using Xamarin;
 using Android.Runtime;
 
 namespace MDKControl.Droid.Activities
@@ -24,7 +23,7 @@ namespace MDKControl.Droid.Activities
                 args.Handled = true;
             };*/
 
-            Insights.HasPendingCrashReport += (sender, isStartupCrash) =>
+            /*Insights.HasPendingCrashReport += (sender, isStartupCrash) =>
             {
                 if (isStartupCrash) {
                     Insights.PurgePendingCrashReports().Wait();
@@ -35,7 +34,7 @@ namespace MDKControl.Droid.Activities
 #else
             Insights.Initialize("76d51a30602c5fd9a5e64f263e25d14947533c61", this);
 #endif
-            Insights.Track("Startup");
+            Insights.Track("Startup");*/
 
             SetContentView(Resource.Layout.Splash);
 
@@ -45,7 +44,7 @@ namespace MDKControl.Droid.Activities
 
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
 
-            Insights.Track("StartDeviceListViewActivity");
+            //Insights.Track("StartDeviceListViewActivity");
             StartActivity(typeof(DeviceListViewActivity));
         }
     }
