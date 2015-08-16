@@ -39,6 +39,30 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
             <TextView
+                android:text="Pre Delay"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/PreDelayTime"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:ems="4"
+                android:editable="false"
+                android:focusable="false"
+                android:clickable="true"
+                android:enabled="false"
+                android:text="0.1s" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
                 android:text="Exposure"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -61,12 +85,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
             <TextView
-                android:text="Delay"
+                android:text="Post Delay"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1" />
             <EditText
-                android:id="@+id/DelayTime"
+                android:id="@+id/PostDelayTime"
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -76,6 +100,12 @@
                 android:focusable="false"
                 android:clickable="true" />
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center"
@@ -98,12 +128,6 @@
                 android:focusable="false"
                 android:clickable="true" />
         </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp">
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center"

@@ -245,7 +245,7 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return _delayTimeEditText
-                    ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.DelayTime));
+                    ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.PostDelayTime));
             }
         }
 
