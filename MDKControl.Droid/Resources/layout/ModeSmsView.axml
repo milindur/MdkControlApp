@@ -45,14 +45,11 @@
                 android:layout_weight="1" />
             <EditText
                 android:id="@+id/ExposureTime"
-                android:text=""
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
                 android:ems="4"
-                android:textAlignment="center"
                 android:editable="false"
                 android:focusable="false"
                 android:clickable="true" />
@@ -70,14 +67,11 @@
                 android:layout_weight="1" />
             <EditText
                 android:id="@+id/DelayTime"
-                android:text=""
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
                 android:ems="4"
-                android:textAlignment="center"
                 android:editable="false"
                 android:focusable="false"
                 android:clickable="true" />
@@ -95,14 +89,11 @@
                 android:layout_weight="1" />
             <EditText
                 android:id="@+id/IntervalTime"
-                android:text=""
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
                 android:ems="4"
-                android:textAlignment="center"
                 android:editable="false"
                 android:focusable="false"
                 android:clickable="true" />
@@ -126,14 +117,11 @@
                 android:layout_weight="1" />
             <EditText
                 android:id="@+id/DurationTime"
-                android:text=""
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
                 android:ems="5"
-                android:textAlignment="center"
                 android:editable="false"
                 android:focusable="false"
                 android:clickable="true" />
@@ -151,14 +139,11 @@
                 android:layout_weight="1" />
             <EditText
                 android:id="@+id/MaxShots"
-                android:text=""
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:maxLength="6"
                 android:ems="4"
-                android:textAlignment="center"
                 android:editable="false"
                 android:focusable="false"
                 android:clickable="true" />

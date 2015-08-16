@@ -9,13 +9,13 @@
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/StartProgramNorth"
-            android:text="Start North"
+            android:text="Start N"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1" />
         <Button
             android:id="@+id/StartProgramSouth"
-            android:text="Start South"
+            android:text="Start S"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1" />
