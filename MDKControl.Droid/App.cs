@@ -44,7 +44,6 @@ namespace MDKControl.Droid
             var nav = new NavigationService();
             nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewActivity));
             nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewActivity));
-            nav.Configure(ViewModelLocator.RunningViewKey, typeof(RunningViewActivity));
 
             builder.RegisterInstance(nav)
                 .As<INavigationService>();

@@ -108,7 +108,6 @@
     <Compile Include="Helpers\DispatcherHelper.cs" />
     <Compile Include="Activities\DeviceListViewActivity.cs" />
     <Compile Include="Activities\DeviceViewActivity.cs" />
-    <Compile Include="Activities\RunningViewActivity.cs" />
     <Compile Include="Activities\SplashActivity.cs" />
     <Compile Include="Fragments\ModeAstroViewFragment.cs" />
     <Compile Include="Fragments\ModeSmsViewFragment.cs" />
@@ -117,6 +116,9 @@
     <Compile Include="Widgets\SliderView.cs" />
     <Compile Include="Fragments\TimeViewFragment.cs" />
     <Compile Include="Fragments\IntegerViewFragment.cs" />
+    <Compile Include="Fragments\ModeAstroStatusViewFragment.cs" />
+    <Compile Include="Fragments\ModePanoStatusViewFragment.cs" />
+    <Compile Include="Fragments\ModeSmsStatusViewFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -132,13 +134,15 @@
     <AndroidResource Include="Resources\layout\DeviceListView.axml" />
     <AndroidResource Include="Resources\layout\DeviceView.axml" />
     <AndroidResource Include="Resources\menu\DeviceListOptionsMenu.xml" />
-    <AndroidResource Include="Resources\layout\RunningView.axml" />
     <AndroidResource Include="Resources\layout\ModeAstroView.axml" />
     <AndroidResource Include="Resources\layout\ModeSmsView.axml" />
     <AndroidResource Include="Resources\layout\ModePanoView.axml" />
     <AndroidResource Include="Resources\layout\JoystickView.axml" />
     <AndroidResource Include="Resources\layout\TimeView.axml" />
     <AndroidResource Include="Resources\layout\IntegerView.axml" />
+    <AndroidResource Include="Resources\layout\ModeSmsStatusView.axml" />
+    <AndroidResource Include="Resources\layout\ModeAstroStatusView.axml" />
+    <AndroidResource Include="Resources\layout\ModePanoStatusView.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MDKControl.Core\MDKControl.Core.csproj">
