@@ -16,7 +16,7 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>MDKControl.Droid</AssemblyName>
     <TargetFrameworkVersion>v5.1</TargetFrameworkVersion>
-    <ReleaseVersion>0.5-alpha5</ReleaseVersion>
+    <ReleaseVersion>0.5-alpha7</ReleaseVersion>
     <AndroidLinkMode>None</AndroidLinkMode>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
