@@ -70,6 +70,20 @@
                 android:ems="4"
                 android:editable="false"
                 android:focusable="false" />
+            <TextView
+                android:text="Length (24fps)"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/VideoLength24"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:ems="4"
+                android:editable="false"
+                android:focusable="false" />
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
@@ -105,6 +119,20 @@
                 android:ems="4"
                 android:editable="false"
                 android:focusable="false" />
+            <TextView
+                android:text="Length (25fps)"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/VideoLength25"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:ems="4"
+                android:editable="false"
+                android:focusable="false" />
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
@@ -133,6 +161,20 @@
                 android:layout_weight="1" />
             <EditText
                 android:id="@+id/OverallShots"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:ems="4"
+                android:editable="false"
+                android:focusable="false" />
+            <TextView
+                android:text="Length (30fps)"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/VideoLength30"
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"

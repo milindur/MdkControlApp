@@ -138,7 +138,7 @@ namespace MDKControl.Core.Services
         public async Task<float> GetProgramPercentComplete()
         {
             var response = await _commService
-                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramComplete, null))
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramPercentComplete, null))
                 .ConfigureAwait(false);
 
             return (float)MoCoBusHelper.ParseStatus<byte>(response);

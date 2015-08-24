@@ -89,8 +89,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070002
 			public const int DisconnectedLayout = 2131165186;
 			
-			// aapt resource value: 0x7f070026
-			public const int DurationTime = 2131165222;
+			// aapt resource value: 0x7f070029
+			public const int DurationTime = 2131165225;
 			
 			// aapt resource value: 0x7f070017
 			public const int ElapsedShots = 2131165207;
@@ -101,23 +101,23 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070022
 			public const int ExposureTime = 2131165218;
 			
-			// aapt resource value: 0x7f070028
-			public const int Hours = 2131165224;
-			
 			// aapt resource value: 0x7f07002b
-			public const int Hundredths = 2131165227;
+			public const int Hours = 2131165227;
 			
-			// aapt resource value: 0x7f070025
-			public const int IntervalTime = 2131165221;
+			// aapt resource value: 0x7f07002e
+			public const int Hundredths = 2131165230;
+			
+			// aapt resource value: 0x7f070028
+			public const int IntervalTime = 2131165224;
 			
 			// aapt resource value: 0x7f07000c
 			public const int Joystick = 2131165196;
 			
-			// aapt resource value: 0x7f070027
-			public const int MaxShots = 2131165223;
+			// aapt resource value: 0x7f07002a
+			public const int MaxShots = 2131165226;
 			
-			// aapt resource value: 0x7f070029
-			public const int Minutes = 2131165225;
+			// aapt resource value: 0x7f07002c
+			public const int Minutes = 2131165228;
 			
 			// aapt resource value: 0x7f070009
 			public const int Number = 2131165193;
@@ -152,14 +152,14 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f07000f
 			public const int Resume = 2131165199;
 			
-			// aapt resource value: 0x7f07002c
-			public const int ScanningStart = 2131165228;
+			// aapt resource value: 0x7f07002f
+			public const int ScanningStart = 2131165231;
+			
+			// aapt resource value: 0x7f070030
+			public const int ScanningStop = 2131165232;
 			
 			// aapt resource value: 0x7f07002d
-			public const int ScanningStop = 2131165229;
-			
-			// aapt resource value: 0x7f07002a
-			public const int Seconds = 2131165226;
+			public const int Seconds = 2131165229;
 			
 			// aapt resource value: 0x7f070007
 			public const int SetModeAstro = 2131165191;
@@ -202,6 +202,15 @@ namespace MDKControl.Droid
 			
 			// aapt resource value: 0x7f070020
 			public const int SwapStartStop = 2131165216;
+			
+			// aapt resource value: 0x7f070025
+			public const int VideoLength24 = 2131165221;
+			
+			// aapt resource value: 0x7f070026
+			public const int VideoLength25 = 2131165222;
+			
+			// aapt resource value: 0x7f070027
+			public const int VideoLength30 = 2131165223;
 			
 			static Id()
 			{

@@ -106,6 +106,10 @@ namespace MDKControl.Droid.Activities
 
         private void ShowModeSmsFragment()
         {
+            System.Diagnostics.Debug.WriteLine("ShowModeSmsFragment");
+
+            FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
+
             var ft = FragmentManager.BeginTransaction();
             ft.Replace(Resource.Id.ConnectedFragmentContainer, new ModeSmsViewFragment());
             ft.SetTransition(FragmentTransit.FragmentFade);
@@ -116,6 +120,10 @@ namespace MDKControl.Droid.Activities
 
         private void ShowModeAstroFragment()
         {
+            System.Diagnostics.Debug.WriteLine("ShowModeAstroFragment");
+
+            FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
+
             var ft = FragmentManager.BeginTransaction();
             ft.Replace(Resource.Id.ConnectedFragmentContainer, new ModeAstroViewFragment());
             ft.SetTransition(FragmentTransit.FragmentFade);
@@ -126,6 +134,10 @@ namespace MDKControl.Droid.Activities
 
         private void ShowModePanoFragment()
         {
+            System.Diagnostics.Debug.WriteLine("ShowModePanoFragment");
+
+            FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
+
             var ft = FragmentManager.BeginTransaction();
             ft.Replace(Resource.Id.ConnectedFragmentContainer, new ModePanoViewFragment());
             ft.SetTransition(FragmentTransit.FragmentFade);
