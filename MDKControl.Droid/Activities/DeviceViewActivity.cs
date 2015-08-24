@@ -56,8 +56,6 @@ namespace MDKControl.Droid.Activities
             SetModePanoButton.SetCommand("Click", Vm.SetModePanoCommand);
             SetModeAstroButton.Click += (o, e) => {};
             SetModeAstroButton.SetCommand("Click", Vm.SetModeAstroCommand);
-
-            ShowModeSmsFragment();
         }
 
         protected override void OnResume()
@@ -75,11 +73,17 @@ namespace MDKControl.Droid.Activities
                 .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
             _showConnectingBinding = this.SetBinding(() => Vm.IsConnecting, () => ConnectingLayout.Visibility)
                 .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
-            _showConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectedLayout.Visibility)
-                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
+            _showConnectedBinding = this.SetBinding(() => Vm.IsConnected)
+                //.ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone)
+                .WhenSourceChanges(() =>
+                    {
+                        ConnectedLayout.Visibility = Vm.IsConnected ? ViewStates.Visible : ViewStates.Gone;
+                        if (Vm.IsConnected) OnProgramModeChanged();
+                    });
 
             _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
                 .WhenSourceChanges(OnProgramModeChanged);
+            _programModeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         protected override void OnPause()
@@ -148,22 +152,30 @@ namespace MDKControl.Droid.Activities
 
         private void OnProgramModeChanged()
         {
-            SetModeAstroButton.Enabled = true;
-            SetModePanoButton.Enabled = true;
-            SetModeSmsButton.Enabled = true;
+            if (!Vm.IsConnected)
+                return;
+            
+            RunOnUiThread(() => 
+                {
+                    System.Diagnostics.Debug.WriteLine("OnProgramModeChanged");
 
-            if (Vm.ProgramMode == MoCoBusProgramMode.ShootMoveShoot)
-            {
-                ShowModeSmsFragment();
-            }
-            else if (Vm.ProgramMode == MoCoBusProgramMode.Astro)
-            {
-                ShowModeAstroFragment();
-            }
-            else if (Vm.ProgramMode == MoCoBusProgramMode.Panorama)
-            {
-                ShowModePanoFragment();
-            }
+                    SetModeAstroButton.Enabled = true;
+                    SetModePanoButton.Enabled = true;
+                    SetModeSmsButton.Enabled = true;
+
+                    if (Vm.ProgramMode == MoCoBusProgramMode.ShootMoveShoot)
+                    {
+                        ShowModeSmsFragment();
+                    }
+                    else if (Vm.ProgramMode == MoCoBusProgramMode.Astro)
+                    {
+                        ShowModeAstroFragment();
+                    }
+                    else if (Vm.ProgramMode == MoCoBusProgramMode.Panorama)
+                    {
+                        ShowModePanoFragment();
+                    }
+                });
         }
 
         public Switch ConnectSwitch
