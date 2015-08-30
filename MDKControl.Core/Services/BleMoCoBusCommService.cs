@@ -89,7 +89,7 @@ namespace MDKControl.Core.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Exception", DateTime.UtcNow);
+                Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Exception: {1}", DateTime.UtcNow, ex);
                 return;
             }
 
@@ -139,12 +139,6 @@ namespace MDKControl.Core.Services
             _rxBytesQueue = new ConcurrentQueue<byte[]>();
         }
 
-        public override async Task<MoCoBusFrame> ReceiveAsync()
-        {
-            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(1000));
-            return await ReceiveAsync(cts.Token).ConfigureAwait(false);
-        }
-
         public override async Task<MoCoBusFrame> ReceiveAsync(CancellationToken token)
         {
             if (!IsConnected || _moCoBusRxCharacteristic == null)
@@ -152,15 +146,20 @@ namespace MDKControl.Core.Services
 
             return await Task.Factory.StartNew(() =>
                 {
-                    if (_rxBytesQueue.IsEmpty)
+                    //if (_rxBytesQueue.IsEmpty)
                     {
                         Debug.WriteLine("ReceiveAsync: Waiting for answer!");
-                        _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(250));
+                        _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(500));
                     }
 
+                    Debug.WriteLine("ReceiveAsync: TryDequeue");
                     byte[] bytes;
-                    while (_rxBytesQueue.TryDequeue(out bytes))
+                    if (_rxBytesQueue.TryDequeue(out bytes))
                     {
+                        Debug.WriteLine("ReceiveAsync: Got bytes");
+
+                        token.ThrowIfCancellationRequested();
+                        
                         MoCoBusFrame frame;
                         if (MoCoBusFrame.TryParse(bytes, out frame))
                         {

@@ -20,7 +20,6 @@ namespace MDKControl.Core.Services
         Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame);
         Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token);
         void Send(MoCoBusFrame frame);
-        Task<MoCoBusFrame> ReceiveAsync();
         Task<MoCoBusFrame> ReceiveAsync(CancellationToken token);
     }
 }
