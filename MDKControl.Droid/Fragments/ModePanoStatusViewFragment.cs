@@ -13,8 +13,6 @@ using GalaSoft.MvvmLight.Helpers;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Activities;
 using MDKControl.Droid.Widgets;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 
 namespace MDKControl.Droid.Fragments
 {
@@ -47,6 +45,8 @@ namespace MDKControl.Droid.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            Dialog.SetTitle("Panorama");
+
             return inflater.Inflate(Resource.Layout.ModePanoStatusView, container, false);
         }
 

@@ -29,7 +29,7 @@ namespace MDKControl.Core.ViewModels
         private decimal _exposureTime = 0.1m;
         private decimal _delayTime = 0.5m;
 
-        public ModePanoViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
+        public ModePanoViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
             _protocolService = protocolService;

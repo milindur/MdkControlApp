@@ -30,9 +30,13 @@ namespace MDKControl.Core.ViewModels
         private readonly JoystickViewModel _joystickViewModel;
 
         private MoCoBusProgramMode _programMode = MoCoBusProgramMode.ShootMoveShoot;
+        private MoCoBusRunStatus _runStatus;
         private RelayCommand _setModeSmsCommand;
         private RelayCommand _setModePanoCommand;
         private RelayCommand _setModeAstroCommand;
+
+        private Task _updateTask;
+        private CancellationTokenSource _updateTaskCancellationTokenSource;
 
         public DeviceViewModel(IDispatcherHelper dispatcherHelper, 
                                INavigationService navigationService, 
@@ -48,15 +52,17 @@ namespace MDKControl.Core.ViewModels
 
             _protocolService = moCoBusProtocolServiceFactory(_commService, 3);
 
-            _modeAstroViewModel = new ModeAstroViewModel(_dispatcherHelper, _protocolService);
-            _modePanoViewModel = new ModePanoViewModel(_dispatcherHelper, _protocolService);
-            _modeSmsViewModel = new ModeSmsViewModel(_dispatcherHelper, _protocolService);
+            _modeAstroViewModel = new ModeAstroViewModel(_dispatcherHelper, this, _protocolService);
+            _modePanoViewModel = new ModePanoViewModel(_dispatcherHelper, this, _protocolService);
+            _modeSmsViewModel = new ModeSmsViewModel(_dispatcherHelper, this, _protocolService);
 
             _joystickViewModel = new JoystickViewModel(_dispatcherHelper, _protocolService);
         }
 
         private async void CommServiceOnConnectionChanged(object sender, EventArgs e)
         {
+            Debug.WriteLine("CommServiceOnConnectionChanged: {0}", _commService.ConnectionState);
+            
             if (_commService.ConnectionState == ConnectionState.Connected)
             {
                 await UpdateDeviceState().ConfigureAwait(false);
@@ -105,10 +111,27 @@ namespace MDKControl.Core.ViewModels
             get { return _programMode; }
             set
             {
+                Debug.WriteLine("Setting ProgramMode");
                 _programMode = value;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
+                        Debug.WriteLine("RaisePropertyChanged ProgramMode");
                         RaisePropertyChanged(() => ProgramMode);
+                    });
+            }
+        }
+
+        public MoCoBusRunStatus RunStatus
+        {
+            get { return _runStatus; }
+            set
+            {
+                Debug.WriteLine("Setting RunStatus");
+                _runStatus = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        Debug.WriteLine("RaisePropertyChanged RunStatus");
+                        RaisePropertyChanged(() => RunStatus);
                     });
             }
         }
@@ -132,7 +155,19 @@ namespace MDKControl.Core.ViewModels
 
         private async Task UpdateDeviceState()
         {
+            Debug.WriteLine("UpdateDeviceState");
             ProgramMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
+        }
+
+        public async Task UpdateState()
+        {
+            Debug.WriteLine("UpdateState");
+            _runStatus = await _protocolService.Main.GetRunStatus();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => RunStatus);
+                });
         }
 
         private async void SetModeSms()
@@ -153,8 +188,63 @@ namespace MDKControl.Core.ViewModels
             await UpdateDeviceState();
         }
 
+        public void StartUpdateTask()
+        {
+            _updateTaskCancellationTokenSource = new CancellationTokenSource();
+            _updateTask = Task.Factory.StartNew(async () =>
+                {
+                    var token = _updateTaskCancellationTokenSource.Token;
+                    try
+                    {
+                        while (true)
+                        {
+                            await Task.Delay(1000, token);
+                            token.ThrowIfCancellationRequested();
+
+                            try
+                            {
+                                Debug.WriteLine("UpdateTask: Updating...");
+                                await UpdateState();
+                                await ModeSmsViewModel.UpdateState();
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                break;
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("UpdateTask: {0}", ex);
+                            }
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("UpdateTask: {0}", ex);
+                    }
+                }, _updateTaskCancellationTokenSource.Token);
+        }
+
+        public async void StopUpdateTask()
+        {
+            if (_updateTaskCancellationTokenSource == null)
+                return;
+
+            Debug.WriteLine("Stop UpdateTask");
+
+            _updateTaskCancellationTokenSource.Cancel();
+            await _updateTask;
+
+            _updateTaskCancellationTokenSource = null;
+            _updateTask = null;
+        }
+
         public override void Cleanup()
         {
+            StopUpdateTask();
+            
             ModeAstroViewModel.Cleanup();
             ModePanoViewModel.Cleanup();
             ModeSmsViewModel.Cleanup();

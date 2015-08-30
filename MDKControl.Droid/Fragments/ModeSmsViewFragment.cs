@@ -15,6 +15,7 @@ using MDKControl.Droid.Widgets;
 using MDKControl.Droid.Activities;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using MDKControl.Core.Models;
 
 namespace MDKControl.Droid.Fragments
 {
@@ -32,8 +33,6 @@ namespace MDKControl.Droid.Fragments
         private Button _setStopButton;
         private Button _swapStartStopButton;
         private Button _startProgramButton;
-        private Button _pauseProgramButton;
-        private Button _stopProgramButton;
 
         private EditText _exposureTimeEditText;
         private EditText _delayTimeEditText;
@@ -59,59 +58,81 @@ namespace MDKControl.Droid.Fragments
                 {
                     var dlg = TimeViewFragment.NewInstance("Exposure", Vm.ExposureTime);
                     dlg.Closed += (oo, ee) => { Vm.ExposureTime = ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
             
             DelayTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Delay", Vm.DelayTime);
                     dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             IntervalTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Interval", Vm.IntervalTime);
-                    dlg.Closed += (oo, ee) => { Vm.IntervalTime = ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Closed += (oo, ee) => { System.Diagnostics.Debug.WriteLine("Setting IntervalTime from dialog"); Vm.IntervalTime = ee; };
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             DurationTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Duration", Vm.DurationTime);
                     dlg.Closed += (oo, ee) => { Vm.DurationTime = ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             MaxShotsEditText.Click += (o, e) => 
                 {
                     var dlg = IntegerViewFragment.NewInstance("Shots", Vm.MaxShots);
                     dlg.Closed += (oo, ee) => { Vm.MaxShots = (ushort)ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             SetStartButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Start");
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
             SetStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
                     dlg.SetCommand("Closed", Vm.SetStopCommand);
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             SwapStartStopButton.Click += (o, e) => {};
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
 
-            StartProgramButton.Click += (o, e) => {};
+            StartProgramButton.Click += (o, e) => 
+                {  
+                    var dlg = ModeSmsStatusViewFragment.NewInstance();
+                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                    dlg.Show(FragmentManager, "statusDlg");
+                };
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
-            PauseProgramButton.Click += (o, e) => {};
-            PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
-            StopProgramButton.Click += (o, e) => {};
-            StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
+        }
+
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+
+            _activity = activity;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _activity = null;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
 
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
@@ -149,24 +170,26 @@ namespace MDKControl.Droid.Fragments
             _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
         }
 
-        public override void OnAttach(Activity activity)
+        public override void OnPause()
         {
-            base.OnAttach(activity);
-
-            _activity = activity;
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            _activity = null;
-
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
             _intervalTimeBinding.Detach();
             _durationTimeBinding.Detach();
             _maxShotsBinding.Detach();
+
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+            if (dlg != null)
+            {
+                dlg.Dismiss();
+            }
+            dlg = FragmentManager.FindFragmentByTag<DialogFragment>("joystickDlg");
+            if (dlg != null)
+            {
+                dlg.Dismiss();
+            }
+
+            base.OnPause();
         }
 
         public ModeSmsViewModel Vm
@@ -210,24 +233,6 @@ namespace MDKControl.Droid.Fragments
             {
                 return _startProgramButton
                     ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
-            }
-        }
-
-        public Button PauseProgramButton
-        {
-            get
-            {
-                return _pauseProgramButton
-                    ?? (_pauseProgramButton = View.FindViewById<Button>(Resource.Id.PauseProgram));
-            }
-        }
-
-        public Button StopProgramButton
-        {
-            get
-            {
-                return _stopProgramButton
-                    ?? (_stopProgramButton = View.FindViewById<Button>(Resource.Id.StopProgram));
             }
         }
 
@@ -277,4 +282,3 @@ namespace MDKControl.Droid.Fragments
         }
     }
 }
-    

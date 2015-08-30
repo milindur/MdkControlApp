@@ -31,8 +31,6 @@ namespace MDKControl.Droid.Fragments
         private Button _setRefStartButton;
         private Button _setRefStopButton;
         private Button _startProgramButton;
-        private Button _pauseProgramButton;
-        private Button _stopProgramButton;
 
         private EditText _exposureTimeEditText;
         private EditText _delayTimeEditText;
@@ -55,27 +53,27 @@ namespace MDKControl.Droid.Fragments
                 {
                     var dlg = TimeViewFragment.NewInstance("Exposure", Vm.ExposureTime);
                     dlg.Closed += (oo, ee) => { Vm.ExposureTime = ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             DelayTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Delay", Vm.DelayTime);
                     dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             SetStartButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Start");
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
             SetStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
                     dlg.SetCommand("Closed", Vm.SetStopCommand);
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
             SwapStartStopButton.Click += (o, e) => {};
@@ -85,21 +83,43 @@ namespace MDKControl.Droid.Fragments
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Fov Start");
                     dlg.SetCommand("Closed", Vm.SetRefStartCommand);
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
             SetRefStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Fov Stop");
                     dlg.SetCommand("Closed", Vm.SetRefStopCommand);
-                    dlg.Show(FragmentManager, "dlg");
+                    dlg.Show(FragmentManager, "joystickDlg");
                 };
 
-            StartProgramButton.Click += (o, e) => {};
+            StartProgramButton.Click += (o, e) => 
+                {  
+                    var dlg = ModePanoStatusViewFragment.NewInstance();
+                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                    dlg.Show(FragmentManager, "statusDlg");
+                };
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
-            PauseProgramButton.Click += (o, e) => {};
-            PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
-            StopProgramButton.Click += (o, e) => {};
-            StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
+        }
+
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+
+            _activity = activity;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _activity = null;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
 
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
@@ -116,21 +136,23 @@ namespace MDKControl.Droid.Fragments
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
-        public override void OnAttach(Activity activity)
+        public override void OnPause()
         {
-            base.OnAttach(activity);
-
-            _activity = activity;
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-
-            _activity = null;
-
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
+
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+            if (dlg != null)
+            {
+                dlg.Dismiss();
+            }
+            dlg = FragmentManager.FindFragmentByTag<DialogFragment>("joystickDlg");
+            if (dlg != null)
+            {
+                dlg.Dismiss();
+            }
+
+            base.OnPause();
         }
 
         public ModePanoViewModel Vm
@@ -192,24 +214,6 @@ namespace MDKControl.Droid.Fragments
             {
                 return _startProgramButton
                     ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
-            }
-        }
-
-        public Button PauseProgramButton
-        {
-            get
-            {
-                return _pauseProgramButton
-                    ?? (_pauseProgramButton = View.FindViewById<Button>(Resource.Id.PauseProgram));
-            }
-        }
-
-        public Button StopProgramButton
-        {
-            get
-            {
-                return _stopProgramButton
-                    ?? (_stopProgramButton = View.FindViewById<Button>(Resource.Id.StopProgram));
             }
         }
 

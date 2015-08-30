@@ -185,17 +185,5 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1" />
-        <Button
-            android:id="@+id/PauseProgram"
-            android:text="Pause"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1" />
-        <Button
-            android:id="@+id/StopProgram"
-            android:text="Stop"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1" />
     </LinearLayout>
 </LinearLayout>

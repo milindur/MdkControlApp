@@ -22,7 +22,7 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
-        public ModeAstroViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
+        public ModeAstroViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
             _protocolService = protocolService;

@@ -24,8 +24,6 @@ namespace MDKControl.Droid.Fragments
 
         private Button _startProgramNorthButton;
         private Button _startProgramSouthButton;
-        private Button _pauseProgramButton;
-        private Button _stopProgramButton;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -41,14 +39,25 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            StartProgramNorthButton.Click += (o, e) => {};
+            StartProgramNorthButton.Click += (o, e) => 
+                {  
+                    var dlg = ModePanoStatusViewFragment.NewInstance();
+                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                    dlg.SetCommand("Resumed", Vm.StartProgramNorthCommand);
+                    dlg.Show(FragmentManager, "statusDlg");
+                };
             StartProgramNorthButton.SetCommand("Click", Vm.StartProgramNorthCommand);
-            StartProgramSouthButton.Click += (o, e) => {};
+
+            StartProgramSouthButton.Click += (o, e) => 
+                {  
+                    var dlg = ModePanoStatusViewFragment.NewInstance();
+                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                    dlg.SetCommand("Resumed", Vm.StartProgramSouthCommand);
+                    dlg.Show(FragmentManager, "statusDlg");
+                };
             StartProgramSouthButton.SetCommand("Click", Vm.StartProgramSouthCommand);
-            PauseProgramButton.Click += (o, e) => {};
-            PauseProgramButton.SetCommand("Click", Vm.PauseProgramCommand);
-            StopProgramButton.Click += (o, e) => {};
-            StopProgramButton.SetCommand("Click", Vm.StopProgramCommand);
         }
 
         public override void OnAttach(Activity activity)
@@ -63,6 +72,22 @@ namespace MDKControl.Droid.Fragments
             base.OnDestroy();
 
             _activity = null;
+        }
+
+        public override void OnResume()
+        {
+            base.OnResume();
+        }
+
+        public override void OnPause()
+        {
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+            if (dlg != null)
+            {
+                dlg.Dismiss();
+            }
+
+            base.OnPause();
         }
 
         public ModeAstroViewModel Vm
@@ -90,25 +115,5 @@ namespace MDKControl.Droid.Fragments
                     ?? (_startProgramSouthButton = View.FindViewById<Button>(Resource.Id.StartProgramSouth));
             }
         }
-
-        public Button PauseProgramButton
-        {
-            get
-            {
-                return _pauseProgramButton
-                    ?? (_pauseProgramButton = View.FindViewById<Button>(Resource.Id.PauseProgram));
-            }
-        }
-
-        public Button StopProgramButton
-        {
-            get
-            {
-                return _stopProgramButton
-                    ?? (_stopProgramButton = View.FindViewById<Button>(Resource.Id.StopProgram));
-            }
-        }
-
     }
 }
-    
