@@ -19,31 +19,13 @@ namespace MDKControl.Droid.Activities
         {
             base.OnCreate(savedInstanceState);
 
-            AndroidEnvironment.UnhandledExceptionRaiser += (sender, args) =>
-            {
-                args.Handled = true;
-            };
-
-            Insights.HasPendingCrashReport += (sender, isStartupCrash) =>
-            {
-                if (isStartupCrash) {
-                    Insights.PurgePendingCrashReports().Wait();
-                }
-            };
-#if DEBUG 
-            Insights.Initialize(Insights.DebugModeKey, this);
-#else
-            Insights.Initialize("76d51a30602c5fd9a5e64f263e25d14947533c61", this);
-#endif
-            Insights.Track("Startup");
-
+            System.Diagnostics.Debug.WriteLine("Create SplashActivity");
             SetContentView(Resource.Layout.Splash);
 
-            await Task.Delay(400);
-
-            App.Bootstrap();
-
+            App.Initialize(this);
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
+
+            await Task.Delay(400);
 
             Insights.Track("StartDeviceListViewActivity");
             StartActivity(typeof(DeviceListViewActivity));

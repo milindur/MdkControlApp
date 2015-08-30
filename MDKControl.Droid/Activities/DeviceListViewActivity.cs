@@ -37,6 +37,8 @@ namespace MDKControl.Droid.Activities
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.DeviceListView);
 
+            App.Initialize(this);
+
             DevicesList.Adapter = Vm.Devices.GetAdapter(GetDevicesAdapter);
             DevicesList.OnItemClickListener = this;
         }
@@ -45,6 +47,7 @@ namespace MDKControl.Droid.Activities
         {
             base.OnResume();
 
+            App.Initialize(this);
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
         }
 

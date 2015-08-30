@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Autofac;
@@ -11,50 +12,97 @@ using GalaSoft.MvvmLight.Views;
 using MDKControl.Core;
 using MDKControl.Core.Helpers;
 using MDKControl.Core.ViewModels;
+using MDKControl.Droid.Activities;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
+using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
-using MDKControl.Droid.Activities;
 
 namespace MDKControl.Droid
 {
-    public static class App
+    [Application]
+    public class App : Application
     {
-        private static IContainer container;
-        
-        public static void Bootstrap()
+        private static IContainer _container;
+
+        public App(IntPtr handle, JniHandleOwnership transfer)
+            : base(handle, transfer)
         {
-            var builder = new ContainerBuilder();
+        }
 
-            // shared modules
+        public override void OnCreate()
+        {
+            base.OnCreate();
 
-            builder.RegisterModule<CoreModule>();
+            AndroidEnvironment.UnhandledExceptionRaiser += (sender, args) =>
+                {
+                    args.Handled = true;
+                };
 
-            // platform-specific registrations
+            Bootstrap();
+        }
+        
+        private static void Bootstrap()
+        {
+            System.Diagnostics.Debug.WriteLine("Bootstrap");
 
-            builder.RegisterType<DispatcherHelper>()
+            if (_container == null)
+            {
+                var builder = new ContainerBuilder();
+
+                // shared modules
+
+                builder.RegisterModule<CoreModule>();
+
+                // platform-specific registrations
+
+                builder.RegisterType<DispatcherHelper>()
                 .AsSelf()
                 .As<IDispatcherHelper>()
                 .SingleInstance();
 
-            builder.RegisterInstance(new Ble.Adapter())
+                builder.RegisterInstance(new Ble.Adapter())
                 .As<Ble.IAdapter>()
                 .SingleInstance();
 
-            var nav = new NavigationService();
-            nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewActivity));
-            nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewActivity));
+                var nav = new NavigationService();
+                nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewActivity));
+                nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewActivity));
 
-            builder.RegisterInstance(nav)
+                builder.RegisterInstance(nav)
                 .As<INavigationService>();
 
-            builder.RegisterType<DialogService>()
+                builder.RegisterType<DialogService>()
                 .As<IDialogService>();
 
-            container = builder.Build();
+                _container = builder.Build();
+            }
 
-            var csl = new AutofacServiceLocator(container);
-            ServiceLocator.SetLocatorProvider(() => csl);
+            if (!ServiceLocator.IsLocationProviderSet)
+            {
+                var csl = new AutofacServiceLocator(_container);
+                ServiceLocator.SetLocatorProvider(() => csl);
+            }
+        }
+
+        public static void Initialize(Context context)
+        {
+            if (!Insights.IsInitialized)
+            {
+                Insights.HasPendingCrashReport += (sender, isStartupCrash) =>
+                    {
+                        if (isStartupCrash) {
+                            Insights.PurgePendingCrashReports().Wait();
+                        }
+                    };
+
+#if DEBUG
+                Insights.Initialize(Insights.DebugModeKey, context);
+#else
+                Insights.Initialize("76d51a30602c5fd9a5e64f263e25d14947533c61", context);
+#endif
+                Insights.Track("Initialize");
+            }
         }
     }
 }
