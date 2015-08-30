@@ -21,6 +21,8 @@ namespace MDKControl.Core.Services
 
         public BleMoCoBusCommService(Ble.IDevice device, Ble.IAdapter adapter)
         {
+            Debug.WriteLine("Create BleMoCoBusCommService");
+            
             _device = device;
             _adapter = adapter;
 
@@ -76,16 +78,22 @@ namespace MDKControl.Core.Services
 
         private void MoCoBusRxCharacteristicOnValueUpdated(object sender, Ble.CharacteristicReadEventArgs e)
         {
+            Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Entering", DateTime.UtcNow);
             try
             {
                 if (e.Characteristic == null || e.Characteristic.Value == null)
+                {
+                    Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Characteristic or Characteristic value is null", DateTime.UtcNow);
                     return;
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Exception", DateTime.UtcNow);
                 return;
             }
 
+            Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Value received", DateTime.UtcNow);
             _rxBytesQueue.Enqueue(e.Characteristic.Value);
             _newRxBytesReceived.Set();
             OnDataReceived();
@@ -160,7 +168,7 @@ namespace MDKControl.Core.Services
                         }
                     }
 
-                    Debug.WriteLine("ReceiveAsync: Timeout!");
+                    Debug.WriteLine("{0}: ReceiveAsync: Timeout!", DateTime.UtcNow);
                     throw new TimeoutException();
                 }, token).ConfigureAwait(false);
         }

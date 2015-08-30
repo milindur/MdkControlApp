@@ -60,11 +60,11 @@ namespace MDKControl.Core.Services
                     }
                     catch (TimeoutException)
                     {
-                        Debug.WriteLine("SendAndReceiveAsync: Timeout!");
+                        Debug.WriteLine("{0}: SendAndReceiveAsync: Timeout!", DateTime.UtcNow);
                     }
 
-                    Debug.WriteLine("SendAndReceiveAsync: Retry!");
                     await Task.Delay(50).ConfigureAwait(false);
+                    Debug.WriteLine("{0}: SendAndReceiveAsync: Retry!", DateTime.UtcNow);
                 }
             }
 
