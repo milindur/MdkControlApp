@@ -119,20 +119,28 @@ namespace MDKControl.Core.Services
         public async Task<MoCoBusRunStatus> GetRunStatus()
         {
             var response = await _commService
-                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetProgramMode, null))
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetRunStatus, null))
                 .ConfigureAwait(false);
 
             return (MoCoBusRunStatus)MoCoBusHelper.ParseStatus<byte>(response);
         }
 
-        public Task<TimeSpan> GetRunTime()
+        public async Task<TimeSpan> GetRunTime()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetRunTime, null))
+                .ConfigureAwait(false);
+
+            return TimeSpan.FromMilliseconds(MoCoBusHelper.ParseStatus<uint>(response));
         }
 
-        public Task<TimeSpan> GetTotalProgramRunTime()
+        public async Task<TimeSpan> GetTotalProgramRunTime()
         {
-            throw new NotImplementedException();
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.GetTotalProgramRunTime, null))
+                .ConfigureAwait(false);
+
+            return TimeSpan.FromMilliseconds(MoCoBusHelper.ParseStatus<uint>(response));
         }
 
         public async Task<float> GetProgramPercentComplete()
