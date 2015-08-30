@@ -277,8 +277,7 @@ namespace MDKControl.Core.ViewModels
         private async void StopProgram()
         {
             await _protocolService.Main.Stop();
-
-            _deviceViewModel.StopUpdateTask();
+            await _deviceViewModel.StopUpdateTask();
         }
 
         public async Task UpdateState()

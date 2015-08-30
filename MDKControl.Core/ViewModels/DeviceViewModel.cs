@@ -227,7 +227,7 @@ namespace MDKControl.Core.ViewModels
                 }, _updateTaskCancellationTokenSource.Token);
         }
 
-        public async void StopUpdateTask()
+        public async Task StopUpdateTask()
         {
             if (_updateTaskCancellationTokenSource == null)
                 return;
@@ -243,7 +243,7 @@ namespace MDKControl.Core.ViewModels
 
         public override void Cleanup()
         {
-            StopUpdateTask();
+            StopUpdateTask().Wait();
             
             ModeAstroViewModel.Cleanup();
             ModePanoViewModel.Cleanup();
