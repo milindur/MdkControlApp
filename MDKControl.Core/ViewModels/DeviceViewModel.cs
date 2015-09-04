@@ -190,6 +190,9 @@ namespace MDKControl.Core.ViewModels
 
         public void StartUpdateTask()
         {
+            if (_updateTask != null)
+                return;
+            
             _updateTaskCancellationTokenSource = new CancellationTokenSource();
             _updateTask = Task.Factory.StartNew(async () =>
                 {
