@@ -172,6 +172,8 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
+            base.OnPause();
+
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
             _intervalTimeBinding.Detach();
@@ -188,8 +190,6 @@ namespace MDKControl.Droid.Fragments
             {
                 dlg.Dismiss();
             }
-
-            base.OnPause();
         }
 
         public ModeSmsViewModel Vm

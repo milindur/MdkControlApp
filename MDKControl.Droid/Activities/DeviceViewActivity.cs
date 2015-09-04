@@ -59,18 +59,6 @@ namespace MDKControl.Droid.Activities
             SetModePanoButton.SetCommand("Click", Vm.SetModePanoCommand);
             SetModeAstroButton.Click += (o, e) => {};
             SetModeAstroButton.SetCommand("Click", Vm.SetModeAstroCommand);
-        }
-
-        protected override void OnResume()
-        {
-            base.OnResume();
-
-            App.Initialize(this);
-            ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
-
-            DisconnectedLayout.Visibility = ViewStates.Visible;
-            ConnectingLayout.Visibility = ViewStates.Gone;
-            ConnectedLayout.Visibility = ViewStates.Gone;
 
             _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectSwitch.Checked, BindingMode.TwoWay);
             _showDisconnectedBinding = this.SetBinding(() => Vm.IsDisconnected, () => DisconnectedLayout.Visibility)
@@ -92,26 +80,43 @@ namespace MDKControl.Droid.Activities
             _programModeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
-        protected override void OnPause()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             _isConnectedBinding.Detach();
             _showDisconnectedBinding.Detach();
             _showConnectingBinding.Detach();
             _showConnectedBinding.Detach();
 
             _programModeBinding.Detach();
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            App.Initialize(this);
+            ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
+
+            DisconnectedLayout.Visibility = ViewStates.Visible;
+            ConnectingLayout.Visibility = ViewStates.Gone;
+            ConnectedLayout.Visibility = ViewStates.Gone;
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
 
             Vm.JoystickViewModel.StopJoystick(null);
             Vm.JoystickViewModel.StopSlider(null);
-
-            base.OnPause();
         }
 
         protected override void OnApplicationStop()
         {
-            Vm.Cleanup();
-
             base.OnApplicationStop();
+
+            Vm.Cleanup();
         }
 
         private void ShowModeSmsFragment()
