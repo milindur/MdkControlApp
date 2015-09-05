@@ -23,6 +23,8 @@ namespace MDKControl.Droid.Fragments
     {
         private Activity _activity;
 
+        private Binding _runStatusBinding;
+
         private Binding _exposureTimeBinding;
         private Binding _delayTimeBinding;
         private Binding _intervalTimeBinding;
@@ -134,6 +136,24 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnResume();
 
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
+                .WhenSourceChanges(() =>
+                    {
+                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped)
+                        {
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+                            if (dlg == null)
+                            {
+                                dlg = ModeSmsStatusViewFragment.NewInstance();
+                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                                dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                                dlg.Show(FragmentManager, "statusDlg");
+                                DeviceVm.StartUpdateTask();
+                            }
+                        }
+                    });
+
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
                     { 
@@ -174,6 +194,7 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnPause();
 
+            _runStatusBinding.Detach();
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
             _intervalTimeBinding.Detach();
@@ -197,6 +218,14 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
+            }
+        }
+
+        public DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return ((DeviceViewActivity)_activity).Vm;
             }
         }
 

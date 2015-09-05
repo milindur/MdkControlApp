@@ -18,6 +18,8 @@ namespace MDKControl.Droid.Fragments
 {
     public class ModeAstroStatusViewFragment : DialogFragment
     {
+        private Activity _activity;
+
         private Button _resumeButton;
         private Button _pauseButton;
         private Button _stopButton;
@@ -72,11 +74,25 @@ namespace MDKControl.Droid.Fragments
                 };
         }
 
+        public override void OnAttach(Activity activity)
+        {
+            base.OnAttach(activity);
+
+            _activity = activity;
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _activity = null;
+        }
+
         public ModePanoViewModel Vm
         {
             get
             {
-                return ((DeviceViewActivity)Activity).Vm.ModePanoViewModel;
+                return ((DeviceViewActivity)_activity).Vm.ModePanoViewModel;
             }
         }
 

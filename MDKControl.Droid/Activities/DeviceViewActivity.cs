@@ -37,6 +37,8 @@ namespace MDKControl.Droid.Activities
         private Button _setModePanoButton;
         private Button _setModeAstroButton;
 
+        private MoCoBusProgramMode _programMode = MoCoBusProgramMode.Invalid;
+
         public DeviceViewActivity()
         {
         }
@@ -59,37 +61,11 @@ namespace MDKControl.Droid.Activities
             SetModePanoButton.SetCommand("Click", Vm.SetModePanoCommand);
             SetModeAstroButton.Click += (o, e) => {};
             SetModeAstroButton.SetCommand("Click", Vm.SetModeAstroCommand);
-
-            _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectSwitch.Checked, BindingMode.TwoWay);
-            _showDisconnectedBinding = this.SetBinding(() => Vm.IsDisconnected, () => DisconnectedLayout.Visibility)
-                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
-            _showConnectingBinding = this.SetBinding(() => Vm.IsConnecting, () => ConnectingLayout.Visibility)
-                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
-            _showConnectedBinding = this.SetBinding(() => Vm.IsConnected)
-                .WhenSourceChanges(() =>
-                    {
-                        ConnectedLayout.Visibility = Vm.IsConnected ? ViewStates.Visible : ViewStates.Gone;
-                        if (Vm.IsConnected) 
-                        {
-                            OnProgramModeChanged();
-                        }
-                    });
-
-            _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
-                .WhenSourceChanges(OnProgramModeChanged);
-            _programModeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            _isConnectedBinding.Detach();
-            _showDisconnectedBinding.Detach();
-            _showConnectingBinding.Detach();
-            _showConnectedBinding.Detach();
-
-            _programModeBinding.Detach();
         }
 
         protected override void OnResume()
@@ -102,12 +78,45 @@ namespace MDKControl.Droid.Activities
             DisconnectedLayout.Visibility = ViewStates.Visible;
             ConnectingLayout.Visibility = ViewStates.Gone;
             ConnectedLayout.Visibility = ViewStates.Gone;
+        
+            _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectSwitch.Checked, BindingMode.TwoWay);
+            _showDisconnectedBinding = this.SetBinding(() => Vm.IsDisconnected, () => DisconnectedLayout.Visibility)
+                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
+            _showConnectingBinding = this.SetBinding(() => Vm.IsConnecting, () => ConnectingLayout.Visibility)
+                .ConvertSourceToTarget(b => b ? ViewStates.Visible : ViewStates.Gone);
+            _showConnectedBinding = this.SetBinding(() => Vm.IsConnected)
+                .WhenSourceChanges(() =>
+                    {
+                        _programMode = MoCoBusProgramMode.Invalid;
+
+                        ConnectedLayout.Visibility = Vm.IsConnected ? ViewStates.Visible : ViewStates.Gone;
+                        if (Vm.IsConnected) 
+                        {
+                            OnProgramModeChanged();
+                        }
+                        else
+                        {
+                            FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
+                        }
+                    });
+
+            _programMode = MoCoBusProgramMode.Invalid;
+            _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
+                .WhenSourceChanges(OnProgramModeChanged);
+            _programModeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
+            _isConnectedBinding.Detach();
+            _showDisconnectedBinding.Detach();
+            _showConnectingBinding.Detach();
+            _showConnectedBinding.Detach();
+            _programModeBinding.Detach();
+
+            Vm.StopUpdateTask();
             Vm.JoystickViewModel.StopJoystick(null);
             Vm.JoystickViewModel.StopSlider(null);
         }
@@ -166,6 +175,11 @@ namespace MDKControl.Droid.Activities
             if (!Vm.IsConnected)
                 return;
             
+            if (_programMode == Vm.ProgramMode) 
+                return;
+
+            _programMode = Vm.ProgramMode;
+
             System.Diagnostics.Debug.WriteLine("OnProgramModeChanged");
 
             SetModeAstroButton.Enabled = true;

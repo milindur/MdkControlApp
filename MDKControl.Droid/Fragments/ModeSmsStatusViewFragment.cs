@@ -139,6 +139,11 @@ namespace MDKControl.Droid.Fragments
                         ResumeButton.Enabled = true;
                     }
                 });
+
+            if (!DeviceVm.IsConnected || DeviceVm.RunStatus == MoCoBusRunStatus.Stopped)
+            {
+                Dismiss();
+            }
         }
 
         public override void OnPause()
@@ -155,7 +160,7 @@ namespace MDKControl.Droid.Fragments
         {
             get
             {
-                return ((DeviceViewActivity)Activity).Vm.ModeSmsViewModel;
+                return ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
             }
         }
 
@@ -163,7 +168,7 @@ namespace MDKControl.Droid.Fragments
         {
             get
             {
-                return ((DeviceViewActivity)Activity).Vm;
+                return ((DeviceViewActivity)_activity).Vm;
             }
         }
 

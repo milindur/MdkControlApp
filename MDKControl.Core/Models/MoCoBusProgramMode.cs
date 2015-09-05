@@ -6,6 +6,7 @@ namespace MDKControl.Core.Models
         TimelapseContinous,
         VideoContinous,
         Panorama = 100,
-        Astro
+        Astro,
+        Invalid = 255
     }
 }

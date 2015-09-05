@@ -29,7 +29,7 @@ namespace MDKControl.Core.ViewModels
         private readonly ModeSmsViewModel _modeSmsViewModel;
         private readonly JoystickViewModel _joystickViewModel;
 
-        private MoCoBusProgramMode _programMode = MoCoBusProgramMode.ShootMoveShoot;
+        private MoCoBusProgramMode _programMode = MoCoBusProgramMode.Invalid;
         private MoCoBusRunStatus _runStatus;
         private RelayCommand _setModeSmsCommand;
         private RelayCommand _setModePanoCommand;
@@ -65,7 +65,7 @@ namespace MDKControl.Core.ViewModels
             
             if (_commService.ConnectionState == ConnectionState.Connected)
             {
-                await UpdateDeviceState().ConfigureAwait(false);
+                await UpdateState().ConfigureAwait(false);
             }
             
             _dispatcherHelper.RunOnUIThread(() =>
@@ -153,19 +153,16 @@ namespace MDKControl.Core.ViewModels
             get { return _setModeAstroCommand ?? (_setModeAstroCommand = new RelayCommand(SetModeAstro)); }
         }
 
-        private async Task UpdateDeviceState()
-        {
-            Debug.WriteLine("UpdateDeviceState");
-            ProgramMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
-        }
-
         public async Task UpdateState()
         {
             Debug.WriteLine("UpdateState");
+
+            _programMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
             _runStatus = await _protocolService.Main.GetRunStatus();
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
+                    RaisePropertyChanged(() => ProgramMode);
                     RaisePropertyChanged(() => RunStatus);
                 });
         }
@@ -173,19 +170,19 @@ namespace MDKControl.Core.ViewModels
         private async void SetModeSms()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
-            await UpdateDeviceState();
+            await UpdateState();
         }
 
         private async void SetModePano()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
-            await UpdateDeviceState();
+            await UpdateState();
         }
 
         private async void SetModeAstro()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
-            await UpdateDeviceState();
+            await UpdateState();
         }
 
         public void StartUpdateTask()
