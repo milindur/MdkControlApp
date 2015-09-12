@@ -25,6 +25,13 @@ namespace MDKControl.Droid.Fragments
         private Binding _progressBarBinding;
         private Binding _elapsedTimeBinding;
         private Binding _elapsedShotsBinding;
+        private Binding _remainingTimeBinding;
+        private Binding _remainingShotsBinding;
+        private Binding _overallTimeBinding;
+        private Binding _overallShotsBinding;
+        private Binding _videoLength24Binding;
+        private Binding _videoLength25Binding;
+        private Binding _videoLength30Binding;
 
         private Button _resumeButton;
         private Button _pauseButton;
@@ -122,6 +129,34 @@ namespace MDKControl.Droid.Fragments
                 {
                     ElapsedShotsEditText.Text = string.Format("{0}", Vm.ElapsedShots);
                 });
+            _remainingTimeBinding = this.SetBinding(() => Vm.RemainingTime).WhenSourceChanges(() =>
+                {
+                    RemainingTimeEditText.Text = string.Format("{0}:{1:00}m", Vm.RemainingTime.Minutes, Vm.RemainingTime.Seconds);
+                });
+            _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
+                {
+                    RemainingShotsEditText.Text = string.Format("{0}", Vm.RemainingShots);
+                });
+            _overallTimeBinding = this.SetBinding(() => Vm.DurationTime).WhenSourceChanges(() =>
+                {
+                    OverallTimeEditText.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                });
+            _overallShotsBinding = this.SetBinding(() => Vm.MaxShots).WhenSourceChanges(() =>
+                {
+                    OverallShotsEditText.Text = string.Format("{0}", Vm.MaxShots);
+                });
+            _videoLength24Binding = this.SetBinding(() => Vm.VideoLength24).WhenSourceChanges(() =>
+                {
+                    VideoLength24EditText.Text = string.Format("{0}:{1:00}m", Vm.VideoLength24.Minutes, Vm.VideoLength24.Seconds);
+                });
+            _videoLength25Binding = this.SetBinding(() => Vm.VideoLength25).WhenSourceChanges(() =>
+                {
+                    VideoLength25EditText.Text = string.Format("{0}:{1:00}m", Vm.VideoLength25.Minutes, Vm.VideoLength25.Seconds);
+                });
+            _videoLength30Binding = this.SetBinding(() => Vm.VideoLength30).WhenSourceChanges(() =>
+                {
+                    VideoLength30EditText.Text = string.Format("{0}:{1:00}m", Vm.VideoLength30.Minutes, Vm.VideoLength30.Seconds);
+                });
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
                     System.Diagnostics.Debug.WriteLine("OnRunStatusChanged 1");
@@ -151,6 +186,13 @@ namespace MDKControl.Droid.Fragments
             _progressBarBinding.Detach();
             _elapsedTimeBinding.Detach();
             _elapsedShotsBinding.Detach();
+            _remainingTimeBinding.Detach();
+            _remainingShotsBinding.Detach();
+            _overallTimeBinding.Detach();
+            _overallShotsBinding.Detach();
+            _videoLength24Binding.Detach();
+            _videoLength25Binding.Detach();
+            _videoLength30Binding.Detach();
             _runStatusBinding.Detach();
 
             base.OnPause();
@@ -249,7 +291,7 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return _overallTimeEditText
-                    ?? (_overallTimeEditText = View.FindViewById<EditText>(Resource.Id.ElapsedTime));
+                    ?? (_overallTimeEditText = View.FindViewById<EditText>(Resource.Id.OverallTime));
             }
         }
 
@@ -258,7 +300,7 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return _overallShotsEditText
-                    ?? (_overallShotsEditText = View.FindViewById<EditText>(Resource.Id.ElapsedShots));
+                    ?? (_overallShotsEditText = View.FindViewById<EditText>(Resource.Id.OverallShots));
             }
         }
 

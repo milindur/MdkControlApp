@@ -12,5 +12,8 @@ namespace MDKControl.Core.Services
         Task SetExposureDelayTime(ushort time);
         Task SetInterval(uint time);
         Task SetMaxShots(ushort shots);
+
+        Task<uint> GetInterval();
+        Task<ushort> GetCurrentShots();
 	}
 }

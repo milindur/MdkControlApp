@@ -188,6 +188,16 @@ namespace MDKControl.Core.ViewModels
             get { return _elapsedShots; }
         }
 
+        public TimeSpan RemainingTime
+        {
+            get { return TimeSpan.FromSeconds((double)DurationTime) - ElapsedTime; }
+        }
+
+        public int RemainingShots
+        {
+            get { return MaxShots - ElapsedShots; }
+        }
+
         public TimeSpan VideoLength24
         {
             get { return TimeSpan.FromSeconds(_elapsedShots / 24f); }
@@ -284,16 +294,17 @@ namespace MDKControl.Core.ViewModels
         {
             _progress = await _protocolService.Main.GetProgramPercentComplete();
             _elapsedTime = await _protocolService.Main.GetRunTime();
+            _elapsedShots = await _protocolService.Camera.GetCurrentShots();
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
                     RaisePropertyChanged(() => Progress);
                     RaisePropertyChanged(() => ElapsedTime);
                     RaisePropertyChanged(() => ElapsedShots);
-                    /*RaisePropertyChanged(() => RemainingTime);
+                    RaisePropertyChanged(() => RemainingTime);
                     RaisePropertyChanged(() => RemainingShots);
-                    RaisePropertyChanged(() => OverallTime);
-                    RaisePropertyChanged(() => OverallShots);*/
+                    RaisePropertyChanged(() => DurationTime);
+                    RaisePropertyChanged(() => MaxShots);
                     RaisePropertyChanged(() => VideoLength24);
                     RaisePropertyChanged(() => VideoLength25);
                     RaisePropertyChanged(() => VideoLength30);

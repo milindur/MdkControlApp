@@ -50,5 +50,23 @@ namespace MDKControl.Core.Services
                 .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.SetMaxShots, BitConverter.GetBytes(shots).Reverse().ToArray()))
                 .ConfigureAwait(false);
         }
+
+        public async Task<uint> GetInterval()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetIntervalTime, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<uint>(response);
+        }
+
+        public async Task<ushort> GetCurrentShots()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetCurrentShots, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<ushort>(response);
+        }
     }
 }
