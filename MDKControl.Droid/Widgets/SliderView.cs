@@ -139,28 +139,34 @@ namespace MDKControl.Droid.Widgets
 
         protected override void OnDraw(Canvas canvas)
         {
-            canvas.DrawRect(_bounds, _paintBorder);
-
-            canvas.DrawLine(_bounds.CenterX(), _bounds.Top, _bounds.CenterX(), _bounds.Bottom, _paintGrid);
-            canvas.DrawLine(_bounds.Left, _bounds.CenterY(), _bounds.Right, _bounds.CenterY(), _paintGrid);
-
-            canvas.DrawLine(
-                _bounds.Left + _bounds.Width() / 4f, 
-                _bounds.Top, 
-                _bounds.Left + _bounds.Width() / 4f, 
-                _bounds.Bottom, 
-                _paintSubGrid);
-            canvas.DrawLine(_bounds.Left + 3f * _bounds.Width() / 4f, 
-                _bounds.Top, 
-                _bounds.Left + 3f * _bounds.Width() / 4f, 
-                _bounds.Bottom, 
-                _paintSubGrid);
-
-            canvas.DrawText("Slider", _bounds.Left + 4f, _bounds.CenterY() - 4f, _paintGridText);
-
-            if (_isActive)
+            try
             {
-                canvas.DrawCircle(_sliderPositionRaw.X, _sliderPositionRaw.Y, 56f, _paintPos);
+                canvas.DrawRect(_bounds, _paintBorder);
+
+                canvas.DrawLine(_bounds.CenterX(), _bounds.Top, _bounds.CenterX(), _bounds.Bottom, _paintGrid);
+                canvas.DrawLine(_bounds.Left, _bounds.CenterY(), _bounds.Right, _bounds.CenterY(), _paintGrid);
+
+                canvas.DrawLine(
+                    _bounds.Left + _bounds.Width() / 4f, 
+                    _bounds.Top, 
+                    _bounds.Left + _bounds.Width() / 4f, 
+                    _bounds.Bottom, 
+                    _paintSubGrid);
+                canvas.DrawLine(_bounds.Left + 3f * _bounds.Width() / 4f, 
+                    _bounds.Top, 
+                    _bounds.Left + 3f * _bounds.Width() / 4f, 
+                    _bounds.Bottom, 
+                    _paintSubGrid);
+
+                canvas.DrawText("Slider", _bounds.Left + 4f, _bounds.CenterY() - 4f, _paintGridText);
+
+                if (_isActive)
+                {
+                    canvas.DrawCircle(_sliderPositionRaw.X, _sliderPositionRaw.Y, 56f, _paintPos);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
