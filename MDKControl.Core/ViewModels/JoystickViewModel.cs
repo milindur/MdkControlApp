@@ -111,6 +111,7 @@ namespace MDKControl.Core.ViewModels
                             {
                                 Debug.WriteLine("MoveSliderOrJoystickTask: Trigger Watchdog!");
                                 await _protocolService.Main.GetJoystickWatchdogStatus();
+                                await Task.Delay(20, token);
                             }
                             catch (OperationCanceledException)
                             {
@@ -126,8 +127,11 @@ namespace MDKControl.Core.ViewModels
                                 var currentJoystick = _joystickCurrentPoint;
                                 var currentSlider = _sliderCurrentPoint;
                                 await _protocolService.Motor2.SetContinuousSpeed(currentJoystick.X).ConfigureAwait(false);
+                                await Task.Delay(20, token);
                                 await _protocolService.Motor3.SetContinuousSpeed(currentJoystick.Y).ConfigureAwait(false);
+                                await Task.Delay(20, token);
                                 await _protocolService.Motor1.SetContinuousSpeed(currentSlider).ConfigureAwait(false);
+                                await Task.Delay(20, token);
                             }
                             catch (OperationCanceledException)
                             {
@@ -148,8 +152,11 @@ namespace MDKControl.Core.ViewModels
                     try
                     {
                         await _protocolService.Motor2.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await Task.Delay(20);
                         await _protocolService.Motor3.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await Task.Delay(20);
                         await _protocolService.Motor1.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await Task.Delay(20);
                     }
                     catch (Exception ex)
                     {
