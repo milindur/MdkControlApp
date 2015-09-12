@@ -184,6 +184,22 @@ namespace MDKControl.Droid.Widgets
 
                 x = (x - scaleX) * 100f / scaleX;
             }
+            else if (e.PointerCount == 2)
+            {
+                x = (e.GetX(0) + e.GetX(1)) / 2f;
+
+                if (x < _bounds.Left) 
+                    x = _bounds.Left;
+                if (x > _bounds.Right) 
+                    x = _bounds.Right;
+
+                _sliderPositionRaw = new PointF(x, _bounds.CenterY());
+                _isActive = e.Action == MotionEventActions.Down || e.Action == MotionEventActions.Move;
+
+                var scaleX = _bounds.Width() / 2f;
+
+                x = (x - scaleX) * 10f / scaleX;
+            }
             else
             {
                 _isActive = false;

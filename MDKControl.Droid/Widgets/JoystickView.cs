@@ -205,6 +205,29 @@ namespace MDKControl.Droid.Widgets
                 x = (x - scaleX) * 100f / scaleX;
                 y = (y - scaleY) * 100f / scaleY;
             }
+            else if (e.PointerCount == 2)
+            {
+                x = (e.GetX(0) + e.GetX(1)) / 2f;
+                y = (e.GetY(0) + e.GetY(1)) / 2f;
+
+                if (x < _bounds.Left)
+                    x = _bounds.Left;
+                if (x > _bounds.Right)
+                    x = _bounds.Right;
+                if (y < _bounds.Top)
+                    y = _bounds.Top;
+                if (y > _bounds.Bottom)
+                    y = _bounds.Bottom;
+
+                _joystickPositionRaw = new PointF(x, y);
+                _isActive = e.Action == MotionEventActions.Down || e.Action == MotionEventActions.Move;
+
+                var scaleX = _bounds.Width() / 2f;
+                var scaleY = _bounds.Height() / 2f;
+
+                x = (x - scaleX) * 10f / scaleX;
+                y = (y - scaleY) * 10f / scaleY;
+            }
             else
             {
                 _isActive = false;
