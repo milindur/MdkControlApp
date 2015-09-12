@@ -8,34 +8,6 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:paddingBottom="8dp">
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <TextView
-                android:text="Elapsed Time"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1" />
-            <EditText
-                android:id="@+id/ElapsedTime"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:ems="4"
-                android:editable="false"
-                android:focusable="false" />
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:layout_weight="0">
         <Button
             android:id="@+id/Resume"

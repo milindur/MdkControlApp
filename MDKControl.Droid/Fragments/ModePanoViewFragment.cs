@@ -10,9 +10,10 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
-using MDKControl.Droid.Widgets;
 using MDKControl.Droid.Activities;
+using MDKControl.Droid.Widgets;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 
@@ -21,6 +22,8 @@ namespace MDKControl.Droid.Fragments
     public class ModePanoViewFragment : Fragment
     {
         private Activity _activity;
+
+        private Binding _runStatusBinding;
 
         private Binding _exposureTimeBinding;
         private Binding _delayTimeBinding;
@@ -121,6 +124,24 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnResume();
 
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
+                .WhenSourceChanges(() =>
+                    {
+                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped)
+                        {
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+                            if (dlg == null)
+                            {
+                                dlg = ModePanoStatusViewFragment.NewInstance();
+                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                                dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                                dlg.Show(FragmentManager, "statusDlg");
+                                DeviceVm.StartUpdateTask();
+                            }
+                        }
+                    });
+
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
                     { 
@@ -138,6 +159,7 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
+            _runStatusBinding.Detach();
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
 
@@ -160,6 +182,14 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return ((DeviceViewActivity)_activity).Vm.ModePanoViewModel;
+            }
+        }
+
+        public DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return ((DeviceViewActivity)_activity).Vm;
             }
         }
 

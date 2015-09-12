@@ -15,8 +15,10 @@ namespace MDKControl.Core.ViewModels
     public class ModeAstroViewModel : ViewModelBase
     {
         private readonly IDispatcherHelper _dispatcherHelper;
+        private readonly DeviceViewModel _deviceViewModel;
         private readonly IMoCoBusProtocolService _protocolService;
 
+        private RelayCommand _resumeProgramCommand;
         private RelayCommand _startProgramNorthCommand;
         private RelayCommand _startProgramSouthCommand;
         private RelayCommand _pauseProgramCommand;
@@ -25,7 +27,13 @@ namespace MDKControl.Core.ViewModels
         public ModeAstroViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
+            _deviceViewModel = deviceViewModel;
             _protocolService = protocolService;
+        }
+
+        public RelayCommand ResumeProgramCommand
+        {
+            get { return _resumeProgramCommand ?? (_resumeProgramCommand = new RelayCommand(ResumeProgram)); }
         }
 
         public RelayCommand StartProgramNorthCommand
@@ -48,16 +56,27 @@ namespace MDKControl.Core.ViewModels
             get { return _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram)); }
         }
 
+        private async void ResumeProgram()
+        {
+            await _protocolService.Main.Start();
+
+            _deviceViewModel.StartUpdateTask();
+        }
+
         private async void StartProgramNorth()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
             await _protocolService.Main.Start(0);
+
+            _deviceViewModel.StartUpdateTask();
         }
 
         private async void StartProgramSouth()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
             await _protocolService.Main.Start(1);
+
+            _deviceViewModel.StartUpdateTask();
         }
 
         private async void PauseProgram()
@@ -68,6 +87,12 @@ namespace MDKControl.Core.ViewModels
         private async void StopProgram()
         {
             await _protocolService.Main.Stop();
+            await _deviceViewModel.StopUpdateTask();
+        }
+
+        public Task UpdateState()
+        {
+            return Task.FromResult(0);
         }
 
         public override void Cleanup()

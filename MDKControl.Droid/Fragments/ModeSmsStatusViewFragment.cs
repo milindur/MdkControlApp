@@ -10,10 +10,10 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Activities;
 using MDKControl.Droid.Widgets;
-using MDKControl.Core.Models;
 
 namespace MDKControl.Droid.Fragments
 {

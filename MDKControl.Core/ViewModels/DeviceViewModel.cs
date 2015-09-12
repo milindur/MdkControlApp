@@ -205,7 +205,18 @@ namespace MDKControl.Core.ViewModels
                             {
                                 Debug.WriteLine("UpdateTask: Updating...");
                                 await UpdateState();
-                                await ModeSmsViewModel.UpdateState();
+                                switch (ProgramMode)
+                                {
+                                    case MoCoBusProgramMode.ShootMoveShoot:
+                                        await ModeSmsViewModel.UpdateState();
+                                        break;
+                                    case MoCoBusProgramMode.Panorama:
+                                        await ModePanoViewModel.UpdateState();
+                                        break;
+                                    case MoCoBusProgramMode.Astro:
+                                        await ModeAstroViewModel.UpdateState();
+                                        break;
+                                }
                             }
                             catch (OperationCanceledException)
                             {

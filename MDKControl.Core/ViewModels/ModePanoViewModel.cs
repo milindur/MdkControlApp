@@ -15,6 +15,7 @@ namespace MDKControl.Core.ViewModels
     public class ModePanoViewModel : ViewModelBase
     {
         private readonly IDispatcherHelper _dispatcherHelper;
+        private readonly DeviceViewModel _deviceViewModel;
         private readonly IMoCoBusProtocolService _protocolService;
 
         private RelayCommand _setStartCommand;
@@ -29,9 +30,14 @@ namespace MDKControl.Core.ViewModels
         private decimal _exposureTime = 0.1m;
         private decimal _delayTime = 0.5m;
 
+        private float _progress = 0;
+        private TimeSpan _elapsedTime = TimeSpan.Zero;
+        private int _elapsedShots = 0;
+
         public ModePanoViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
+            _deviceViewModel = deviceViewModel;
             _protocolService = protocolService;
         }
 
@@ -63,6 +69,41 @@ namespace MDKControl.Core.ViewModels
                         RaisePropertyChanged(() => DelayTime);
                     });
             }
+        }
+
+        public float Progress
+        {
+            get { return _progress; }
+        }
+
+        public TimeSpan ElapsedTime
+        {
+            get { return _elapsedTime; }
+        }
+
+        public int ElapsedShots
+        {
+            get { return _elapsedShots; }
+        }
+
+        public TimeSpan RemainingTime
+        {
+            get { return TimeSpan.Zero; }
+        }
+
+        public int RemainingShots
+        {
+            get { return 0; }
+        }
+
+        public TimeSpan OverallTime
+        {
+            get { return TimeSpan.Zero; }
+        }
+
+        public int OverallShots
+        {
+            get { return 0; }
         }
 
         public RelayCommand SetStartCommand
@@ -145,6 +186,8 @@ namespace MDKControl.Core.ViewModels
 
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
             await _protocolService.Main.Start();
+
+            _deviceViewModel.StartUpdateTask();
         }
 
         private async void PauseProgram()
@@ -155,6 +198,25 @@ namespace MDKControl.Core.ViewModels
         private async void StopProgram()
         {
             await _protocolService.Main.Stop();
+            await _deviceViewModel.StopUpdateTask();
+        }
+
+        public async Task UpdateState()
+        {
+            _progress = await _protocolService.Main.GetProgramPercentComplete();
+            _elapsedTime = await _protocolService.Main.GetRunTime();
+            _elapsedShots = await _protocolService.Camera.GetCurrentShots();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => Progress);
+                    RaisePropertyChanged(() => ElapsedTime);
+                    RaisePropertyChanged(() => ElapsedShots);
+                    RaisePropertyChanged(() => RemainingTime);
+                    RaisePropertyChanged(() => RemainingShots);
+                    RaisePropertyChanged(() => OverallTime);
+                    RaisePropertyChanged(() => OverallShots);
+                });
         }
 
         public override void Cleanup()

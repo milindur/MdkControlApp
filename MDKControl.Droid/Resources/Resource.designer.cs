@@ -95,8 +95,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070015
 			public const int ElapsedShots = 2131165205;
 			
-			// aapt resource value: 0x7f07000e
-			public const int ElapsedTime = 2131165198;
+			// aapt resource value: 0x7f070014
+			public const int ElapsedTime = 2131165204;
 			
 			// aapt resource value: 0x7f070020
 			public const int ExposureTime = 2131165216;
@@ -128,8 +128,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070018
 			public const int OverallTime = 2131165208;
 			
-			// aapt resource value: 0x7f070010
-			public const int Pause = 2131165200;
+			// aapt resource value: 0x7f07000f
+			public const int Pause = 2131165199;
 			
 			// aapt resource value: 0x7f070021
 			public const int PostDelayTime = 2131165217;
@@ -137,8 +137,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f07001f
 			public const int PreDelayTime = 2131165215;
 			
-			// aapt resource value: 0x7f070014
-			public const int Progress = 2131165204;
+			// aapt resource value: 0x7f070013
+			public const int Progress = 2131165203;
 			
 			// aapt resource value: 0x7f070017
 			public const int RemainingShots = 2131165207;
@@ -146,8 +146,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070016
 			public const int RemainingTime = 2131165206;
 			
-			// aapt resource value: 0x7f07000f
-			public const int Resume = 2131165199;
+			// aapt resource value: 0x7f07000e
+			public const int Resume = 2131165198;
 			
 			// aapt resource value: 0x7f07002d
 			public const int ScanningStart = 2131165229;
@@ -185,14 +185,14 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070022
 			public const int StartProgram = 2131165218;
 			
-			// aapt resource value: 0x7f070012
-			public const int StartProgramNorth = 2131165202;
-			
-			// aapt resource value: 0x7f070013
-			public const int StartProgramSouth = 2131165203;
-			
 			// aapt resource value: 0x7f070011
-			public const int Stop = 2131165201;
+			public const int StartProgramNorth = 2131165201;
+			
+			// aapt resource value: 0x7f070012
+			public const int StartProgramSouth = 2131165202;
+			
+			// aapt resource value: 0x7f070010
+			public const int Stop = 2131165200;
 			
 			// aapt resource value: 0x7f07001e
 			public const int SwapStartStop = 2131165214;

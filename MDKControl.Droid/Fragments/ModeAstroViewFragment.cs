@@ -15,12 +15,15 @@ using MDKControl.Droid.Widgets;
 using MDKControl.Droid.Activities;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using MDKControl.Core.Models;
 
 namespace MDKControl.Droid.Fragments
 {
     public class ModeAstroViewFragment : Fragment
     {
         private Activity _activity;
+
+        private Binding _runStatusBinding;
 
         private Button _startProgramNorthButton;
         private Button _startProgramSouthButton;
@@ -41,20 +44,20 @@ namespace MDKControl.Droid.Fragments
 
             StartProgramNorthButton.Click += (o, e) => 
                 {  
-                    var dlg = ModePanoStatusViewFragment.NewInstance();
+                    var dlg = ModeAstroStatusViewFragment.NewInstance();
                     dlg.SetCommand("Stoped", Vm.StopProgramCommand);
                     dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                    dlg.SetCommand("Resumed", Vm.StartProgramNorthCommand);
+                    dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
                     dlg.Show(FragmentManager, "statusDlg");
                 };
             StartProgramNorthButton.SetCommand("Click", Vm.StartProgramNorthCommand);
 
             StartProgramSouthButton.Click += (o, e) => 
                 {  
-                    var dlg = ModePanoStatusViewFragment.NewInstance();
+                    var dlg = ModeAstroStatusViewFragment.NewInstance();
                     dlg.SetCommand("Stoped", Vm.StopProgramCommand);
                     dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                    dlg.SetCommand("Resumed", Vm.StartProgramSouthCommand);
+                    dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
                     dlg.Show(FragmentManager, "statusDlg");
                 };
             StartProgramSouthButton.SetCommand("Click", Vm.StartProgramSouthCommand);
@@ -77,10 +80,30 @@ namespace MDKControl.Droid.Fragments
         public override void OnResume()
         {
             base.OnResume();
+
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
+                .WhenSourceChanges(() =>
+                    {
+                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped)
+                        {
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+                            if (dlg == null)
+                            {
+                                dlg = ModeAstroStatusViewFragment.NewInstance();
+                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                                dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
+                                dlg.Show(FragmentManager, "statusDlg");
+                                DeviceVm.StartUpdateTask();
+                            }
+                        }
+                    });
         }
 
         public override void OnPause()
         {
+            _runStatusBinding.Detach();
+
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
             if (dlg != null)
             {
@@ -95,6 +118,14 @@ namespace MDKControl.Droid.Fragments
             get
             {
                 return ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
+            }
+        }
+
+        public DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return ((DeviceViewActivity)_activity).Vm;
             }
         }
 

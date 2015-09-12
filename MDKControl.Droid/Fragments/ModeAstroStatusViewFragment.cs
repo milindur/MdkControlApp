@@ -10,6 +10,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Activities;
 using MDKControl.Droid.Widgets;
@@ -19,6 +20,8 @@ namespace MDKControl.Droid.Fragments
     public class ModeAstroStatusViewFragment : DialogFragment
     {
         private Activity _activity;
+
+        private Binding _runStatusBinding;
 
         private Button _resumeButton;
         private Button _pauseButton;
@@ -35,6 +38,7 @@ namespace MDKControl.Droid.Fragments
             var f = new ModeAstroStatusViewFragment();
             f.Arguments = args;
             f.ShowsDialog = true;
+            f.Cancelable = false;
 
             return f;
         }
@@ -88,11 +92,54 @@ namespace MDKControl.Droid.Fragments
             _activity = null;
         }
 
-        public ModePanoViewModel Vm
+        public override void OnResume()
+        {
+            base.OnResume();
+
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
+                {
+                    System.Diagnostics.Debug.WriteLine("OnRunStatusChanged 1");
+
+                    ResumeButton.Enabled = false;
+                    PauseButton.Enabled = false;
+                    StopButton.Enabled = true;
+
+                    if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
+                    {
+                        PauseButton.Enabled = true;
+                    }
+                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
+                    {
+                        ResumeButton.Enabled = true;
+                    }
+                });
+
+            if (!DeviceVm.IsConnected || DeviceVm.RunStatus == MoCoBusRunStatus.Stopped)
+            {
+                Dismiss();
+            }
+        }
+
+        public override void OnPause()
+        {
+            _runStatusBinding.Detach();
+
+            base.OnPause();
+        }
+
+        public ModeAstroViewModel Vm
         {
             get
             {
-                return ((DeviceViewActivity)_activity).Vm.ModePanoViewModel;
+                return ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
+            }
+        }
+
+        public DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return ((DeviceViewActivity)_activity).Vm;
             }
         }
 
