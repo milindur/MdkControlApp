@@ -22,7 +22,10 @@ namespace MDKControl.Droid.Fragments
     {
         private Button _closeButton;
         private Button _cancelButton;
-        private NumberPicker _numberPicker;
+        private NumberPicker _thousandPicker;
+        private NumberPicker _hundredPicker;
+        private NumberPicker _tenPicker;
+        private NumberPicker _onePicker;
 
         public event EventHandler Canceled;
         public event EventHandler<int> Closed;
@@ -65,8 +68,14 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            NumberPicker.MinValue = 0;
-            NumberPicker.MaxValue = 99999;
+            OnePicker.MinValue = 0;
+            OnePicker.MaxValue = 9;
+            TenPicker.MinValue = 0;
+            TenPicker.MaxValue = 9;
+            HundredPicker.MinValue = 0;
+            HundredPicker.MaxValue = 9;
+            ThousandPicker.MinValue = 0;
+            ThousandPicker.MaxValue = 99;
 
             Value = _value;
 
@@ -86,19 +95,49 @@ namespace MDKControl.Droid.Fragments
 
         protected int Value
         {
-            get { return NumberPicker.Value; }
+            get { return ThousandPicker.Value * 1000 + HundredPicker.Value * 100 + TenPicker.Value * 10 + OnePicker.Value; }
             set 
             {
-                NumberPicker.Value = value;
+                ThousandPicker.Value = value / 1000;
+                HundredPicker.Value = (value % 1000) / 100;
+                TenPicker.Value = (value % 100) / 10;
+                OnePicker.Value = value % 10;
             }
         }
 
-        public NumberPicker NumberPicker
+        public NumberPicker OnePicker
         {
             get
             {
-                return _numberPicker
-                    ?? (_numberPicker = View.FindViewById<NumberPicker>(Resource.Id.Number));
+                return _onePicker
+                    ?? (_onePicker = View.FindViewById<NumberPicker>(Resource.Id.One));
+            }
+        }
+
+        public NumberPicker TenPicker
+        {
+            get
+            {
+                return _tenPicker
+                    ?? (_tenPicker = View.FindViewById<NumberPicker>(Resource.Id.Ten));
+            }
+        }
+
+        public NumberPicker HundredPicker
+        {
+            get
+            {
+                return _hundredPicker
+                    ?? (_hundredPicker = View.FindViewById<NumberPicker>(Resource.Id.Hundred));
+            }
+        }
+
+        public NumberPicker ThousandPicker
+        {
+            get
+            {
+                return _thousandPicker
+                    ?? (_thousandPicker = View.FindViewById<NumberPicker>(Resource.Id.Thousand));
             }
         }
 

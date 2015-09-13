@@ -11,7 +11,25 @@
         android:orientation="horizontal"
         android:gravity="center">
         <NumberPicker
-            android:id="@+id/Number"
+            android:id="@+id/Thousand"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:orientation="vertical" />
+        <NumberPicker
+            android:id="@+id/Hundred"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:orientation="vertical" />
+        <NumberPicker
+            android:id="@+id/Ten"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:orientation="vertical" />
+        <NumberPicker
+            android:id="@+id/One"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
