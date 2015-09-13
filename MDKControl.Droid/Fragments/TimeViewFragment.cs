@@ -105,8 +105,6 @@ namespace MDKControl.Droid.Fragments
                 MinutesPicker.Value = tmp % 60;
                 tmp /= 60;
                 HoursPicker.Value = tmp;
-                tmp /= 60;
-                HoursPicker.Value = tmp;
             }
         }
 
