@@ -215,7 +215,7 @@ namespace MDKControl.Core.ViewModels
                     {
                         while (true)
                         {
-                            await Task.Delay(1000, token);
+                            await Task.Delay(500, token);
                             token.ThrowIfCancellationRequested();
 
                             try
