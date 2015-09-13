@@ -30,6 +30,11 @@ namespace MDKControl.Core.ViewModels
         private decimal _exposureTime = 0.1m;
         private decimal _delayTime = 0.5m;
 
+        private int _panStartPos = 0;
+        private int _panStopPos = 0;
+        private int _tiltStartPos = 0;
+        private int _tiltStopPos = 0;
+
         private float _progress = 0;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
         private int _elapsedShots = 0;
@@ -106,6 +111,36 @@ namespace MDKControl.Core.ViewModels
             get { return 0; }
         }
 
+        public int PanStartPosition
+        {
+            get { return _panStartPos; }
+        }
+
+        public int PanStopPosition
+        {
+            get { return _panStopPos; }
+        }
+
+        public int PanSize
+        {
+            get { return _panStopPos - _panStartPos; }
+        }
+
+        public int TiltStartPosition
+        {
+            get { return _tiltStartPos; }
+        }
+
+        public int TiltStopPosition
+        {
+            get { return _tiltStopPos; }
+        }
+
+        public int TiltSize
+        {
+            get { return _tiltStopPos - _tiltStartPos; }
+        }
+
         public RelayCommand SetStartCommand
         {
             get { return _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart)); }
@@ -149,16 +184,53 @@ namespace MDKControl.Core.ViewModels
         private async void SetStart()
         {
             await _protocolService.Main.SetProgramStartPoint();
+
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => PanStartPosition);
+                    RaisePropertyChanged(() => TiltStartPosition);
+                    RaisePropertyChanged(() => PanSize);
+                    RaisePropertyChanged(() => TiltSize);
+                });
         }
 
         private async void SetStop()
         {
             await _protocolService.Main.SetProgramStopPoint();
+
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => PanStopPosition);
+                    RaisePropertyChanged(() => TiltStopPosition);
+                    RaisePropertyChanged(() => PanSize);
+                    RaisePropertyChanged(() => TiltSize);
+                });
         }
 
         private async  void SwapStartStop()
         {
             await _protocolService.Main.ReverseAllMotorsStartStopPoints();
+
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => PanStartPosition);
+                    RaisePropertyChanged(() => TiltStartPosition);
+                    RaisePropertyChanged(() => PanStopPosition);
+                    RaisePropertyChanged(() => TiltStopPosition);
+                    RaisePropertyChanged(() => PanSize);
+                    RaisePropertyChanged(() => TiltSize);
+                });
         }
 
         private async void SetRefStart()
@@ -216,6 +288,29 @@ namespace MDKControl.Core.ViewModels
                     RaisePropertyChanged(() => RemainingShots);
                     RaisePropertyChanged(() => OverallTime);
                     RaisePropertyChanged(() => OverallShots);
+                });
+        }
+
+        public async Task InitState()
+        {
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+
+            _exposureTime = (decimal)await _protocolService.Camera.GetTriggerTime() / 1000m;
+            _delayTime = (decimal)await _protocolService.Camera.GetExposureDelayTime() / 1000m;
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => PanStartPosition);
+                    RaisePropertyChanged(() => TiltStartPosition);
+                    RaisePropertyChanged(() => PanStopPosition);
+                    RaisePropertyChanged(() => TiltStopPosition);
+                    RaisePropertyChanged(() => PanSize);
+                    RaisePropertyChanged(() => TiltSize);
+                    RaisePropertyChanged(() => ExposureTime);
+                    RaisePropertyChanged(() => DelayTime);
                 });
         }
 

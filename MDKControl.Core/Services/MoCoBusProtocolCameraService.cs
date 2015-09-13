@@ -51,13 +51,49 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task<ushort> GetFocusTime()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetFocusTime, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<ushort>(response);
+        }
+
+        public async Task<uint> GetTriggerTime()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetTriggerTime, null))
+                .ConfigureAwait(false);
+
+            return (uint)MoCoBusHelper.ParseStatus<int>(response);
+        }
+
+        public async Task<ushort> GetExposureDelayTime()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetExposureDelay, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<ushort>(response);
+        }
+
         public async Task<uint> GetInterval()
         {
             var response = await _commService
                 .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetIntervalTime, null))
                 .ConfigureAwait(false);
 
-            return MoCoBusHelper.ParseStatus<uint>(response);
+            return (uint)MoCoBusHelper.ParseStatus<int>(response);
+        }
+
+        public async Task<ushort> GetMaxShots()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetMaxShots, null))
+                .ConfigureAwait(false);
+
+            return (ushort)MoCoBusHelper.ParseStatus<int>(response);
         }
 
         public async Task<ushort> GetCurrentShots()

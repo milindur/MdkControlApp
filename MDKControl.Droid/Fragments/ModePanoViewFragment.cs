@@ -28,6 +28,13 @@ namespace MDKControl.Droid.Fragments
         private Binding _exposureTimeBinding;
         private Binding _delayTimeBinding;
         
+        private Binding _panStartPosBinding;
+        private Binding _panStopPosBinding;
+        private Binding _panSizeBinding;
+        private Binding _tiltStartPosBinding;
+        private Binding _tiltStopPosBinding;
+        private Binding _tiltSizeBinding;
+
         private Button _setStartButton;
         private Button _setStopButton;
         private Button _swapStartStopButton;
@@ -37,6 +44,13 @@ namespace MDKControl.Droid.Fragments
 
         private EditText _exposureTimeEditText;
         private EditText _delayTimeEditText;
+
+        private EditText _panStartPosEditText;
+        private EditText _panStopPosEditText;
+        private EditText _panSizeEditText;
+        private EditText _tiltStartPosEditText;
+        private EditText _tiltStopPosEditText;
+        private EditText _tiltSizeEditText;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -155,6 +169,48 @@ namespace MDKControl.Droid.Fragments
                         DelayTimeEditText.Text = string.Format("{0:F1}s", Vm.DelayTime); 
                     });
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
+        
+            _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        PanStartPosEditText.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+                    });
+            _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        PanStopPosEditText.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+                    });
+            _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panSizeBinding = this.SetBinding(() => Vm.PanSize)
+                .WhenSourceChanges(() =>
+                    {
+                        PanSizeEditText.Text = string.Format("{0:F1}°", (double)Vm.PanSize / (190 * 200 * 16) * 360);
+                    });
+            _panSizeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltStartPosEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+                    });
+            _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltStopPosEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+                    });
+            _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
+        
+            _tiltSizeBinding = this.SetBinding(() => Vm.TiltSize)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltSizeEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltSize / (190 * 200 * 16) * 360);
+                    });
+            _tiltSizeBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         public override void OnPause()
@@ -162,6 +218,13 @@ namespace MDKControl.Droid.Fragments
             _runStatusBinding.Detach();
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
+
+            _panStartPosBinding.Detach();
+            _panStopPosBinding.Detach();
+            _panSizeBinding.Detach();
+            _tiltStartPosBinding.Detach();
+            _tiltStopPosBinding.Detach();
+            _tiltSizeBinding.Detach();
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
             if (dlg != null)
@@ -262,6 +325,60 @@ namespace MDKControl.Droid.Fragments
             {
                 return _delayTimeEditText
                     ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.PostDelayTime));
+            }
+        }
+
+        public EditText PanStartPosEditText
+        {
+            get
+            {
+                return _panStartPosEditText
+                    ?? (_panStartPosEditText = View.FindViewById<EditText>(Resource.Id.PanStartPos));
+            }
+        }
+
+        public EditText PanStopPosEditText
+        {
+            get
+            {
+                return _panStopPosEditText
+                    ?? (_panStopPosEditText = View.FindViewById<EditText>(Resource.Id.PanStopPos));
+            }
+        }
+
+        public EditText PanSizeEditText
+        {
+            get
+            {
+                return _panSizeEditText
+                    ?? (_panSizeEditText = View.FindViewById<EditText>(Resource.Id.PanSize));
+            }
+        }
+
+        public EditText TiltStartPosEditText
+        {
+            get
+            {
+                return _tiltStartPosEditText
+                    ?? (_tiltStartPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStartPos));
+            }
+        }
+
+        public EditText TiltStopPosEditText
+        {
+            get
+            {
+                return _tiltStopPosEditText
+                    ?? (_tiltStopPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStopPos));
+            }
+        }
+
+        public EditText TiltSizeEditText
+        {
+            get
+            {
+                return _tiltSizeEditText
+                    ?? (_tiltSizeEditText = View.FindViewById<EditText>(Resource.Id.TiltSize));
             }
         }
     }

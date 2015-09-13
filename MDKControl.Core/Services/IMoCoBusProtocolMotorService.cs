@@ -12,5 +12,7 @@ namespace MDKControl.Core.Services
         Task SetStartHere();
         Task SetStopHere();
 
+        Task<int> GetProgramStartPoint();
+        Task<int> GetProgramStopPoint();
     }
 }

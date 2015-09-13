@@ -33,6 +33,13 @@ namespace MDKControl.Core.ViewModels
         private decimal _intervalTime = 3.0m;
         private decimal _durationTime = 300.0m;
 
+        private int _sliderStartPos = 0;
+        private int _sliderStopPos = 0;
+        private int _panStartPos = 0;
+        private int _panStopPos = 0;
+        private int _tiltStartPos = 0;
+        private int _tiltStopPos = 0;
+
         private float _progress = 0;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
         private int _elapsedShots = 0;
@@ -152,7 +159,7 @@ namespace MDKControl.Core.ViewModels
 
         public ushort MaxShots
         {
-            get { return (ushort)(Math.Ceiling(_durationTime / _intervalTime) + 1); }
+            get { return _intervalTime > 0 ? (ushort)(Math.Ceiling(_durationTime / _intervalTime) + 1) : (ushort)0; }
             set
             {
                 var tmp = value;
@@ -213,6 +220,36 @@ namespace MDKControl.Core.ViewModels
             get { return TimeSpan.FromSeconds(_elapsedShots / 30f); }
         }
 
+        public int SliderStartPosition
+        {
+            get { return _sliderStartPos; }
+        }
+
+        public int SliderStopPosition
+        {
+            get { return _sliderStopPos; }
+        }
+
+        public int PanStartPosition
+        {
+            get { return _panStartPos; }
+        }
+
+        public int PanStopPosition
+        {
+            get { return _panStopPos; }
+        }
+
+        public int TiltStartPosition
+        {
+            get { return _tiltStartPos; }
+        }
+
+        public int TiltStopPosition
+        {
+            get { return _tiltStopPos; }
+        }
+
         public RelayCommand SetStartCommand
         {
             get { return _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart)); }
@@ -246,16 +283,55 @@ namespace MDKControl.Core.ViewModels
         private async void SetStart()
         {
             await _protocolService.Main.SetProgramStartPoint();
+
+            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint();
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+        
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => SliderStartPosition);
+                    RaisePropertyChanged(() => PanStartPosition);
+                    RaisePropertyChanged(() => TiltStartPosition);
+                });
         }
 
         private async void SetStop()
         {
             await _protocolService.Main.SetProgramStopPoint();
+
+            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint();
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => SliderStopPosition);
+                    RaisePropertyChanged(() => PanStopPosition);
+                    RaisePropertyChanged(() => TiltStopPosition);
+                });
         }
 
         private async  void SwapStartStop()
         {
             await _protocolService.Main.ReverseAllMotorsStartStopPoints();
+
+            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint();
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint();
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => SliderStartPosition);
+                    RaisePropertyChanged(() => PanStartPosition);
+                    RaisePropertyChanged(() => TiltStartPosition);
+                    RaisePropertyChanged(() => SliderStopPosition);
+                    RaisePropertyChanged(() => PanStopPosition);
+                    RaisePropertyChanged(() => TiltStopPosition);
+                });
         }
 
         private async void StartProgram()
@@ -270,7 +346,6 @@ namespace MDKControl.Core.ViewModels
             await _protocolService.Camera.SetTriggerTime(exposureTime);
             await _protocolService.Camera.SetExposureDelayTime(postDelay);
             await _protocolService.Camera.SetInterval(interval);
-
             await _protocolService.Camera.SetMaxShots(MaxShots);
 
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
@@ -308,6 +383,37 @@ namespace MDKControl.Core.ViewModels
                     RaisePropertyChanged(() => VideoLength24);
                     RaisePropertyChanged(() => VideoLength25);
                     RaisePropertyChanged(() => VideoLength30);
+                });
+        }
+
+        public async Task InitState()
+        {
+            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint();
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint();
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+
+            _exposureTime = (decimal)await _protocolService.Camera.GetTriggerTime() / 1000m;
+            _postDelayTime = (decimal)await _protocolService.Camera.GetExposureDelayTime() / 1000m;
+            _intervalTime = (decimal)await _protocolService.Camera.GetInterval() / 1000m;
+            _durationTime = ((decimal)await _protocolService.Camera.GetMaxShots() - 1) * _intervalTime;
+            if (_durationTime < 0) _durationTime = 0;
+
+            _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => SliderStartPosition);
+                    RaisePropertyChanged(() => PanStartPosition);
+                    RaisePropertyChanged(() => TiltStartPosition);
+                    RaisePropertyChanged(() => SliderStopPosition);
+                    RaisePropertyChanged(() => PanStopPosition);
+                    RaisePropertyChanged(() => TiltStopPosition);
+                    RaisePropertyChanged(() => ExposureTime);
+                    RaisePropertyChanged(() => DelayTime);
+                    RaisePropertyChanged(() => IntervalTime);
+                    RaisePropertyChanged(() => DurationTime);
+                    RaisePropertyChanged(() => MaxShots);
                 });
         }
 

@@ -31,6 +31,13 @@ namespace MDKControl.Droid.Fragments
         private Binding _durationTimeBinding;
         private Binding _maxShotsBinding;
 
+        private Binding _sliderStartPosBinding;
+        private Binding _sliderStopPosBinding;
+        private Binding _panStartPosBinding;
+        private Binding _panStopPosBinding;
+        private Binding _tiltStartPosBinding;
+        private Binding _tiltStopPosBinding;
+
         private Button _setStartButton;
         private Button _setStopButton;
         private Button _swapStartStopButton;
@@ -41,6 +48,13 @@ namespace MDKControl.Droid.Fragments
         private EditText _intervalTimeEditText;
         private EditText _durationTimeEditText;
         private EditText _maxShotsEditText;
+
+        private EditText _sliderStartPosEditText;
+        private EditText _sliderStopPosEditText;
+        private EditText _panStartPosEditText;
+        private EditText _panStopPosEditText;
+        private EditText _tiltStartPosEditText;
+        private EditText _tiltStopPosEditText;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -188,16 +202,66 @@ namespace MDKControl.Droid.Fragments
                         MaxShotsEditText.Text = string.Format("{0}", Vm.MaxShots);
                     });
             _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
+
+            _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        SliderStartPosEditText.Text = string.Format("{0}", Vm.SliderStartPosition);
+                    });
+            _sliderStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _sliderStopPosBinding = this.SetBinding(() => Vm.SliderStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        SliderStopPosEditText.Text = string.Format("{0}", Vm.SliderStopPosition);
+                    });
+            _sliderStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        PanStartPosEditText.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+                    });
+            _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        PanStopPosEditText.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+                    });
+            _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltStartPosEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+                    });
+            _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltStopPosEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+                    });
+            _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         public override void OnPause()
         {
             _runStatusBinding.Detach();
+
             _exposureTimeBinding.Detach();
             _delayTimeBinding.Detach();
             _intervalTimeBinding.Detach();
             _durationTimeBinding.Detach();
             _maxShotsBinding.Detach();
+
+            _sliderStartPosBinding.Detach();
+            _sliderStopPosBinding.Detach();
+            _panStartPosBinding.Detach();
+            _panStopPosBinding.Detach();
+            _tiltStartPosBinding.Detach();
+            _tiltStopPosBinding.Detach();
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
             if (dlg != null)
@@ -307,6 +371,60 @@ namespace MDKControl.Droid.Fragments
             {
                 return _maxShotsEditText
                     ?? (_maxShotsEditText = View.FindViewById<EditText>(Resource.Id.MaxShots));
+            }
+        }
+
+        public EditText SliderStartPosEditText
+        {
+            get
+            {
+                return _sliderStartPosEditText
+                    ?? (_sliderStartPosEditText = View.FindViewById<EditText>(Resource.Id.SliderStartPos));
+            }
+        }
+
+        public EditText SliderStopPosEditText
+        {
+            get
+            {
+                return _sliderStopPosEditText
+                    ?? (_sliderStopPosEditText = View.FindViewById<EditText>(Resource.Id.SliderStopPos));
+            }
+        }
+
+        public EditText PanStartPosEditText
+        {
+            get
+            {
+                return _panStartPosEditText
+                    ?? (_panStartPosEditText = View.FindViewById<EditText>(Resource.Id.PanStartPos));
+            }
+        }
+
+        public EditText PanStopPosEditText
+        {
+            get
+            {
+                return _panStopPosEditText
+                    ?? (_panStopPosEditText = View.FindViewById<EditText>(Resource.Id.PanStopPos));
+            }
+        }
+
+        public EditText TiltStartPosEditText
+        {
+            get
+            {
+                return _tiltStartPosEditText
+                    ?? (_tiltStartPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStartPos));
+            }
+        }
+
+        public EditText TiltStopPosEditText
+        {
+            get
+            {
+                return _tiltStopPosEditText
+                    ?? (_tiltStopPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStopPos));
             }
         }
     }

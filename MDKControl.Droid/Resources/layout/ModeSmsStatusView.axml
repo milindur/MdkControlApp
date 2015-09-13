@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
             <TextView
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
             <TextView
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
         </LinearLayout>
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
             <TextView
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
             <TextView
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
         </LinearLayout>
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
             <TextView
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
             <TextView
@@ -179,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:ems="4"
+                android:ems="5"
                 android:editable="false"
                 android:focusable="false" />
         </LinearLayout>

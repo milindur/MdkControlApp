@@ -157,7 +157,24 @@ namespace MDKControl.Core.ViewModels
         {
             Debug.WriteLine("UpdateState");
 
+            var tmpProgramMode = _programMode;
             _programMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
+            if (tmpProgramMode != _programMode)
+            {
+                switch (_programMode)
+                {
+                    case MoCoBusProgramMode.ShootMoveShoot:
+                        await ModeSmsViewModel.InitState().ConfigureAwait(false);
+                        break;
+                    case MoCoBusProgramMode.Panorama:
+                        await ModePanoViewModel.InitState().ConfigureAwait(false);
+                        break;
+                    case MoCoBusProgramMode.Astro:
+                        //await ModeAstroViewModel.InitState().ConfigureAwait(false);
+                        break;
+                }
+            }
+
             _runStatus = await _protocolService.Main.GetRunStatus();
 
             _dispatcherHelper.RunOnUIThread(() =>

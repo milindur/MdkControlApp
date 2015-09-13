@@ -43,5 +43,23 @@ namespace MDKControl.Core.Services
                 .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.SetStopHere, null))
                 .ConfigureAwait(false);
         }
+
+        public async Task<int> GetProgramStartPoint()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.GetProgramStartPoint, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<int>(response);
+        }
+
+        public async Task<int> GetProgramStopPoint()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.GetProgramStopPoint, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<int>(response);
+        }
     }
 }
