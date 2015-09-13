@@ -38,6 +38,7 @@ namespace MDKControl.Core.ViewModels
         private float _progress = 0;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
         private int _elapsedShots = 0;
+        private int _overallShots = 0;
 
         public ModePanoViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
@@ -93,12 +94,12 @@ namespace MDKControl.Core.ViewModels
 
         public TimeSpan RemainingTime
         {
-            get { return TimeSpan.Zero; }
+            get { return OverallTime - ElapsedTime; }
         }
 
         public int RemainingShots
         {
-            get { return 0; }
+            get { return OverallShots - ElapsedShots; }
         }
 
         public TimeSpan OverallTime
@@ -108,7 +109,7 @@ namespace MDKControl.Core.ViewModels
 
         public int OverallShots
         {
-            get { return 0; }
+            get { return _overallShots; }
         }
 
         public int PanStartPosition
@@ -278,6 +279,7 @@ namespace MDKControl.Core.ViewModels
             _progress = await _protocolService.Main.GetProgramPercentComplete();
             _elapsedTime = await _protocolService.Main.GetRunTime();
             _elapsedShots = await _protocolService.Camera.GetCurrentShots();
+            _overallShots = await _protocolService.Camera.GetMaxShots();
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
