@@ -39,6 +39,8 @@ namespace MDKControl.Core.ViewModels
         private TimeSpan _elapsedTime = TimeSpan.Zero;
         private int _elapsedShots = 0;
         private int _overallShots = 0;
+        private uint _overallCols = 0;
+        private uint _overallRows = 0;
 
         public ModePanoViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
@@ -110,6 +112,16 @@ namespace MDKControl.Core.ViewModels
         public int OverallShots
         {
             get { return _overallShots; }
+        }
+
+        public uint OverallCols
+        {
+            get { return _overallCols; }
+        }
+
+        public uint OverallRows
+        {
+            get { return _overallRows; }
         }
 
         public int PanStartPosition
@@ -260,6 +272,9 @@ namespace MDKControl.Core.ViewModels
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
             await _protocolService.Main.Start();
 
+            _overallCols = await _protocolService.Motor2.GetTravelShots();
+            _overallRows = await _protocolService.Motor3.GetTravelShots();
+
             _deviceViewModel.StartUpdateTask();
         }
 
@@ -280,6 +295,8 @@ namespace MDKControl.Core.ViewModels
             _elapsedTime = await _protocolService.Main.GetRunTime();
             _elapsedShots = await _protocolService.Camera.GetCurrentShots();
             _overallShots = await _protocolService.Camera.GetMaxShots();
+            //_overallCols = await _protocolService.Motor2.GetTravelShots();
+            //_overallRows = await _protocolService.Motor3.GetTravelShots();
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
@@ -290,6 +307,8 @@ namespace MDKControl.Core.ViewModels
                     RaisePropertyChanged(() => RemainingShots);
                     RaisePropertyChanged(() => OverallTime);
                     RaisePropertyChanged(() => OverallShots);
+                    RaisePropertyChanged(() => OverallCols);
+                    RaisePropertyChanged(() => OverallRows);
                 });
         }
 

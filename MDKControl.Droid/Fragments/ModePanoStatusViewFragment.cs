@@ -29,6 +29,8 @@ namespace MDKControl.Droid.Fragments
         private Binding _remainingShotsBinding;
         private Binding _overallTimeBinding;
         private Binding _overallShotsBinding;
+        private Binding _overallColsBinding;
+        private Binding _overallRowsBinding;
 
         private Button _resumeButton;
         private Button _pauseButton;
@@ -41,6 +43,8 @@ namespace MDKControl.Droid.Fragments
         private EditText _remainingShotsEditText;
         private EditText _overallTimeEditText;
         private EditText _overallShotsEditText;
+        private EditText _overallColsEditText;
+        private EditText _overallRowsEditText;
 
         public event EventHandler Resumed;
         public event EventHandler Paused;
@@ -139,6 +143,14 @@ namespace MDKControl.Droid.Fragments
                 {
                     OverallShotsEditText.Text = string.Format("{0}", Vm.OverallShots);
                 });
+            _overallColsBinding = this.SetBinding(() => Vm.OverallCols).WhenSourceChanges(() =>
+                {
+                    OverallColsEditText.Text = string.Format("{0}", Vm.OverallCols);
+                });
+            _overallRowsBinding = this.SetBinding(() => Vm.OverallRows).WhenSourceChanges(() =>
+                {
+                    OverallRowsEditText.Text = string.Format("{0}", Vm.OverallRows);
+                });
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
                     System.Diagnostics.Debug.WriteLine("OnRunStatusChanged 1");
@@ -172,6 +184,8 @@ namespace MDKControl.Droid.Fragments
             _remainingShotsBinding.Detach();
             _overallTimeBinding.Detach();
             _overallShotsBinding.Detach();
+            _overallColsBinding.Detach();
+            _overallRowsBinding.Detach();
             _runStatusBinding.Detach();
 
             base.OnPause();
@@ -280,6 +294,24 @@ namespace MDKControl.Droid.Fragments
             {
                 return _overallShotsEditText
                     ?? (_overallShotsEditText = View.FindViewById<EditText>(Resource.Id.OverallShots));
+            }
+        }
+
+        public EditText OverallColsEditText
+        {
+            get
+            {
+                return _overallColsEditText
+                    ?? (_overallColsEditText = View.FindViewById<EditText>(Resource.Id.OverallCols));
+            }
+        }
+
+        public EditText OverallRowsEditText
+        {
+            get
+            {
+                return _overallRowsEditText
+                    ?? (_overallRowsEditText = View.FindViewById<EditText>(Resource.Id.OverallRows));
             }
         }
     }

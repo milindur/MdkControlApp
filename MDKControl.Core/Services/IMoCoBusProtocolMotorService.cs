@@ -14,5 +14,6 @@ namespace MDKControl.Core.Services
 
         Task<int> GetProgramStartPoint();
         Task<int> GetProgramStopPoint();
+        Task<uint> GetTravelShots();
     }
 }

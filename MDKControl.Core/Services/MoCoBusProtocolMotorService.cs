@@ -61,5 +61,14 @@ namespace MDKControl.Core.Services
 
             return MoCoBusHelper.ParseStatus<int>(response);
         }
+
+        public async Task<uint> GetTravelShots()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusMotorCommandFrame(_address, _motor, MoCoBusMotorCommand.GetTravelShotsOrTime, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<uint>(response);
+        }
     }
 }
