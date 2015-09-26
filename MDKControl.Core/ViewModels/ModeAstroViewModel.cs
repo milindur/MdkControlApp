@@ -19,8 +19,7 @@ namespace MDKControl.Core.ViewModels
         private readonly IMoCoBusProtocolService _protocolService;
 
         private RelayCommand _resumeProgramCommand;
-        private RelayCommand _startProgramNorthCommand;
-        private RelayCommand _startProgramSouthCommand;
+        private RelayCommand _startProgramCommand;
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
@@ -36,14 +35,9 @@ namespace MDKControl.Core.ViewModels
             get { return _resumeProgramCommand ?? (_resumeProgramCommand = new RelayCommand(ResumeProgram)); }
         }
 
-        public RelayCommand StartProgramNorthCommand
+        public RelayCommand StartProgramCommand
         {
-            get { return _startProgramNorthCommand ?? (_startProgramNorthCommand = new RelayCommand(StartProgramNorth)); }
-        }
-
-        public RelayCommand StartProgramSouthCommand
-        {
-            get { return _startProgramSouthCommand ?? (_startProgramSouthCommand = new RelayCommand(StartProgramSouth)); }
+            get { return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(StartProgram)); }
         }
 
         public RelayCommand PauseProgramCommand
@@ -63,18 +57,10 @@ namespace MDKControl.Core.ViewModels
             _deviceViewModel.StartUpdateTask();
         }
 
-        private async void StartProgramNorth()
+        private async void StartProgram()
         {
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
-            await _protocolService.Main.Start(0);
-
-            _deviceViewModel.StartUpdateTask();
-        }
-
-        private async void StartProgramSouth()
-        {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
-            await _protocolService.Main.Start(1);
+            await _protocolService.Main.Start((byte)Direction, (byte)Speed);
 
             _deviceViewModel.StartUpdateTask();
         }
@@ -89,6 +75,9 @@ namespace MDKControl.Core.ViewModels
             await _protocolService.Main.Stop();
             await _deviceViewModel.StopUpdateTask();
         }
+
+        public AstroDirection Direction { get; set; }
+        public AstroSpeed Speed { get; set; }
 
         public Task UpdateState()
         {

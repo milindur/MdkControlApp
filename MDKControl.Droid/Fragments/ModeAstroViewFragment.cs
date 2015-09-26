@@ -24,9 +24,16 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
+        private Binding _northRadioBinding;
+        private Binding _southRadioBinding;
+        private Binding _siderealRadioBinding;
+        private Binding _lunarRadioBinding;
 
-        private Button _startProgramNorthButton;
-        private Button _startProgramSouthButton;
+        private Button _startProgramButton;
+        private RadioButton _northRadioButton;
+        private RadioButton _southRadioButton;
+        private RadioButton _siderealRadioButton;
+        private RadioButton _lunarRadioButton;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -42,7 +49,7 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            StartProgramNorthButton.Click += (o, e) => 
+            StartProgramButton.Click += (o, e) => 
                 {  
                     var dlg = ModeAstroStatusViewFragment.NewInstance();
                     dlg.SetCommand("Stoped", Vm.StopProgramCommand);
@@ -50,17 +57,7 @@ namespace MDKControl.Droid.Fragments
                     dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
                     dlg.Show(FragmentManager, "statusDlg");
                 };
-            StartProgramNorthButton.SetCommand("Click", Vm.StartProgramNorthCommand);
-
-            StartProgramSouthButton.Click += (o, e) => 
-                {  
-                    var dlg = ModeAstroStatusViewFragment.NewInstance();
-                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                    dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
-                    dlg.Show(FragmentManager, "statusDlg");
-                };
-            StartProgramSouthButton.SetCommand("Click", Vm.StartProgramSouthCommand);
+            StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
         }
 
         public override void OnAttach(Activity activity)
@@ -80,6 +77,28 @@ namespace MDKControl.Droid.Fragments
         public override void OnResume()
         {
             base.OnResume();
+
+            _northRadioBinding = this.SetBinding(() => NorthRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                    {
+                        if (NorthRadioButton.Checked) Vm.Direction = AstroDirection.North;
+                    });
+            _southRadioBinding = this.SetBinding(() => SouthRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                    {
+                        if (SouthRadioButton.Checked) Vm.Direction = AstroDirection.South;
+                    });
+
+            _siderealRadioBinding = this.SetBinding(() => SiderealRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                    {
+                        if (SiderealRadioButton.Checked) Vm.Speed = AstroSpeed.Sidereal;
+                    });
+            _lunarRadioBinding = this.SetBinding(() => LunarRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                    {
+                        if (LunarRadioButton.Checked) Vm.Speed = AstroSpeed.Lunar;
+                    });
 
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
                 .WhenSourceChanges(() =>
@@ -102,6 +121,10 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
+            _northRadioBinding.Detach();
+            _southRadioBinding.Detach();
+            _siderealRadioBinding.Detach();
+            _lunarRadioBinding.Detach();
             _runStatusBinding.Detach();
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
@@ -129,21 +152,48 @@ namespace MDKControl.Droid.Fragments
             }
         }
 
-        public Button StartProgramNorthButton
+        public Button StartProgramButton
         {
             get
             {
-                return _startProgramNorthButton
-                    ?? (_startProgramNorthButton = View.FindViewById<Button>(Resource.Id.StartProgramNorth));
+                return _startProgramButton
+                    ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
             }
         }
 
-        public Button StartProgramSouthButton
+        public RadioButton NorthRadioButton
         {
             get
             {
-                return _startProgramSouthButton
-                    ?? (_startProgramSouthButton = View.FindViewById<Button>(Resource.Id.StartProgramSouth));
+                return _northRadioButton
+                    ?? (_northRadioButton = View.FindViewById<RadioButton>(Resource.Id.NorthRadioButton));
+            }
+        }
+
+        public RadioButton SouthRadioButton
+        {
+            get
+            {
+                return _southRadioButton
+                    ?? (_southRadioButton = View.FindViewById<RadioButton>(Resource.Id.SouthRadioButton));
+            }
+        }
+
+        public RadioButton SiderealRadioButton
+        {
+            get
+            {
+                return _siderealRadioButton
+                    ?? (_siderealRadioButton = View.FindViewById<RadioButton>(Resource.Id.SiderealRadioButton));
+            }
+        }
+
+        public RadioButton LunarRadioButton
+        {
+            get
+            {
+                return _lunarRadioButton
+                    ?? (_lunarRadioButton = View.FindViewById<RadioButton>(Resource.Id.LunarRadioButton));
             }
         }
     }

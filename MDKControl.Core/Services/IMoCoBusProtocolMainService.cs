@@ -8,6 +8,7 @@ namespace MDKControl.Core.Services
     {
         Task Start();
         Task Start(byte arg);
+        Task Start(byte arg1, byte arg2);
         Task Pause();
         Task Stop();
 

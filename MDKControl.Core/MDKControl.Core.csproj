@@ -67,6 +67,8 @@
     <Compile Include="ViewModels\ModeSmsViewModel.cs" />
     <Compile Include="ViewModels\ModePanoViewModel.cs" />
     <Compile Include="ViewModels\JoystickViewModel.cs" />
+    <Compile Include="Models\AstroDirection.cs" />
+    <Compile Include="Models\AstroSpeed.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
