@@ -67,7 +67,11 @@ namespace MDKControl.Core.ViewModels
             {
                 await UpdateState().ConfigureAwait(false);
             }
-            
+            else
+            {
+                await StopUpdateTask().ConfigureAwait(false);
+            }
+
             _dispatcherHelper.RunOnUIThread(() =>
                 {
                     RaisePropertyChanged(() => IsConnected);

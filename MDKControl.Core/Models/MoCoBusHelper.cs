@@ -10,7 +10,7 @@ namespace MDKControl.Core.Models
     {
         public static dynamic ParseStatus(MoCoBusFrame frame)
         {
-            if (frame != null && frame.Length == 0) return null;
+            if (frame == null || frame.Length == 0) return null;
 
             switch ((MoCoBusStatusType)frame.Data[0])
             {
