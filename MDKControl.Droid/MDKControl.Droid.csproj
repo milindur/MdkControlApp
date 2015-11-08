@@ -13,13 +13,14 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <AndroidUseLatestPlatformSdk>False</AndroidUseLatestPlatformSdk>
     <AssemblyName>MDKControl.Droid</AssemblyName>
-    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
-    <ReleaseVersion>0.6-alpha2</ReleaseVersion>
+    <TargetFrameworkVersion>v5.1</TargetFrameworkVersion>
+    <ReleaseVersion>0.9.0</ReleaseVersion>
     <AndroidLinkMode>None</AndroidLinkMode>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <XamarinInsightsApiKey>76d51a30602c5fd9a5e64f263e25d14947533c61</XamarinInsightsApiKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
