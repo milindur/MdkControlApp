@@ -71,15 +71,6 @@
     <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\portable-windows8+net45+wp8\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveProperty.Android">
-      <HintPath>..\packages\ReactiveProperty.2.2.4\lib\MonoAndroid\ReactiveProperty.Android.dll</HintPath>
-    </Reference>
-    <Reference Include="ReactiveProperty.DataAnnotations">
-      <HintPath>..\packages\ReactiveProperty.2.2.4\lib\MonoAndroid\ReactiveProperty.DataAnnotations.dll</HintPath>
-    </Reference>
-    <Reference Include="ReactiveProperty">
-      <HintPath>..\packages\ReactiveProperty.2.2.4\lib\MonoAndroid\ReactiveProperty.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -94,6 +85,15 @@
     </Reference>
     <Reference Include="Nito.AsyncEx.Enlightenment">
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\MonoAndroid\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty.Android">
+      <HintPath>..\packages\ReactiveProperty.2.2.6.1\lib\MonoAndroid\ReactiveProperty.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty.DataAnnotations">
+      <HintPath>..\packages\ReactiveProperty.2.2.6.1\lib\MonoAndroid\ReactiveProperty.DataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveProperty">
+      <HintPath>..\packages\ReactiveProperty.2.2.6.1\lib\MonoAndroid\ReactiveProperty.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Insights">
       <HintPath>..\packages\Xamarin.Insights.1.11.1\lib\MonoAndroid10\Xamarin.Insights.dll</HintPath>
