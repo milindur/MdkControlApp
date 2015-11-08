@@ -120,8 +120,8 @@
     <Reference Include="Nito.AsyncEx">
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\portable-net45+netcore45+wpa81\Nito.AsyncEx.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveProperty">
-      <HintPath>..\packages\ReactiveProperty.2.2.6.1\lib\portable-net45+WP8+win8+wpa81+MonoTouch+MonoAndroid\ReactiveProperty.dll</HintPath>
+    <Reference Include="ReactiveProperty, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\ReactiveProperty.2.2.7.1\lib\portable-net45+WP8+win8+wpa81+MonoTouch+MonoAndroid\ReactiveProperty.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
