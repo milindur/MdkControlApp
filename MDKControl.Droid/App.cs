@@ -101,6 +101,7 @@ namespace MDKControl.Droid
 #else
                 Insights.Initialize("76d51a30602c5fd9a5e64f263e25d14947533c61", context);
 #endif
+
                 Insights.Track("Initialize");
             }
         }

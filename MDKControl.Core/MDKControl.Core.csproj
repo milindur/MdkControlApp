@@ -24,6 +24,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -71,6 +72,7 @@
     <Compile Include="Models\AstroSpeed.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <Import Project="..\packages\Xamarin.Insights.1.11.2\build\portable-win+net45+wp80+windows8+wpa+MonoAndroid10+MonoTouch10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.2\build\portable-win+net45+wp80+windows8+wpa+MonoAndroid10+MonoTouch10\Xamarin.Insights.targets')" />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -120,8 +122,11 @@
     <Reference Include="Nito.AsyncEx">
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\portable-net45+netcore45+wpa81\Nito.AsyncEx.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveProperty, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\ReactiveProperty.2.2.7.1\lib\portable-net45+WP8+win8+wpa81+MonoTouch+MonoAndroid\ReactiveProperty.dll</HintPath>
+    <Reference Include="ReactiveProperty">
+      <HintPath>..\packages\ReactiveProperty.2.2.8\lib\portable-net45+WP8+win8+wpa81+MonoTouch+MonoAndroid\ReactiveProperty.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Insights">
+      <HintPath>..\packages\Xamarin.Insights.1.11.2\lib\portable-win+net45+wp80+windows8+wpa+MonoAndroid10+MonoTouch10\Xamarin.Insights.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
