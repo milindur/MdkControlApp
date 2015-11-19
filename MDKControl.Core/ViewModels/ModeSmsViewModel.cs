@@ -60,8 +60,8 @@ namespace MDKControl.Core.ViewModels
 
                 if (_exposureTime < 0.1m)
                     _exposureTime = 0.1m;
-                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
-                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime;
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
+                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime;                
 
                 _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
 
@@ -85,8 +85,8 @@ namespace MDKControl.Core.ViewModels
 
                 if (_postDelayTime < 0.1m)
                     _postDelayTime = 0.1m;
-                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
-                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime;
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
+                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime;
 
                 _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
 
@@ -108,13 +108,13 @@ namespace MDKControl.Core.ViewModels
             {
                 _intervalTime = value;
 
-                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
                 {
                     _postDelayTime = _intervalTime - _preDelayTime - _focusTime - _exposureTime - _minMotionTime;
                     if (_postDelayTime < 0.1m)
                         _postDelayTime = 0.1m;
-                    if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime)
-                        _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime - _minMotionTime;
+                    if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
+                        _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime;
                 }
                 else
                 {
