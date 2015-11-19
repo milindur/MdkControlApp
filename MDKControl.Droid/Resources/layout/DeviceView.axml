@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp"
+        android:background="@android:color/background_dark">
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:text="Connect"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+        <Switch
+            android:id="@+id/ConnectSwitch"
+            android:textOn="On"
+            android:textOff="Off"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/DisconnectedLayout"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:text="Disconnected"
+            android:gravity="center"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:textStyle="italic" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ConnectingLayout"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="8dp">
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:text="Connecting..."
+            android:gravity="center"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:textStyle="italic" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ConnectedLayout"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="0dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="24dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp">
+            <Button
+                android:id="@+id/SetModeSms"
+                android:text="SMS"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+            <Button
+                android:id="@+id/SetModePano"
+                android:text="PANO"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+            <Button
+                android:id="@+id/SetModeAstro"
+                android:text="ASTRO"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/ConnectedFragmentContainer"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
+</LinearLayout>

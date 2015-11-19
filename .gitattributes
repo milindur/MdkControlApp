@@ -1,26 +1,30 @@
-* text eol=lf
+*.md  			text eol=crlf
+*.cs    		text eol=crlf diff=csharp
+*.xaml  		text eol=crlf
+*.axml  		text eol=crlf
+*.xml  			text eol=crlf
+*.config		text eol=crlf
+*.settings		text eol=crlf
+*.appxmanifest	text eol=crlf
 
-*.md  	text eol=lf
-*.cs    text eol=lf diff=csharp
-*.xaml  text eol=lf
-*.xml  	text eol=lf
+*.sln       	text eol=crlf
+*.csproj    	text eol=crlf
+*.vbproj    	text eol=crlf
+*.vcxproj   	text eol=crlf
+*.vcproj    	text eol=crlf
+*.dbproj    	text eol=crlf
+*.fsproj    	text eol=crlf
+*.lsproj    	text eol=crlf
+*.wixproj   	text eol=crlf
+*.modelproj 	text eol=crlf
+*.sqlproj   	text eol=crlf
+*.wwaproj   	text eol=crlf
 
-*.sln       text eol=lf merge=binary
-*.csproj    text eol=lf merge=binary
-*.vbproj    text eol=lf merge=binary
-*.vcxproj   text eol=lf merge=binary
-*.vcproj    text eol=lf merge=binary
-*.dbproj    text eol=lf merge=binary
-*.fsproj    text eol=lf merge=binary
-*.lsproj    text eol=lf merge=binary
-*.wixproj   text eol=lf merge=binary
-*.modelproj text eol=lf merge=binary
-*.sqlproj   text eol=lf merge=binary
-*.wwaproj   text eol=lf merge=binary
-
-*.dll	binary
-*.exe	binary
-*.jpg   binary
-*.png   binary
-*.gif   binary
+*.dll			binary
+*.exe			binary
+*.mdb			binary
+*.pdb			binary
+*.jpg   		binary
+*.png   		binary
+*.gif   		binary
 

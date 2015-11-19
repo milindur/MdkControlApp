@@ -1,68 +1,69 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Helpers;
 using MDKControl.Core.Services;
 using Robotics.Mobile.Core.Bluetooth.LE;
-using Xamarin.Forms;
-using System.Diagnostics;
 
 namespace MDKControl.Core.ViewModels
 {
     public class DeviceListViewModel : ViewModelBase
     {
+        private readonly IDispatcherHelper _dispatcherHelper;
+        private readonly INavigationService _navigationService;
         private readonly IAdapter _adapter;
-        private readonly BleMoCoBusDeviceServiceFactory _bleMoCoBusDeviceServiceFactory;
-        private IDevice _selectedDevice;
+        private readonly Func<IDevice, DeviceViewModel> _deviceViewModelFactory;
         private ObservableCollection<IDevice> _devices = new ObservableCollection<IDevice>();
-        private Command _startScanCommand;
-        private Command _stopScanCommand;
+        private Dictionary<Guid, DeviceViewModel> _deviceViewModels = new Dictionary<Guid, DeviceViewModel>();
+        private RelayCommand _startScanCommand;
+        private RelayCommand _stopScanCommand;
+        private RelayCommand<IDevice> _selectDeviceCommand;
         private bool _isScanning;
 
-        public DeviceListViewModel(IAdapter adapter, BleMoCoBusDeviceServiceFactory bleMoCoBusDeviceServiceFactory)
+        public DeviceListViewModel(IDispatcherHelper dispatcherHelper, 
+                                   INavigationService navigationService, 
+                                   IAdapter adapter, 
+                                   Func<IDevice, DeviceViewModel> deviceViewModelFactory)
         {
+            _dispatcherHelper = dispatcherHelper;
+            _navigationService = navigationService;
             _adapter = adapter;
-            _bleMoCoBusDeviceServiceFactory = bleMoCoBusDeviceServiceFactory;
-            
+            _deviceViewModelFactory = deviceViewModelFactory;
+
             _adapter.ScanTimeoutElapsed += (s, e) =>
             {
-                Device.BeginInvokeOnMainThread(() =>
-                    {
-                        StopScan();
-                    });
+                StopScan();
             };
             _adapter.DeviceDiscovered += (s, e) =>
             {
-                Device.BeginInvokeOnMainThread(() =>
-                    {
-                        if (_devices.All(d => d.ID != e.Device.ID))
+                if (_devices.All(d => d.ID != e.Device.ID))
+                {
+                    _dispatcherHelper.RunOnUIThread(() =>
                         {
                             _devices.Add(e.Device);
-                        }
-                    });
+                        });
+                }
             };
-            /*MessagingCenter.Subscribe<DeviceViewModel, IDevice>(this, "TodoSaved", (sender, model) =>
-            {
-            });
-
-            MessagingCenter.Subscribe<DeviceViewModel, IDevice>(this, "TodoDeleted", (sender, model) =>
-            {
-            });*/
-
-            Title = "Devices";
         }
 
         public bool IsScanning
         {
-            get
-            {
-                return _isScanning;
-            }
+            get { return _isScanning; }
             private set
             {
                 _isScanning = value;
-                ((Command)StartScanCommand).ChangeCanExecute();
-                ((Command)StopScanCommand).ChangeCanExecute();
-                OnPropertyChanged(() => IsScanning);
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        ((RelayCommand)StartScanCommand).RaiseCanExecuteChanged();
+                        ((RelayCommand)StopScanCommand).RaiseCanExecuteChanged();
+                        RaisePropertyChanged(() => IsScanning);
+                    });
             }
         }
 
@@ -74,64 +75,59 @@ namespace MDKControl.Core.ViewModels
                 if (_devices == value)
                     return;
                 _devices = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public IDevice SelectedDevice
-        {
-            get { return _selectedDevice; }
-            set
-            {
-                if (_selectedDevice == value)
-                    return;
-                
-                _selectedDevice = value;
-
-                OnPropertyChanged();
-
-                if (_selectedDevice != null)
-                {
-                    var device = _bleMoCoBusDeviceServiceFactory(_selectedDevice);
-                    device.ConnectionChanged += async (s, e) =>
+                _dispatcherHelper.RunOnUIThread(() =>
                     {
-                        if (device.IsConnected)
-                        {
-                            var res = await device.SendAndReceiveAsync(new Models.MoCoBusMainCommandFrame(3, Models.MoCoBusMainCommand.GetFirmwareVersion, new byte[0]));
-                            Debug.WriteLine(res);
-                        }
-                    };
-                    device.Connect();
-                }
+                        RaisePropertyChanged(() => Devices);
+                    });
             }
         }
 
-        public object SelectedItem
+        public RelayCommand StartScanCommand
         {
-            get { return SelectedDevice; }
-            set { SelectedDevice = (IDevice)value; }
+            get { return _startScanCommand ?? (_startScanCommand = new RelayCommand(StartScan, () => !IsScanning)); }
         }
 
-        public ICommand StartScanCommand
+        public RelayCommand StopScanCommand
         {
-            get { return _startScanCommand ?? (_startScanCommand = new Command(StartScan, () => !IsScanning)); }
+            get { return _stopScanCommand ?? (_stopScanCommand = new RelayCommand(StopScan, () => IsScanning)); }
+        }
+
+        public RelayCommand<IDevice> SelectDeviceCommand
+        {
+            get { return _selectDeviceCommand ?? (_selectDeviceCommand = new RelayCommand<IDevice>(SelectDevice)); }
         }
 
         private void StartScan()
         {
+            Devices.Clear();
+
+            foreach (var vm in _deviceViewModels.Values)
+            {
+                vm.Cleanup();
+            }
+            _deviceViewModels.Clear();
+
             IsScanning = true;
             _adapter.StartScanningForDevices(BleConstants.ServiceMoCoBus);
-        }
-
-        public ICommand StopScanCommand
-        {
-            get { return _stopScanCommand ?? (_stopScanCommand = new Command(StopScan, () => IsScanning)); }
         }
 
         private void StopScan()
         {
             IsScanning = false;
             _adapter.StopScanningForDevices();
+        }
+
+        private void SelectDevice(IDevice device)
+        {
+            StopScan();
+
+            DeviceViewModel vm;
+            if (!_deviceViewModels.TryGetValue(device.ID, out vm))
+            {
+                vm = _deviceViewModelFactory(device);
+                _deviceViewModels.Add(device.ID, vm);
+            }
+            _navigationService.NavigateTo(ViewModelLocator.DeviceViewKey, vm);
         }
     }
 }

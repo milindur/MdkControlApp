@@ -6,6 +6,7 @@
         Reserved,
 
         Start,
+        Pause,
         Stop,
         DebugLed,
         TimingMaster,
@@ -34,6 +35,8 @@
         ReverseAllMotorsStartStopPoints,
 
         SetGraffikMode = 50,
+        SetAppMode,
+        SetProgramDelay,
 
         GetFirmwareVersion = 100,
         GetRunStatus,

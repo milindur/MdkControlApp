@@ -1,7 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.milindur.mdkcontrol" android:versionName="0.3-alpha1" android:versionCode="5" android:installLocation="auto">
-	<uses-sdk android:minSdkVersion="18" android:targetSdkVersion="21" />
-	<application android:label="MDK Control" android:icon="@drawable/ic_launcher"></application>
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.milindur.mdkcontrol" android:versionName="0.9.0" android:installLocation="auto" android:versionCode="900">
+	<uses-sdk android:minSdkVersion="18" android:targetSdkVersion="22" />
+	<application android:label="MDK Control" android:icon="@drawable/ic_launcher" android:theme="@android:style/Theme.Holo"></application>
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.BATTERY_STATS" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.READ_LOGS" />
+	<uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 </manifest>

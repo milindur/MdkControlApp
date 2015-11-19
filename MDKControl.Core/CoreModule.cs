@@ -3,8 +3,6 @@ using Autofac.Builder;
 using Autofac.Core;
 using MDKControl.Core.Services;
 using MDKControl.Core.ViewModels;
-using Xamarin.Forms;
-using MDKControl.Core.Views;
 
 namespace MDKControl.Core
 {
@@ -12,15 +10,30 @@ namespace MDKControl.Core
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<App>()
-                .AsSelf()
-                .As<Application>();
+            builder.RegisterType<BleMoCoBusCommService>()
+                .As<IMoCoBusCommService>();
 
-            builder.RegisterType<BleMoCoBusDeviceService>();
-            builder.RegisterGeneratedFactory<BleMoCoBusDeviceServiceFactory>(new TypedService(typeof(BleMoCoBusDeviceService)));
+            builder.RegisterType<MoCoBusProtocolService>()
+                .As<IMoCoBusProtocolService>();
 
-            builder.RegisterType<DeviceListViewModel>();
-            builder.RegisterType<DeviceListView>();
+            builder.RegisterType<MoCoBusProtocolMainService>()
+                .As<IMoCoBusProtocolMainService>();
+
+            builder.RegisterType<MoCoBusProtocolCameraService>()
+                .As<IMoCoBusProtocolCameraService>();
+
+            builder.RegisterType<MoCoBusProtocolMotorService>()
+                .As<IMoCoBusProtocolMotorService>();
+
+            builder.RegisterGeneratedFactory<MoCoBusProtocolMotorServiceFactoryDelegate>(
+                new TypedService(typeof(IMoCoBusProtocolMotorService)));
+
+            builder.RegisterType<DeviceListViewModel>()
+                .SingleInstance();
+            
+            builder.RegisterType<DeviceViewModel>();
+
+            builder.RegisterType<ModeAstroViewModel>();
         }
     }
 }
