@@ -23,6 +23,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaSoft.MvvmLight.Extras (
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaSoft.MvvmLight.Platform (Android)", "..\mvvmlight\GalaSoft.MvvmLight\GalaSoft.MvvmLight.Platform (Android)\GalaSoft.MvvmLight.Platform (Android).csproj", "{A5B7741D-E331-438C-B3BF-596B048DB622}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50119C68-30DF-4F7C-9A4E-BB10D8AA6B1D}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -474,6 +480,8 @@ Global
 		{EFE39D51-63CB-4D8B-AB47-367E2FB40EFB}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{EFE39D51-63CB-4D8B-AB47-367E2FB40EFB}.Release|x86.ActiveCfg = Release|Any CPU
 		{EFE39D51-63CB-4D8B-AB47-367E2FB40EFB}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
