@@ -99,6 +99,15 @@
     <Reference Include="Xamarin.Insights">
       <HintPath>..\packages\Xamarin.Insights.1.11.2\lib\MonoAndroid10\Xamarin.Insights.dll</HintPath>
     </Reference>
+    <Reference Include="GalaSoft.MvvmLight">
+      <HintPath>..\libs\MvvmLight\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras">
+      <HintPath>..\libs\MvvmLight\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform">
+      <HintPath>..\libs\MvvmLight\Android\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -152,18 +161,6 @@
     <ProjectReference Include="..\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core\Robotics.Mobile.Core.csproj">
       <Project>{65733427-B647-4556-A87C-20937496780A}</Project>
       <Name>Robotics.Mobile.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mvvmlight\GalaSoft.MvvmLight\GalaSoft.MvvmLight %28PCL%29\GalaSoft.MvvmLight %28PCL%29.csproj">
-      <Project>{6A912701-3BA1-4975-ADBF-160CAF66B640}</Project>
-      <Name>GalaSoft.MvvmLight (PCL)</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mvvmlight\GalaSoft.MvvmLight\GalaSoft.MvvmLight.Extras %28PCL%29\GalaSoft.MvvmLight.Extras %28PCL%29.csproj">
-      <Project>{39C71A69-4ACE-4B45-9A2C-C274FADA78EF}</Project>
-      <Name>GalaSoft.MvvmLight.Extras (PCL)</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mvvmlight\GalaSoft.MvvmLight\GalaSoft.MvvmLight.Platform %28Android%29\GalaSoft.MvvmLight.Platform %28Android%29.csproj">
-      <Project>{A5B7741D-E331-438C-B3BF-596B048DB622}</Project>
-      <Name>GalaSoft.MvvmLight.Platform (Android)</Name>
     </ProjectReference>
     <ProjectReference Include="..\Monkey.Robotics\Source\Platform Stacks\Robotics.Mobile.Core.Droid\Robotics.Mobile.Core.Droid.csproj">
       <Project>{0040B1B9-6E22-438A-A6A7-A5A00B2B89B1}</Project>

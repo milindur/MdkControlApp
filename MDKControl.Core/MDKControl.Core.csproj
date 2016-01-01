@@ -82,14 +82,6 @@
       <Project>{65733427-B647-4556-A87C-20937496780A}</Project>
       <Name>Robotics.Mobile.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\mvvmlight\GalaSoft.MvvmLight\GalaSoft.MvvmLight %28PCL%29\GalaSoft.MvvmLight %28PCL%29.csproj">
-      <Project>{6A912701-3BA1-4975-ADBF-160CAF66B640}</Project>
-      <Name>GalaSoft.MvvmLight (PCL)</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\mvvmlight\GalaSoft.MvvmLight\GalaSoft.MvvmLight.Extras %28PCL%29\GalaSoft.MvvmLight.Extras %28PCL%29.csproj">
-      <Project>{39C71A69-4ACE-4B45-9A2C-C274FADA78EF}</Project>
-      <Name>GalaSoft.MvvmLight.Extras (PCL)</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da">
@@ -127,6 +119,12 @@
     </Reference>
     <Reference Include="Xamarin.Insights">
       <HintPath>..\packages\Xamarin.Insights.1.11.2\lib\portable-win+net45+wp80+windows8+wpa+MonoAndroid10+MonoTouch10\Xamarin.Insights.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight">
+      <HintPath>..\libs\MvvmLight\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras">
+      <HintPath>..\libs\MvvmLight\GalaSoft.MvvmLight.Extras.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
