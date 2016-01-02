@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Foundation;
 using UIKit;
-using Xamarin.Forms.Platform.iOS;
-using MDKControl.Core;
-using Xamarin.Forms;
 using Autofac;
+using Autofac.Extras.CommonServiceLocator;
+using GalaSoft.MvvmLight.Helpers;
+using GalaSoft.MvvmLight.Views;
+using MDKControl.Core;
+using MDKControl.Core.Helpers;
+using MDKControl.Core.ViewModels;
+//using MDKControl.iOS.ViewControllers;
+using MDKControl.iOS.Helpers;
+using Microsoft.Practices.ServiceLocation;
+using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
+
 
 namespace MDKControl.iOS
 {
@@ -16,24 +23,20 @@ namespace MDKControl.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : FormsApplicationDelegate
+    public partial class AppDelegate : UIApplicationDelegate
     {
-        // class-level declarations
-        UIWindow window;
+        private static IContainer _container;
 
-        //
-        // This method is invoked when the application has loaded and is ready to run. In this 
-        // method you should instantiate the window, load the UI into it and then make the window
-        // visible.
-        //
-        // You have 17 seconds to return from this method, or iOS will terminate your application.
-        //
-        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+        public override UIWindow Window
         {
-            Forms.Init();
-            
+            get;
+            set;
+        }
+
+        public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+        {
             // create a new window instance based on the screen size
-            window = new UIWindow(UIScreen.MainScreen.Bounds);
+            Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
             // If you have defined a view, add it here:
             // window.RootViewController  = navigationController;
@@ -41,21 +44,87 @@ namespace MDKControl.iOS
             // make the window visible
             //window.MakeKeyAndVisible();
 
-            var builder = new ContainerBuilder();
+            //LoadApplication(container.Resolve<Xamarin.Forms.Application>());
 
-            // shared modules
-            builder.RegisterModule<CoreModule>();
+            Bootstrap();
 
-            // platform-specific registrations
-            builder.RegisterInstance(Ble.Adapter.Current)
-                .As<Ble.IAdapter>()
-                .SingleInstance();
+            ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
 
-            var container = builder.Build();
+            return true;
+        }
 
-            LoadApplication(container.Resolve<Xamarin.Forms.Application>());
+        public override void OnResignActivation(UIApplication application)
+        {
+            // Invoked when the application is about to move from active to inactive state.
+            // This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) 
+            // or when the user quits the application and it begins the transition to the background state.
+            // Games should use this method to pause the game.
+        }
 
-            return base.FinishedLaunching(app, options);
+        public override void DidEnterBackground(UIApplication application)
+        {
+            // Use this method to release shared resources, save user data, invalidate timers and store the application state.
+            // If your application supports background exection this method is called instead of WillTerminate when the user quits.
+        }
+
+        public override void WillEnterForeground(UIApplication application)
+        {
+            // Called as part of the transiton from background to active state.
+            // Here you can undo many of the changes made on entering the background.
+        }
+
+        public override void OnActivated(UIApplication application)
+        {
+            // Restart any tasks that were paused (or not yet started) while the application was inactive. 
+            // If the application was previously in the background, optionally refresh the user interface.
+        }
+
+        public override void WillTerminate(UIApplication application)
+        {
+            // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
+        }
+
+        private static void Bootstrap()
+        {
+            System.Diagnostics.Debug.WriteLine("Bootstrap");
+
+            if (_container == null)
+            {
+                var builder = new ContainerBuilder();
+
+                // shared modules
+
+                builder.RegisterModule<CoreModule>();
+
+                // platform-specific registrations
+
+                builder.RegisterType<DispatcherHelper>()
+                    .AsSelf()
+                    .As<IDispatcherHelper>()
+                    .SingleInstance();
+
+                builder.RegisterInstance(Ble.Adapter.Current)
+                    .As<Ble.IAdapter>()
+                    .SingleInstance();
+
+                var nav = new NavigationService();
+                //nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewController));
+                //nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewController));
+
+                builder.RegisterInstance(nav)
+                    .As<INavigationService>();
+
+                builder.RegisterType<DialogService>()
+                    .As<IDialogService>();
+
+                _container = builder.Build();
+            }
+
+            if (!ServiceLocator.IsLocationProviderSet)
+            {
+                var csl = new AutofacServiceLocator(_container);
+                ServiceLocator.SetLocatorProvider(() => csl);
+            }
         }
     }
 }
