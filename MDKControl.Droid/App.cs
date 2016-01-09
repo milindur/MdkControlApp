@@ -34,11 +34,6 @@ namespace MDKControl.Droid
         {
             base.OnCreate();
 
-            AndroidEnvironment.UnhandledExceptionRaiser += (sender, args) =>
-                {
-                    args.Handled = true;
-                };
-
             Bootstrap();
         }
         
@@ -57,23 +52,25 @@ namespace MDKControl.Droid
                 // platform-specific registrations
 
                 builder.RegisterType<DispatcherHelper>()
-                .AsSelf()
-                .As<IDispatcherHelper>()
-                .SingleInstance();
+                    .AsSelf()
+                    .As<IDispatcherHelper>()
+                    .SingleInstance();
 
                 builder.RegisterInstance(new Ble.Adapter())
-                .As<Ble.IAdapter>()
-                .SingleInstance();
+                    .As<Ble.IAdapter>()
+                    .SingleInstance();
 
                 var nav = new NavigationService();
                 nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewActivity));
                 nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewActivity));
 
                 builder.RegisterInstance(nav)
-                .As<INavigationService>();
+                    .As<INavigationService>()
+                    .SingleInstance();
 
                 builder.RegisterType<DialogService>()
-                .As<IDialogService>();
+                    .As<IDialogService>()
+                    .SingleInstance();
 
                 _container = builder.Build();
             }
