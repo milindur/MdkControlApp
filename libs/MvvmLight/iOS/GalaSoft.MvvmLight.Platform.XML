@@ -837,51 +837,6 @@
             <summary>
             Resets the class by deleting the <see cref="P:GalaSoft.MvvmLight.Threading.DispatcherHelper.MainThreadContext" />
             </summary></member>
-        <member name="T:GalaSoft.MvvmLight.Views.ControllerBase">
-            <summary>
-            A base class to be used with the <see cref="T:GalaSoft.MvvmLight.Views.NavigationService" /> when
-            using Storyboards.
-            </summary></member>
-        <member name="P:GalaSoft.MvvmLight.Views.ControllerBase.NavigationParameter">
-            <summary>
-            The parameter passed to this controller by the
-            <see cref="M:GalaSoft.MvvmLight.Views.NavigationService.NavigateTo(System.String,System.Object)" />  method.
-            </summary></member>
-        <member name="M:GalaSoft.MvvmLight.Views.ControllerBase.#ctor(System.IntPtr)">
-            <summary>
-            A constructor used when creating managed representations of unmanaged objects;
-            Called by the runtime.
-            </summary>
-            <param name="handle">Pointer (handle) to the unmanaged object.</param>
-            <remarks>Check the remarks on <see cref="!:UIViewController(IntPtr)" /></remarks></member>
-        <member name="M:GalaSoft.MvvmLight.Views.ControllerBase.#ctor(Foundation.NSCoder)">
-            <summary>
-            A constructor that initializes the object from the data stored in the unarchiver
-            object.
-            </summary>
-            <param name="coder">The unarchiver object.</param>
-            <remarks>Check the remarks on <see cref="!:UIViewController(NSCoder)" /></remarks></member>
-        <member name="M:GalaSoft.MvvmLight.Views.ControllerBase.#ctor(Foundation.NSObjectFlag)">
-            <summary>
-            Constructor to call on derived classes to skip initialization and merely
-            allocate the object.
-            </summary>
-            <param name="t">Unused sentinel value, pass NSObjectFlag.Empty.</param>
-            <remarks>Check the remarks on <see cref="!:UIViewController(NSObjectFlag)" /></remarks></member>
-        <member name="M:GalaSoft.MvvmLight.Views.ControllerBase.#ctor(System.String,Foundation.NSBundle)">
-            <summary>
-            Initializes an instance of this class.
-            </summary>
-            <param name="nibName">The NIB name, or null.
-            This parameter can be null.</param>
-            <param name="bundle">The bundle where the search for the NIB takes place,
-            if you pass null, this searches for the NIB on the main bundle.
-            This parameter can be null.</param>
-            <remarks>Check the remarks on <see cref="!:UIViewController(string, NSBundle)" /></remarks></member>
-        <member name="M:GalaSoft.MvvmLight.Views.ControllerBase.#ctor">
-            <summary>
-            Initializes an instance of this class.
-            </summary></member>
         <member name="T:GalaSoft.MvvmLight.Views.DialogService">
             <summary>
             An implementation of <see cref="T:GalaSoft.MvvmLight.Views.IDialogService" /> allowing
@@ -1071,5 +1026,15 @@
             <see cref="M:GalaSoft.MvvmLight.Views.NavigationService.NavigateTo(System.String,System.Object)" /> methods are called.
             </summary>
             <param name="navigation">The application's navigation controller.</param></member>
+        <member name="T:GalaSoft.MvvmLight.Views.INavigationTarget">
+            <summary>
+            A interface to be used with the <see cref="T:GalaSoft.MvvmLight.Views.NavigationService" /> when
+            using Storyboards.
+            </summary></member>
+        <member name="P:GalaSoft.MvvmLight.Views.INavigationTarget.NavigationParameter">
+            <summary>
+            The parameter passed to this controller by the
+            <see cref="M:GalaSoft.MvvmLight.Views.NavigationService.NavigateTo(System.String,System.Object)" />  method.
+            </summary></member>
     </members>
 </doc>
