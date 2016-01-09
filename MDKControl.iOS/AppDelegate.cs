@@ -26,6 +26,8 @@ namespace MDKControl.iOS
         private static IContainer _container;
 
         public const string ModeSmsViewKey = "ModeSmsViewKey";
+        public const string ModePanoViewKey = "ModePanoViewKey";
+        public const string ModeAstroViewKey = "ModeAstroViewKey";
 
         public override UIWindow Window
         {
@@ -94,23 +96,16 @@ namespace MDKControl.iOS
                     .SingleInstance();
 
                 builder.RegisterInstance(Ble.Adapter.Current)
-                    .As<Ble.IAdapter>()
-                    .SingleInstance();
+                    .As<Ble.IAdapter>();
                 
-                builder.Register(c => Window.RootViewController as UINavigationController)
-                    .SingleInstance();
+                var nav = new NavigationService();
+                nav.Initialize((UINavigationController)Window.RootViewController);
+                nav.Configure(ViewModelLocator.DeviceListViewKey, "DeviceListViewController");
+                nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
+                nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
 
-                builder.Register(c =>
-                    {
-                        var nav = new NavigationService();
-                        nav.Initialize(c.Resolve<UINavigationController>());
-                        nav.Configure(ViewModelLocator.DeviceListViewKey, "DeviceListViewController");
-                        nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
-                        nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
-                        return nav;
-                    })
-                    .As<INavigationService>()
-                    .SingleInstance();
+                builder.RegisterInstance(nav)
+                    .As<INavigationService>();
 
                 builder.RegisterType<DialogService>()
                     .As<IDialogService>()
