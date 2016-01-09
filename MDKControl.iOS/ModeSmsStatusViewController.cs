@@ -6,9 +6,9 @@ using GalaSoft.MvvmLight.Views;
 
 namespace MDKControl.iOS
 {
-    partial class JoystickViewController : UIViewController, INavigationTarget
+	partial class ModeSmsStatusViewController : UIViewController, INavigationTarget
 	{
-		public JoystickViewController (IntPtr handle) : base (handle)
+		public ModeSmsStatusViewController (IntPtr handle) : base (handle)
 		{
 		}
 

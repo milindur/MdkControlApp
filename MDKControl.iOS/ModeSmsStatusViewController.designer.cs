@@ -11,8 +11,8 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-	[Register ("JoystickViewController")]
-	partial class JoystickViewController
+	[Register ("ModeSmsStatusViewController")]
+	partial class ModeSmsStatusViewController
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -20,7 +20,7 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIBarButtonItem SetButton { get; set; }
+		UIBarButtonItem PauseResumeButton { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -28,9 +28,9 @@ namespace MDKControl.iOS
 				CancelButton.Dispose ();
 				CancelButton = null;
 			}
-			if (SetButton != null) {
-				SetButton.Dispose ();
-				SetButton = null;
+			if (PauseResumeButton != null) {
+				PauseResumeButton.Dispose ();
+				PauseResumeButton = null;
 			}
 		}
 	}

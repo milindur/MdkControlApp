@@ -124,6 +124,10 @@
       <DependentUpon>JoystickViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\UIImageExtensions.cs" />
+    <Compile Include="ModeSmsStatusViewController.cs" />
+    <Compile Include="ModeSmsStatusViewController.designer.cs">
+      <DependentUpon>ModeSmsStatusViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

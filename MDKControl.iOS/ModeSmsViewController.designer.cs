@@ -16,11 +16,35 @@ namespace MDKControl.iOS
 	{
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel DurationValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UITableViewCell ExposureTableViewCell { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel ExposureValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel IntervalValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PostDelayValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UITableViewCell PreDelayTableViewCell { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PreDelayValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel ShotsValueLabel { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -44,13 +68,37 @@ namespace MDKControl.iOS
 
 		void ReleaseDesignerOutlets ()
 		{
+			if (DurationValueLabel != null) {
+				DurationValueLabel.Dispose ();
+				DurationValueLabel = null;
+			}
 			if (ExposureTableViewCell != null) {
 				ExposureTableViewCell.Dispose ();
 				ExposureTableViewCell = null;
 			}
+			if (ExposureValueLabel != null) {
+				ExposureValueLabel.Dispose ();
+				ExposureValueLabel = null;
+			}
+			if (IntervalValueLabel != null) {
+				IntervalValueLabel.Dispose ();
+				IntervalValueLabel = null;
+			}
+			if (PostDelayValueLabel != null) {
+				PostDelayValueLabel.Dispose ();
+				PostDelayValueLabel = null;
+			}
 			if (PreDelayTableViewCell != null) {
 				PreDelayTableViewCell.Dispose ();
 				PreDelayTableViewCell = null;
+			}
+			if (PreDelayValueLabel != null) {
+				PreDelayValueLabel.Dispose ();
+				PreDelayValueLabel = null;
+			}
+			if (ShotsValueLabel != null) {
+				ShotsValueLabel.Dispose ();
+				ShotsValueLabel = null;
 			}
 			if (StartButton != null) {
 				StartButton.Dispose ();

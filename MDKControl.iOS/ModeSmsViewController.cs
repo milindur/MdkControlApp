@@ -10,6 +10,12 @@ namespace MDKControl.iOS
 {
 	partial class ModeSmsViewController : UITableViewController, INavigationTarget
 	{
+        private Binding _exposureTimeBinding;
+        private Binding _delayTimeBinding;
+        private Binding _intervalTimeBinding;
+        private Binding _durationTimeBinding;
+        private Binding _maxShotsBinding;
+
 		public ModeSmsViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -24,15 +30,49 @@ namespace MDKControl.iOS
 
             Vm = (ModeSmsViewModel)NavigationParameter;
 
+            Vm.PropertyChanged += (s, e) => {};
+
             var tableView = (UITableView)View;
             tableView.BackgroundColor = Colors.DefaultLightGray;
             tableView.BackgroundView = null;
             tableView.AllowsSelection = true;
+
+            PreDelayValueLabel.Text = string.Format("{0:F1}s", 0.1f); 
             
-            /*StartTableViewCell.SetCommand(
-                "Clicked",
-                );*/
-            
+            _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
+                .WhenSourceChanges(() =>
+                    { 
+                        ExposureValueLabel.Text = string.Format("{0:F1}s", Vm.ExposureTime);
+                    });
+            _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
+                .WhenSourceChanges(() =>
+                    { 
+                        PostDelayValueLabel.Text = string.Format("{0:F1}s", Vm.DelayTime); 
+                    });
+            _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _intervalTimeBinding = this.SetBinding(() => Vm.IntervalTime)
+                .WhenSourceChanges(() =>
+                    {
+                        IntervalValueLabel.Text = string.Format("{0:F1}s", Vm.IntervalTime);
+                    });
+            _intervalTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _durationTimeBinding = this.SetBinding(() => Vm.DurationTime)
+                .WhenSourceChanges(() =>
+                    {
+                        DurationValueLabel.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                    });
+            _durationTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _maxShotsBinding = this.SetBinding(() => Vm.MaxShots)
+                .WhenSourceChanges(() =>
+                    {
+                        ShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
+                    });
+            _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
 
             base.ViewDidLoad();
         }
@@ -40,8 +80,6 @@ namespace MDKControl.iOS
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             System.Diagnostics.Debug.WriteLine(tableView.CellAt(indexPath));
-
-            //base.RowSelected(tableView, indexPath);
         }
 	}
 }

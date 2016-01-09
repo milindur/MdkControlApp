@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="5">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -18,7 +19,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="77" y="54"/>
+            <point key="canvasLocation" x="57" y="972"/>
         </scene>
         <!--Devices-->
         <scene sceneID="10">
@@ -56,7 +57,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="783" y="54"/>
+            <point key="canvasLocation" x="763" y="972"/>
         </scene>
         <!--Shoot-Move-Shoot-->
         <scene sceneID="NnT-Gj-oNm">
@@ -119,6 +120,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="714" kind="show" id="1517"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="1432">
                                         <rect key="frame" x="0.0" y="202" width="600" height="44"/>
@@ -297,11 +301,21 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Shoot-Move-Shoot" id="1420">
-                        <barButtonItem key="rightBarButtonItem" title="Start" id="1445"/>
+                        <barButtonItem key="rightBarButtonItem" title="Start" id="1445">
+                            <connections>
+                                <segue destination="1528" kind="show" id="1704"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="DurationValueLabel" destination="630" id="name-outlet-630"/>
                         <outlet property="ExposureTableViewCell" destination="611" id="name-outlet-611"/>
+                        <outlet property="ExposureValueLabel" destination="618" id="name-outlet-618"/>
+                        <outlet property="IntervalValueLabel" destination="624" id="name-outlet-624"/>
+                        <outlet property="PostDelayValueLabel" destination="620" id="name-outlet-620"/>
                         <outlet property="PreDelayTableViewCell" destination="609" id="name-outlet-609"/>
+                        <outlet property="PreDelayValueLabel" destination="616" id="name-outlet-616"/>
+                        <outlet property="ShotsValueLabel" destination="632" id="name-outlet-632"/>
                         <outlet property="StartButton" destination="1445" id="name-outlet-1445"/>
                         <outlet property="StartTableViewCell" destination="602" id="name-outlet-602"/>
                         <outlet property="StopTableViewCell" destination="604" id="name-outlet-604"/>
@@ -318,9 +332,9 @@
                     </date>
                 </datePicker>
             </objects>
-            <point key="canvasLocation" x="2397" y="63"/>
+            <point key="canvasLocation" x="2377" y="981"/>
         </scene>
-        <!--Title-->
+        <!--Joystick View Controller-->
         <scene sceneID="713">
             <objects>
                 <viewController storyboardIdentifier="JoystickViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="714" customClass="JoystickViewController" sceneMemberID="viewController">
@@ -333,11 +347,19 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="718"/>
+                    <navigationItem key="navigationItem" id="1479">
+                        <barButtonItem key="backBarButtonItem" title="gugugu" id="1480"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="1481"/>
+                        <barButtonItem key="rightBarButtonItem" title="Set" id="1482"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="CancelButton" destination="1481" id="name-outlet-1481"/>
+                        <outlet property="SetButton" destination="1482" id="name-outlet-1482"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="716" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3078" y="63"/>
+            <point key="canvasLocation" x="3146" y="92"/>
         </scene>
         <!--Mode-->
         <scene sceneID="1013">
@@ -420,7 +442,59 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1020" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1597" y="50"/>
+            <point key="canvasLocation" x="1577" y="968"/>
+        </scene>
+        <!--Shoot-Move-Shoot-->
+        <scene sceneID="1527">
+            <objects>
+                <viewController storyboardIdentifier="ModeSmsStatusViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1528" customClass="ModeSmsStatusViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1525"/>
+                        <viewControllerLayoutGuide type="bottom" id="1526"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1529">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1719">
+                                <rect key="frame" x="20" y="111" width="560" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="MJa-CB-IKP"/>
+                                </constraints>
+                            </progressView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Progress" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="1723">
+                                <rect key="frame" x="20" y="82" width="68" height="21"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1719" firstAttribute="leading" secondItem="1529" secondAttribute="leadingMargin" id="1720"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="1719" secondAttribute="trailing" id="1721"/>
+                            <constraint firstItem="1719" firstAttribute="centerX" secondItem="1529" secondAttribute="centerX" id="1722"/>
+                            <constraint firstItem="1723" firstAttribute="top" secondItem="1525" secondAttribute="bottom" constant="18" id="1724"/>
+                            <constraint firstItem="1723" firstAttribute="leading" secondItem="1529" secondAttribute="leading" constant="20" id="1725"/>
+                            <constraint firstItem="1719" firstAttribute="top" secondItem="1723" secondAttribute="bottom" constant="8" symbolic="YES" id="1726"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Shoot-Move-Shoot" id="1706">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="1708"/>
+                        <barButtonItem key="rightBarButtonItem" title="Pause" id="1707"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="CancelButton" destination="1708" id="name-outlet-1708"/>
+                        <outlet property="PauseResumeButton" destination="1707" id="name-outlet-1707"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1530" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3266" y="977"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="cRi-9C-I2e"/>
+    </inferredMetricsTieBreakers>
 </document>
