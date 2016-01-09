@@ -57,16 +57,14 @@ namespace MDKControl.Droid
                     .SingleInstance();
 
                 builder.RegisterInstance(new Ble.Adapter())
-                    .As<Ble.IAdapter>()
-                    .SingleInstance();
+                    .As<Ble.IAdapter>();
 
                 var nav = new NavigationService();
                 nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewActivity));
                 nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewActivity));
 
                 builder.RegisterInstance(nav)
-                    .As<INavigationService>()
-                    .SingleInstance();
+                    .As<INavigationService>();
 
                 builder.RegisterType<DialogService>()
                     .As<IDialogService>()
