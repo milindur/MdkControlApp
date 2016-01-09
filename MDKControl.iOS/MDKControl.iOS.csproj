@@ -64,8 +64,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
-    <MtouchI18n>
-    </MtouchI18n>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -79,6 +78,7 @@
     <BuildIpa>True</BuildIpa>
     <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>none</DebugType>
@@ -91,6 +91,9 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <CodesignProvision>Automatic:AppStore</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
+    <MtouchUseLlvm>true</MtouchUseLlvm>
+    <IpaPackageName>
+    </IpaPackageName>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -100,9 +103,27 @@
     <None Include="packages.config" />
     <None Include="app.config" />
     <Compile Include="Helpers\DispatcherHelper.cs" />
+    <Compile Include="DeviceListViewController.cs" />
+    <Compile Include="DeviceListViewController.designer.cs">
+      <DependentUpon>DeviceListViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DeviceViewController.cs" />
+    <Compile Include="DeviceViewController.designer.cs">
+      <DependentUpon>DeviceViewController.cs</DependentUpon>
+    </Compile>
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Colors.cs" />
+    <Compile Include="ModeSmsViewController.cs" />
+    <Compile Include="ModeSmsViewController.designer.cs">
+      <DependentUpon>ModeSmsViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JoystickViewController.cs" />
+    <Compile Include="JoystickViewController.designer.cs">
+      <DependentUpon>JoystickViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\UIImageExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -148,6 +169,12 @@
     <Reference Include="ReactiveProperty.iOS">
       <HintPath>..\packages\ReactiveProperty.2.4.1\lib\Xamarin.iOS10\ReactiveProperty.iOS.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Insights">
+      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.iOS10\Xamarin.Insights.dll</HintPath>
+    </Reference>
+    <Reference Include="PLCrashReporterUnifiedBinding">
+      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.iOS10\PLCrashReporterUnifiedBinding.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -162,12 +189,6 @@
     </Reference>
     <Reference Include="Nito.AsyncEx.Enlightenment">
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\Xamarin.iOS10\Nito.AsyncEx.Enlightenment.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Insights">
-      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.iOS10\Xamarin.Insights.dll</HintPath>
-    </Reference>
-    <Reference Include="PLCrashReporterUnifiedBinding">
-      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.iOS10\PLCrashReporterUnifiedBinding.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -189,16 +210,42 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.11.3\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.3\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <ItemGroup>
-    <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
+    <InterfaceDefinition Include="LaunchScreen.storyboard" />
+    <InterfaceDefinition Include="Main.storyboard" />
   </ItemGroup>
   <ItemGroup>
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Contents.json" />
-    <ImageAsset Include="Resources\Images.xcassets\LaunchImage.launchimage\Default-568h%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-40.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-40%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-40%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-60%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-76.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-76%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-83.5%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Icon-Small%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Helpers\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ITunesArtwork Include="Resources\iTunesArtwork.png" />
+    <ITunesArtwork Include="Resources\iTunesArtwork%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\BrightMoon.png" />
+    <BundleResource Include="Resources\FutureFilled.png" />
+    <BundleResource Include="Resources\Hourglass.png" />
+    <BundleResource Include="Resources\NightLandscape.png" />
+    <BundleResource Include="Resources\Panorama.png" />
+    <BundleResource Include="Resources\PanoramaFilled.png" />
+    <BundleResource Include="Resources\Telescope.png" />
+    <BundleResource Include="Resources\TelescopeFilled.png" />
+    <BundleResource Include="Resources\Timer.png" />
+    <BundleResource Include="Resources\TimeSpanFilled.png" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="5">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="4">
+            <objects>
+                <viewController id="5" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2"/>
+                        <viewControllerLayoutGuide type="bottom" id="3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="6">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="MDK Control" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="9">
+                                <rect key="frame" x="20" y="77" width="560" height="48"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Beta" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gM-8e-vX5">
+                                <rect key="frame" x="20" y="559" width="561" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9" firstAttribute="centerX" secondItem="6" secondAttribute="centerX" id="10"/>
+                            <constraint firstItem="9" firstAttribute="centerY" secondItem="6" secondAttribute="centerY" multiplier="1/3" constant="1" id="3el-Bx-SMb"/>
+                            <constraint firstItem="3" firstAttribute="top" secondItem="3gM-8e-vX5" secondAttribute="bottom" constant="20" id="b1b-ai-3B2"/>
+                            <constraint firstItem="3gM-8e-vX5" firstAttribute="leading" secondItem="6" secondAttribute="leadingMargin" id="fi7-3g-uOM"/>
+                            <constraint firstItem="3gM-8e-vX5" firstAttribute="centerX" secondItem="6" secondAttribute="centerX" id="iCi-Vv-mpQ"/>
+                            <constraint firstItem="9" firstAttribute="leading" secondItem="6" secondAttribute="leadingMargin" id="xdT-nL-2nT"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="134" y="65"/>
+        </scene>
+    </scenes>
+</document>

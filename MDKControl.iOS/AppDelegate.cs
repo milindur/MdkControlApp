@@ -10,12 +10,10 @@ using GalaSoft.MvvmLight.Views;
 using MDKControl.Core;
 using MDKControl.Core.Helpers;
 using MDKControl.Core.ViewModels;
-//using MDKControl.iOS.ViewControllers;
 using MDKControl.iOS.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
-
 
 namespace MDKControl.iOS
 {
@@ -27,6 +25,8 @@ namespace MDKControl.iOS
     {
         private static IContainer _container;
 
+        public const string ModeSmsViewKey = "ModeSmsViewKey";
+
         public override UIWindow Window
         {
             get;
@@ -35,19 +35,7 @@ namespace MDKControl.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
-            // create a new window instance based on the screen size
-            Window = new UIWindow(UIScreen.MainScreen.Bounds);
-
-            // If you have defined a view, add it here:
-            // window.RootViewController  = navigationController;
-
-            // make the window visible
-            //window.MakeKeyAndVisible();
-
-            //LoadApplication(container.Resolve<Xamarin.Forms.Application>());
-
             Bootstrap();
-
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
 
             return true;
@@ -82,9 +70,11 @@ namespace MDKControl.iOS
         public override void WillTerminate(UIApplication application)
         {
             // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
+
+            ServiceLocator.Current.GetInstance<DeviceListViewModel>().Cleanup();
         }
 
-        private static void Bootstrap()
+        private void Bootstrap()
         {
             System.Diagnostics.Debug.WriteLine("Bootstrap");
 
@@ -106,16 +96,25 @@ namespace MDKControl.iOS
                 builder.RegisterInstance(Ble.Adapter.Current)
                     .As<Ble.IAdapter>()
                     .SingleInstance();
+                
+                builder.Register(c => Window.RootViewController as UINavigationController)
+                    .SingleInstance();
 
-                var nav = new NavigationService();
-                //nav.Configure(ViewModelLocator.DeviceListViewKey, typeof(DeviceListViewController));
-                //nav.Configure(ViewModelLocator.DeviceViewKey, typeof(DeviceViewController));
-
-                builder.RegisterInstance(nav)
-                    .As<INavigationService>();
+                builder.Register(c =>
+                    {
+                        var nav = new NavigationService();
+                        nav.Initialize(c.Resolve<UINavigationController>());
+                        nav.Configure(ViewModelLocator.DeviceListViewKey, "DeviceListViewController");
+                        nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
+                        nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
+                        return nav;
+                    })
+                    .As<INavigationService>()
+                    .SingleInstance();
 
                 builder.RegisterType<DialogService>()
-                    .As<IDialogService>();
+                    .As<IDialogService>()
+                    .SingleInstance();
 
                 _container = builder.Build();
             }
