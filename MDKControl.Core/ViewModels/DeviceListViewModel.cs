@@ -129,5 +129,18 @@ namespace MDKControl.Core.ViewModels
             }
             _navigationService.NavigateTo(ViewModelLocator.DeviceViewKey, vm);
         }
+
+        public override void Cleanup()
+        {
+            Devices.Clear();
+
+            foreach (var vm in _deviceViewModels.Values)
+            {
+                vm.Cleanup();
+            }
+            _deviceViewModels.Clear();
+
+            base.Cleanup();
+        }
     }
 }
