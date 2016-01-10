@@ -16,6 +16,7 @@ namespace MDKControl.iOS
         private bool _modeChangeRequested = false;
         
         private Binding _isConnectedBinding;
+        private Binding _programModeBinding;
 
 		public DeviceViewController (IntPtr handle) : base (handle)
 		{
@@ -52,31 +53,20 @@ namespace MDKControl.iOS
                 .UpdateTargetTrigger("ValueChanged");
             _isConnectedBinding.ValueChanged += (sender, e) => 
                 {
-                    UIView.Animate(0.5, () => 
-                        {
-                            if (Vm.IsConnected)
-                            {
-                                View.UserInteractionEnabled = true;
-                                View.Alpha = 1.0f;
-                            }
-                            else
-                            {
-                                View.UserInteractionEnabled = false;
-                                View.Alpha = 0.5f;
+                    System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged IsConnected");
 
-                            }
-                        });
+                    OnConnectionOrProgramModeChanged();
                 };
             _isConnectedBinding.ForceUpdateValueFromSourceToTarget();
 
-            Vm.PropertyChanged += (sender, e) => 
-                {
-                    var navService = ServiceLocator.Current.GetInstance<INavigationService>();
-                    
-                    if (e.PropertyName == "ProgramMode")
+            _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
+                .WhenSourceChanges(() => 
                     {
                         System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged ProgramMode");
 
+                        OnConnectionOrProgramModeChanged();
+
+                        var navService = ServiceLocator.Current.GetInstance<INavigationService>();
                         switch (Vm.ProgramMode)
                         {
                             case MoCoBusProgramMode.ShootMoveShoot:
@@ -128,10 +118,31 @@ namespace MDKControl.iOS
                                 }
                                 break;
                         }
-                    }
-                };
+                    });
+            _programModeBinding.ForceUpdateValueFromSourceToTarget();
 
             base.ViewDidLoad();
+        }
+
+        private void OnConnectionOrProgramModeChanged()
+        {
+            if (!Vm.IsConnected && View.UserInteractionEnabled)
+            {
+                UIView.Animate(0.5, () => 
+                    {
+                        View.UserInteractionEnabled = false;
+                        View.Alpha = 0.5f;
+                    });                
+            }
+
+            if (Vm.IsConnected && Vm.ProgramMode != MoCoBusProgramMode.Invalid && !View.UserInteractionEnabled)
+            {
+                UIView.Animate(0.5, () => 
+                    {
+                        View.UserInteractionEnabled = true;
+                        View.Alpha = 1.0f;
+                    });                
+            }
         }
 
         /*public override void ViewWillUnload()

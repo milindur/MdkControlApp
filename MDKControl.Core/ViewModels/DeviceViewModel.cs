@@ -63,12 +63,13 @@ namespace MDKControl.Core.ViewModels
         {
             Debug.WriteLine("CommServiceOnConnectionChanged: {0}", _commService.ConnectionState);
             
+            _programMode = MoCoBusProgramMode.Invalid;
             if (_commService.ConnectionState == ConnectionState.Connected)
             {
                 await UpdateState().ConfigureAwait(false);
             }
             else
-            {
+            {                
                 await StopUpdateTask().ConfigureAwait(false);
             }
 
@@ -77,6 +78,7 @@ namespace MDKControl.Core.ViewModels
                     RaisePropertyChanged(() => IsConnected);
                     RaisePropertyChanged(() => IsConnecting);
                     RaisePropertyChanged(() => IsDisconnected);
+                    RaisePropertyChanged(() => ProgramMode);
                 });
         }
 
