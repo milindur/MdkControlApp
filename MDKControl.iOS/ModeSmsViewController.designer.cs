@@ -32,6 +32,14 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PanStartPosValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel PanStopPosValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel PostDelayValueLabel { get; set; }
 
 		[Outlet]
@@ -48,6 +56,14 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel SliderStartPosValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel SliderStopPosValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIBarButtonItem StartButton { get; set; }
 
 		[Outlet]
@@ -60,7 +76,15 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIButton SwapStartStopButon { get; set; }
+		UIButton SwapStartStopButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel TiltStartPosValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UILabel TiltStopPosValueLabel { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -84,6 +108,14 @@ namespace MDKControl.iOS
 				IntervalValueLabel.Dispose ();
 				IntervalValueLabel = null;
 			}
+			if (PanStartPosValueLabel != null) {
+				PanStartPosValueLabel.Dispose ();
+				PanStartPosValueLabel = null;
+			}
+			if (PanStopPosValueLabel != null) {
+				PanStopPosValueLabel.Dispose ();
+				PanStopPosValueLabel = null;
+			}
 			if (PostDelayValueLabel != null) {
 				PostDelayValueLabel.Dispose ();
 				PostDelayValueLabel = null;
@@ -100,6 +132,14 @@ namespace MDKControl.iOS
 				ShotsValueLabel.Dispose ();
 				ShotsValueLabel = null;
 			}
+			if (SliderStartPosValueLabel != null) {
+				SliderStartPosValueLabel.Dispose ();
+				SliderStartPosValueLabel = null;
+			}
+			if (SliderStopPosValueLabel != null) {
+				SliderStopPosValueLabel.Dispose ();
+				SliderStopPosValueLabel = null;
+			}
 			if (StartButton != null) {
 				StartButton.Dispose ();
 				StartButton = null;
@@ -112,9 +152,17 @@ namespace MDKControl.iOS
 				StopTableViewCell.Dispose ();
 				StopTableViewCell = null;
 			}
-			if (SwapStartStopButon != null) {
-				SwapStartStopButon.Dispose ();
-				SwapStartStopButon = null;
+			if (SwapStartStopButton != null) {
+				SwapStartStopButton.Dispose ();
+				SwapStartStopButton = null;
+			}
+			if (TiltStartPosValueLabel != null) {
+				TiltStartPosValueLabel.Dispose ();
+				TiltStartPosValueLabel = null;
+			}
+			if (TiltStopPosValueLabel != null) {
+				TiltStopPosValueLabel.Dispose ();
+				TiltStopPosValueLabel = null;
 			}
 			if (TimePicker != null) {
 				TimePicker.Dispose ();

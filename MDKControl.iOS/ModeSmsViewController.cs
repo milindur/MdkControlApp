@@ -16,6 +16,13 @@ namespace MDKControl.iOS
         private Binding _durationTimeBinding;
         private Binding _maxShotsBinding;
 
+        private Binding _sliderStartPosBinding;
+        private Binding _sliderStopPosBinding;
+        private Binding _panStartPosBinding;
+        private Binding _panStopPosBinding;
+        private Binding _tiltStartPosBinding;
+        private Binding _tiltStopPosBinding;
+
 		public ModeSmsViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -31,6 +38,7 @@ namespace MDKControl.iOS
             Vm = (ModeSmsViewModel)NavigationParameter;
 
             Vm.PropertyChanged += (s, e) => {};
+            SwapStartStopButton.TouchUpInside += (s, e) => {};
 
             var tableView = (UITableView)View;
             tableView.BackgroundColor = Colors.DefaultLightGray;
@@ -73,6 +81,52 @@ namespace MDKControl.iOS
                         ShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
                     });
             _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
+
+            _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        SliderStartPosValueLabel.Text = string.Format("{0}", Vm.SliderStartPosition);
+                    });
+            _sliderStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _sliderStopPosBinding = this.SetBinding(() => Vm.SliderStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        SliderStopPosValueLabel.Text = string.Format("{0}", Vm.SliderStopPosition);
+                    });
+            _sliderStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        PanStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+                    });
+            _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        PanStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+                    });
+            _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+                    });
+            _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition)
+                .WhenSourceChanges(() =>
+                    {
+                        TiltStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+                    });
+            _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            SwapStartStopButton.SetCommand(
+                "TouchUpInside",
+                Vm.SwapStartStopCommand);          
 
             base.ViewDidLoad();
         }
