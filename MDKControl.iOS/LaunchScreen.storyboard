@@ -22,17 +22,17 @@
                                 <rect key="frame" x="20" y="77" width="560" height="48"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Beta" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gM-8e-vX5">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Beta" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3gM-8e-vX5" misplaced="YES">
                                 <rect key="frame" x="20" y="559" width="561" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" customColorSpace="calibratedWhite" colorSpace="calibratedWhite" white="0.333333333333333" alpha="1"/>
                         <constraints>
                             <constraint firstItem="9" firstAttribute="centerX" secondItem="6" secondAttribute="centerX" id="10"/>
                             <constraint firstItem="9" firstAttribute="centerY" secondItem="6" secondAttribute="centerY" multiplier="1/3" constant="1" id="3el-Bx-SMb"/>
@@ -48,4 +48,16 @@
             <point key="canvasLocation" x="134" y="65"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="BrightMoon.png" width="80" height="80"/>
+        <image name="FutureFilled.png" width="80" height="80"/>
+        <image name="Hourglass.png" width="80" height="80"/>
+        <image name="NightLandscape.png" width="80" height="80"/>
+        <image name="Panorama.png" width="80" height="80"/>
+        <image name="PanoramaFilled.png" width="80" height="80"/>
+        <image name="Telescope.png" width="80" height="80"/>
+        <image name="TelescopeFilled.png" width="80" height="80"/>
+        <image name="Timer.png" width="80" height="80"/>
+        <image name="TimeSpanFilled.png" width="80" height="80"/>
+    </resources>
 </document>
