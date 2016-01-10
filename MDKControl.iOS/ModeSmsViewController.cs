@@ -41,7 +41,7 @@ namespace MDKControl.iOS
             SwapStartStopButton.TouchUpInside += (s, e) => {};
 
             var tableView = (UITableView)View;
-            tableView.BackgroundColor = Colors.DefaultLightGray;
+            tableView.BackgroundColor = UIColor.GroupTableViewBackgroundColor;
             tableView.BackgroundView = null;
             tableView.AllowsSelection = true;
 

@@ -39,7 +39,7 @@ namespace MDKControl.iOS
             ConnectButton.On = false;
 
             var tableView = (UITableView)View;
-            tableView.BackgroundColor = Colors.DefaultLightGray;
+            tableView.BackgroundColor = UIColor.GroupTableViewBackgroundColor;
             tableView.BackgroundView = null;
             tableView.AllowsSelection = true;
 
@@ -177,12 +177,12 @@ namespace MDKControl.iOS
             var cell = tableView.CellAt(indexPath);
             System.Diagnostics.Debug.WriteLine(cell);
 
-            //cell.SetSelected(false, true);
-
             _modeChangeRequested = true;
 
             // TODO: Select command based on indexPath
             Vm.SetModeSmsCommand.Execute(null);
+
+            //cell.SetSelected(false, false);
         }
 	}
 }
