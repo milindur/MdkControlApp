@@ -20,7 +20,7 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITableViewCell ExposureTableViewCell { get; set; }
+		TimePickerTableViewCell DurationValuePickerTableViewCell { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -28,7 +28,15 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		TimePickerTableViewCell ExposureValuePickerTableViewCell { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel IntervalValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		TimePickerTableViewCell IntervalValuePickerTableViewCell { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -44,7 +52,7 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UITableViewCell PreDelayTableViewCell { get; set; }
+		TimePickerTableViewCell PostDelayValuePickerTableViewCell { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -52,7 +60,15 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		TimePickerTableViewCell PreDelayValuePickerTableViewCell { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel ShotsValueLabel { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		TimePickerTableViewCell ShotsValuePickerTableViewCell { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -86,27 +102,31 @@ namespace MDKControl.iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UILabel TiltStopPosValueLabel { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIDatePicker TimePicker { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
 			if (DurationValueLabel != null) {
 				DurationValueLabel.Dispose ();
 				DurationValueLabel = null;
 			}
-			if (ExposureTableViewCell != null) {
-				ExposureTableViewCell.Dispose ();
-				ExposureTableViewCell = null;
+			if (DurationValuePickerTableViewCell != null) {
+				DurationValuePickerTableViewCell.Dispose ();
+				DurationValuePickerTableViewCell = null;
 			}
 			if (ExposureValueLabel != null) {
 				ExposureValueLabel.Dispose ();
 				ExposureValueLabel = null;
 			}
+			if (ExposureValuePickerTableViewCell != null) {
+				ExposureValuePickerTableViewCell.Dispose ();
+				ExposureValuePickerTableViewCell = null;
+			}
 			if (IntervalValueLabel != null) {
 				IntervalValueLabel.Dispose ();
 				IntervalValueLabel = null;
+			}
+			if (IntervalValuePickerTableViewCell != null) {
+				IntervalValuePickerTableViewCell.Dispose ();
+				IntervalValuePickerTableViewCell = null;
 			}
 			if (PanStartPosValueLabel != null) {
 				PanStartPosValueLabel.Dispose ();
@@ -120,17 +140,25 @@ namespace MDKControl.iOS
 				PostDelayValueLabel.Dispose ();
 				PostDelayValueLabel = null;
 			}
-			if (PreDelayTableViewCell != null) {
-				PreDelayTableViewCell.Dispose ();
-				PreDelayTableViewCell = null;
+			if (PostDelayValuePickerTableViewCell != null) {
+				PostDelayValuePickerTableViewCell.Dispose ();
+				PostDelayValuePickerTableViewCell = null;
 			}
 			if (PreDelayValueLabel != null) {
 				PreDelayValueLabel.Dispose ();
 				PreDelayValueLabel = null;
 			}
+			if (PreDelayValuePickerTableViewCell != null) {
+				PreDelayValuePickerTableViewCell.Dispose ();
+				PreDelayValuePickerTableViewCell = null;
+			}
 			if (ShotsValueLabel != null) {
 				ShotsValueLabel.Dispose ();
 				ShotsValueLabel = null;
+			}
+			if (ShotsValuePickerTableViewCell != null) {
+				ShotsValuePickerTableViewCell.Dispose ();
+				ShotsValuePickerTableViewCell = null;
 			}
 			if (SliderStartPosValueLabel != null) {
 				SliderStartPosValueLabel.Dispose ();
@@ -163,10 +191,6 @@ namespace MDKControl.iOS
 			if (TiltStopPosValueLabel != null) {
 				TiltStopPosValueLabel.Dispose ();
 				TiltStopPosValueLabel = null;
-			}
-			if (TimePicker != null) {
-				TimePicker.Dispose ();
-				TimePicker = null;
 			}
 		}
 	}

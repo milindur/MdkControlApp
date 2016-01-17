@@ -128,6 +128,7 @@
     <Compile Include="ModeSmsStatusViewController.designer.cs">
       <DependentUpon>ModeSmsStatusViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimePickerTableViewCell.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
