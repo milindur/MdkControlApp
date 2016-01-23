@@ -22,6 +22,10 @@ namespace MDKControl.iOS
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UIBarButtonItem PauseResumeButton { get; set; }
 
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UIProgressView ProgressBar { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (CancelButton != null) {
@@ -31,6 +35,10 @@ namespace MDKControl.iOS
 			if (PauseResumeButton != null) {
 				PauseResumeButton.Dispose ();
 				PauseResumeButton = null;
+			}
+			if (ProgressBar != null) {
+				ProgressBar.Dispose ();
+				ProgressBar = null;
 			}
 		}
 	}

@@ -26,6 +26,7 @@ namespace MDKControl.iOS
         private static IContainer _container;
 
         public const string ModeSmsViewKey = "ModeSmsViewKey";
+        public const string ModeSmsStatusViewKey = "ModeSmsStatusViewKey";
         public const string ModePanoViewKey = "ModePanoViewKey";
         public const string ModeAstroViewKey = "ModeAstroViewKey";
         public const string JoystickViewKey = "JoystickViewKey";
@@ -104,6 +105,7 @@ namespace MDKControl.iOS
                 nav.Configure(ViewModelLocator.DeviceListViewKey, "DeviceListViewController");
                 nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
                 nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
+                nav.Configure(AppDelegate.ModeSmsStatusViewKey, "ModeSmsStatusViewController");
                 nav.Configure(AppDelegate.JoystickViewKey, "JoystickViewController");
 
                 builder.RegisterInstance(nav)

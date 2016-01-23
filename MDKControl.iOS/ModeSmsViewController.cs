@@ -151,7 +151,6 @@ namespace MDKControl.iOS
                         Vm.MaxShots = t;
                 };
 
-
             _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition)
                 .WhenSourceChanges(() =>
                 {
@@ -196,7 +195,13 @@ namespace MDKControl.iOS
 
             SwapStartStopButton.SetCommand(
                 "TouchUpInside",
-                Vm.SwapStartStopCommand);          
+                Vm.SwapStartStopCommand);
+
+            StartButton.Clicked += (sender, e) => 
+                {
+                    Vm.StartProgramCommand.Execute(null);
+                    ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
+                };            
             
             base.ViewDidLoad();
         }

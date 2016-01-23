@@ -70,7 +70,7 @@ namespace MDKControl.iOS
                         switch (Vm.ProgramMode)
                         {
                             case MoCoBusProgramMode.ShootMoveShoot:
-                                if (navService.CurrentPageKey != AppDelegate.ModeSmsViewKey)
+                                if (navService.CurrentPageKey != AppDelegate.ModeSmsViewKey && navService.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey)
                                 {
                                     if (_modeChangeRequested)
                                     {
