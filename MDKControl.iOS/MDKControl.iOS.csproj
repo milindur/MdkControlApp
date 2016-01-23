@@ -114,7 +114,6 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Colors.cs" />
     <Compile Include="ModeSmsViewController.cs" />
     <Compile Include="ModeSmsViewController.designer.cs">
       <DependentUpon>ModeSmsViewController.cs</DependentUpon>
