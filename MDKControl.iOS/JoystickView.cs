@@ -13,6 +13,8 @@ namespace MDKControl.iOS
     [Register("JoystickView"), DesignTimeVisible(true)]
     public class JoystickView : UIView
     {
+        private const int padding = 10;
+        
         private readonly EventLoopScheduler _scheduler = new EventLoopScheduler();
         private readonly Subject<MDKControl.Core.Models.Point> _joystickStartSubject = new Subject<MDKControl.Core.Models.Point>();
         private readonly Subject<Unit> _joystickStopSubject = new Subject<Unit>();
@@ -40,20 +42,79 @@ namespace MDKControl.iOS
 
         public IObservable<MDKControl.Core.Models.Point> JoystickMove { get { return _joystickMoveSubject.ObserveOn(_scheduler); } }
 
-        public override void Draw(CoreGraphics.CGRect rect)
+        public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
-            _bounds = new CGRect(rect.Location, rect.Size);
+            _bounds = new CGRect(rect.X + padding, rect.Y + padding, rect.Width - 2 * padding, rect.Height - 2 * padding);
             
             using (var ctx = UIGraphics.GetCurrentContext())
             {
-                ctx.SetLineWidth(10);
-                UIColor.Red.SetFill();
-                UIColor.Green.SetStroke();
-                ctx.SetLineDash(0, new nfloat[] { 10, 10 });
-                ctx.FillEllipseInRect(rect);
-                ctx.StrokeEllipseInRect(rect);
+                ctx.SaveState();
+
+                UIColor.DarkGray.SetStroke();
+                ctx.SetLineWidth(3);
+                ctx.StrokeRect(_bounds);
+
+                ctx.RestoreState();
+
+                ctx.SaveState();
+                
+                UIColor.DarkGray.SetStroke();
+                ctx.SetLineWidth(2);
+                ctx.SetLineDash(0, new nfloat[] { 4, 4 });
+
+                ctx.StrokeLineSegments(new [] 
+                    { 
+                        new CGPoint(_bounds.GetMidX(), _bounds.Top), 
+                        new CGPoint(_bounds.GetMidX(), _bounds.Bottom) 
+                    });
+                ctx.StrokeLineSegments(new [] 
+                    { 
+                        new CGPoint(_bounds.Left, _bounds.GetMidY()), 
+                        new CGPoint(_bounds.Right, _bounds.GetMidY()) 
+                    });
+
+                ctx.RestoreState();
+
+                ctx.SaveState();
+
+                UIColor.DarkGray.SetStroke();
+                ctx.SetLineWidth(2);
+                ctx.SetLineDash(0, new nfloat[] { 2, 2 });
+
+                ctx.StrokeLineSegments(new [] 
+                    { 
+                        new CGPoint(_bounds.Left + _bounds.Width / 4f, _bounds.Top), 
+                        new CGPoint(_bounds.Left + _bounds.Width / 4f, _bounds.Bottom) 
+                    });
+                ctx.StrokeLineSegments(new [] 
+                    { 
+                        new CGPoint(_bounds.Left + 3f * _bounds.Width / 4f, _bounds.Top), 
+                        new CGPoint(_bounds.Left + 3f * _bounds.Width / 4f, _bounds.Bottom) 
+                    });
+                ctx.StrokeLineSegments(new []
+                    { 
+                        new CGPoint(_bounds.Left, _bounds.Top + _bounds.Height / 4f), 
+                        new CGPoint(_bounds.Right, _bounds.Top + _bounds.Height / 4f) 
+                    });
+                ctx.StrokeLineSegments(new []
+                    { 
+                        new CGPoint(_bounds.Left, _bounds.Top + 3f * _bounds.Height / 4f), 
+                        new CGPoint(_bounds.Right, _bounds.Top + 3f * _bounds.Height / 4f) 
+                    });
+
+                ctx.RestoreState();
+
+                if (_isActive)
+                {
+                    ctx.SaveState();
+
+                    UIColor.Blue.SetFill();
+                    ctx.FillEllipseInRect(new CGRect(_joystickPositionRaw.X - 20, _joystickPositionRaw.Y - 20, 40, 40));
+
+                    ctx.RestoreState();
+                }
             }
         }
 
@@ -66,6 +127,7 @@ namespace MDKControl.iOS
             {
                 System.Diagnostics.Debug.WriteLine("TouchesBegan");
                 var point = GetTouchPoint(touch);
+                _isActive = true;
                 OnJoystickStart(point.X, point.Y);
                 SetNeedsDisplay();
             }
@@ -80,6 +142,7 @@ namespace MDKControl.iOS
             {
                 System.Diagnostics.Debug.WriteLine("TouchesMoved");
                 var point = GetTouchPoint(touch);
+                _isActive = true;
                 OnJoystickMove(point.X, point.Y);
                 SetNeedsDisplay();
             }
@@ -89,6 +152,8 @@ namespace MDKControl.iOS
         {
             base.TouchesEnded(touches, evt);
 
+            _isActive = false;
+
             System.Diagnostics.Debug.WriteLine("TouchesEnded");
             OnJoystickStop();
             SetNeedsDisplay();
@@ -97,6 +162,8 @@ namespace MDKControl.iOS
         public override void TouchesCancelled(NSSet touches, UIEvent evt)
         {
             base.TouchesCancelled(touches, evt);
+
+            _isActive = false;
 
             System.Diagnostics.Debug.WriteLine("TouchesCancelled");
             OnJoystickStop();
@@ -120,7 +187,6 @@ namespace MDKControl.iOS
                 y = _bounds.Bottom;
 
             _joystickPositionRaw = new CGPoint(x, y);
-            _isActive = true;
 
             var scaleX = _bounds.Width / 2f;
             var scaleY = _bounds.Height / 2f;

@@ -31,19 +31,21 @@ namespace MDKControl.iOS
             CancelButton.Clicked += (sender, e) => 
                 {
                     ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
-                    //NavigationController.PopViewController(true);
                 };
             
             SetButton.Clicked += (sender, e) => 
                 {
                     Dismissed.Invoke();
                     ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
-                    //NavigationController.PopViewController(true);
                 };
 
             Joystick.JoystickStart.SetCommand(Vm.StartJoystickCommand);
             Joystick.JoystickStop.SetCommand(Vm.StopJoystickCommand);
             Joystick.JoystickMove.SetCommand(Vm.MoveJoystickCommand);
+
+            Slider.SliderStart.SetCommand(Vm.StartSliderCommand);
+            Slider.SliderStop.SetCommand(Vm.StopSliderCommand);
+            Slider.SliderMove.SetCommand(Vm.MoveSliderCommand);           
 
             base.ViewDidLoad();
         }
