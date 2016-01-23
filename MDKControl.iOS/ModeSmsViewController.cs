@@ -5,6 +5,8 @@ using UIKit;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
+using MDKControl.iOS.Helpers;
 
 namespace MDKControl.iOS
 {
@@ -56,7 +58,6 @@ namespace MDKControl.iOS
             tableView.BackgroundColor = UIColor.GroupTableViewBackgroundColor;
             tableView.BackgroundView = null;
             tableView.AllowsSelection = true;
-
 
             PreDelayValueLabel.Text = string.Format("{0:F1}s", 0.1f); 
             
@@ -136,8 +137,19 @@ namespace MDKControl.iOS
                 .WhenSourceChanges(() =>
                 {
                     ShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
+                    if (ShotsValuePickerTableViewCell.Model.SelectedNumber != Vm.MaxShots)
+                    {
+                        ShotsValuePickerTableViewCell.Model.SelectedNumber = Vm.MaxShots;
+                    }
                 });
             _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
+
+            ShotsValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
+                {
+                    var t = (ushort)ShotsValuePickerTableViewCell.Model.SelectedNumber;
+                    if (Vm.MaxShots != t)
+                        Vm.MaxShots = t;
+                };
 
 
             _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition)
@@ -185,8 +197,7 @@ namespace MDKControl.iOS
             SwapStartStopButton.SetCommand(
                 "TouchUpInside",
                 Vm.SwapStartStopCommand);          
-
-
+            
             base.ViewDidLoad();
         }
 
@@ -272,7 +283,21 @@ namespace MDKControl.iOS
                     {
                         switch (indexPath.Row)
                         {
-                            case 0:
+                            case 0: // start position
+                                ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(
+                                    AppDelegate.JoystickViewKey, 
+                                    new JoystickNavigationHelper(Vm.DeviceViewModel.JoystickViewModel, () =>
+                                        {
+                                            Vm.SetStartCommand.Execute(null);
+                                        }));
+                                break;
+                            case 1: // stop position
+                                ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(
+                                    AppDelegate.JoystickViewKey, 
+                                    new JoystickNavigationHelper(Vm.DeviceViewModel.JoystickViewModel, () =>
+                                        {
+                                            Vm.SetStopCommand.Execute(null);
+                                        }));
                                 break;
                         }
                     }

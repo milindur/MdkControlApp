@@ -68,7 +68,7 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		TimePickerTableViewCell ShotsValuePickerTableViewCell { get; set; }
+		NumberPickerTableViewCell ShotsValuePickerTableViewCell { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]

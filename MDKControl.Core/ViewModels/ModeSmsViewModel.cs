@@ -51,6 +51,8 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
+        public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
+
         public decimal ExposureTime
         {
             get { return _exposureTime; }

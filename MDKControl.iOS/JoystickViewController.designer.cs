@@ -20,7 +20,15 @@ namespace MDKControl.iOS
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		JoystickView Joystick { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UIBarButtonItem SetButton { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		SliderView Slider { get; set; }
 
 		void ReleaseDesignerOutlets ()
 		{
@@ -28,9 +36,17 @@ namespace MDKControl.iOS
 				CancelButton.Dispose ();
 				CancelButton = null;
 			}
+			if (Joystick != null) {
+				Joystick.Dispose ();
+				Joystick = null;
+			}
 			if (SetButton != null) {
 				SetButton.Dispose ();
 				SetButton = null;
+			}
+			if (Slider != null) {
+				Slider.Dispose ();
+				Slider = null;
 			}
 		}
 	}

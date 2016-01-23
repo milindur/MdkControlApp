@@ -28,6 +28,7 @@ namespace MDKControl.iOS
         public const string ModeSmsViewKey = "ModeSmsViewKey";
         public const string ModePanoViewKey = "ModePanoViewKey";
         public const string ModeAstroViewKey = "ModeAstroViewKey";
+        public const string JoystickViewKey = "JoystickViewKey";
 
         public override UIWindow Window
         {
@@ -103,6 +104,7 @@ namespace MDKControl.iOS
                 nav.Configure(ViewModelLocator.DeviceListViewKey, "DeviceListViewController");
                 nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
                 nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
+                nav.Configure(AppDelegate.JoystickViewKey, "JoystickViewController");
 
                 builder.RegisterInstance(nav)
                     .As<INavigationService>();

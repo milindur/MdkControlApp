@@ -129,6 +129,10 @@
       <DependentUpon>ModeSmsStatusViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="TimePickerTableViewCell.cs" />
+    <Compile Include="NumberPickerTableViewCell.cs" />
+    <Compile Include="JoystickView.cs" />
+    <Compile Include="SliderView.cs" />
+    <Compile Include="Helpers\JoystickNavigationHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
