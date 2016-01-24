@@ -12,6 +12,8 @@ namespace MDKControl.iOS
 {
     partial class ModeSmsViewController : UITableViewController, INavigationTarget
     {
+        private Binding _runStatusBinding;
+
         private Binding _exposureTimeBinding;
         private Binding _delayTimeBinding;
         private Binding _intervalTimeBinding;
@@ -24,6 +26,8 @@ namespace MDKControl.iOS
         private Binding _panStopPosBinding;
         private Binding _tiltStartPosBinding;
         private Binding _tiltStopPosBinding;
+
+        private bool navigatedToStatusView = false;
 
         private bool _editingPreDelay;
         private bool _editingExposure;
@@ -40,6 +44,7 @@ namespace MDKControl.iOS
         public object NavigationParameter { get; set; }
 
         public ModeSmsViewModel Vm { get; private set; }
+        public DeviceViewModel DeviceVm { get { return Vm.DeviceViewModel; } }
 
         public override void ViewDidLoad()
         {
@@ -199,11 +204,31 @@ namespace MDKControl.iOS
 
             StartButton.Clicked += (sender, e) => 
                 {
+                    navigatedToStatusView = true;
                     Vm.StartProgramCommand.Execute(null);
                     ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
                 };            
             
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
+                {
+                    var nav = ServiceLocator.Current.GetInstance<INavigationService>();
+                    if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey && !navigatedToStatusView)
+                    {
+                        navigatedToStatusView = true;
+                        DeviceVm.StartUpdateTask();
+                        nav.NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
+                    }
+                });
+            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
+
             base.ViewDidLoad();
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            navigatedToStatusView = false;
+            
+            base.ViewDidAppear(animated);
         }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

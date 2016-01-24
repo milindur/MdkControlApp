@@ -17,6 +17,7 @@ namespace MDKControl.iOS
         
         private Binding _isConnectedBinding;
         private Binding _programModeBinding;
+        private Binding _runStatusBinding;
 
 		public DeviceViewController (IntPtr handle) : base (handle)
 		{
@@ -72,7 +73,7 @@ namespace MDKControl.iOS
                             case MoCoBusProgramMode.ShootMoveShoot:
                                 if (navService.CurrentPageKey != AppDelegate.ModeSmsViewKey && navService.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey)
                                 {
-                                    if (_modeChangeRequested)
+                                    if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating to ModeSmsView since a mode change was requested");
                                         _modeChangeRequested = false;
@@ -86,9 +87,9 @@ namespace MDKControl.iOS
                                 }
                                 break;
                             case MoCoBusProgramMode.Panorama:
-                                if (navService.CurrentPageKey != AppDelegate.ModePanoViewKey)
+                                if (navService.CurrentPageKey != AppDelegate.ModePanoViewKey && navService.CurrentPageKey != AppDelegate.ModePanoStatusViewKey)
                                 {
-                                    if (_modeChangeRequested)
+                                    if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating to ModePanoView since a mode change was requested");
                                         _modeChangeRequested = false;
@@ -102,9 +103,9 @@ namespace MDKControl.iOS
                                 }
                                 break;
                             case MoCoBusProgramMode.Astro:
-                                if (navService.CurrentPageKey != AppDelegate.ModeAstroViewKey)
+                                if (navService.CurrentPageKey != AppDelegate.ModeAstroViewKey && navService.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey)
                                 {
-                                    if (_modeChangeRequested)
+                                    if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating to ModeAstroView since a mode change was requested");
                                         _modeChangeRequested = false;
