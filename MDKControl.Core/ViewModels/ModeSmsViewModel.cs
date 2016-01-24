@@ -87,6 +87,8 @@ namespace MDKControl.Core.ViewModels
 
                 if (_postDelayTime < 0.1m)
                     _postDelayTime = 0.1m;
+                if (_postDelayTime > 60m)
+                    _postDelayTime = 60m;
                 if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
                     _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime;
 
@@ -115,12 +117,18 @@ namespace MDKControl.Core.ViewModels
                     _postDelayTime = _intervalTime - _preDelayTime - _focusTime - _exposureTime - _minMotionTime;
                     if (_postDelayTime < 0.1m)
                         _postDelayTime = 0.1m;
+                    if (_postDelayTime > 60m)
+                        _postDelayTime = 60m;
                     if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
                         _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime;
                 }
                 else
                 {
                     _postDelayTime = _intervalTime - _preDelayTime - _focusTime - _exposureTime - _minMotionTime;                
+                    if (_postDelayTime < 0.1m)
+                        _postDelayTime = 0.1m;
+                    if (_postDelayTime > 60m)
+                        _postDelayTime = 60m;
                 }
 
                 _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
@@ -338,16 +346,23 @@ namespace MDKControl.Core.ViewModels
 
         private async void StartProgram()
         {
-            var preDelay = (ushort)(_preDelayTime * 1000m);
-            var focusTime = (ushort)(_focusTime * 1000m);
-            var exposureTime = (uint)(_exposureTime * 1000m);
-            var postDelay = (ushort)(_postDelayTime * 1000m);
-            var interval = (uint)(_intervalTime * 1000m);
+            var preDelay = _preDelayTime * 1000m;
+            var focusTime = _focusTime * 1000m;
+            var exposureTime = _exposureTime * 1000m;
+            var postDelay = _postDelayTime * 1000m;
+            var interval = _intervalTime * 1000m;
 
-            await _protocolService.Camera.SetFocusTime(focusTime);
-            await _protocolService.Camera.SetTriggerTime(exposureTime);
-            await _protocolService.Camera.SetExposureDelayTime(postDelay);
-            await _protocolService.Camera.SetInterval(interval);
+            if (preDelay > ushort.MaxValue)
+                preDelay = 60000m;
+            if (focusTime > ushort.MaxValue)
+                focusTime = 60000m;
+            if (postDelay > ushort.MaxValue)
+                postDelay = 60000m;
+
+            await _protocolService.Camera.SetFocusTime((ushort)focusTime);
+            await _protocolService.Camera.SetTriggerTime((uint)exposureTime);
+            await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay);
+            await _protocolService.Camera.SetInterval((uint)interval);
             await _protocolService.Camera.SetMaxShots(MaxShots);
 
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);

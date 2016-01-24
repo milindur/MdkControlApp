@@ -71,6 +71,8 @@ namespace MDKControl.Core.ViewModels
                 _delayTime = value;
                 if (_delayTime < 0.1m)
                     _delayTime = 0.1m;
+                if (_delayTime > 60m)
+                    _delayTime = 60m;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
@@ -262,12 +264,15 @@ namespace MDKControl.Core.ViewModels
         {
             ushort preDelay = 100;
             ushort focusTime = 100;
-            var exposureTime = (uint)(ExposureTime * 1000m);
-            var postDelay = (ushort)(DelayTime * 1000m);
+            var exposureTime = ExposureTime * 1000m;
+            var postDelay = DelayTime * 1000m;
+
+            if (postDelay > ushort.MaxValue)
+                postDelay = 60000m;
 
             await _protocolService.Camera.SetFocusTime(focusTime);
-            await _protocolService.Camera.SetTriggerTime(exposureTime);
-            await _protocolService.Camera.SetExposureDelayTime(postDelay);
+            await _protocolService.Camera.SetTriggerTime((uint)exposureTime);
+            await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay);
 
             await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
             await _protocolService.Main.Start();
