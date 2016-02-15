@@ -292,11 +292,11 @@ namespace MDKControl.Core.ViewModels
 
         private async void SetStart()
         {
-            await _protocolService.Main.SetProgramStartPoint();
+            await _protocolService.Main.SetProgramStartPoint().ConfigureAwait(false);
 
-            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint();
-            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
-            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
+            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint().ConfigureAwait(false);
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
         
             _dispatcherHelper.RunOnUIThread(() =>
                 {
@@ -308,11 +308,11 @@ namespace MDKControl.Core.ViewModels
 
         private async void SetStop()
         {
-            await _protocolService.Main.SetProgramStopPoint();
+            await _protocolService.Main.SetProgramStopPoint().ConfigureAwait(false);
 
-            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint();
-            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
-            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint().ConfigureAwait(false);
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
@@ -324,14 +324,14 @@ namespace MDKControl.Core.ViewModels
 
         private async  void SwapStartStop()
         {
-            await _protocolService.Main.ReverseAllMotorsStartStopPoints();
+            await _protocolService.Main.ReverseAllMotorsStartStopPoints().ConfigureAwait(false);
 
-            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint();
-            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
-            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
-            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint();
-            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
-            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint().ConfigureAwait(false);
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
+            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint().ConfigureAwait(false);
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
@@ -359,34 +359,34 @@ namespace MDKControl.Core.ViewModels
             if (postDelay > ushort.MaxValue)
                 postDelay = 60000m;
 
-            await _protocolService.Camera.SetFocusTime((ushort)focusTime);
-            await _protocolService.Camera.SetTriggerTime((uint)exposureTime);
-            await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay);
-            await _protocolService.Camera.SetInterval((uint)interval);
-            await _protocolService.Camera.SetMaxShots(MaxShots);
+            await _protocolService.Camera.SetFocusTime((ushort)focusTime).ConfigureAwait(false);
+            await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
+            await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
+            await _protocolService.Camera.SetInterval((uint)interval).ConfigureAwait(false);
+            await _protocolService.Camera.SetMaxShots(MaxShots).ConfigureAwait(false);
 
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
-            await _protocolService.Main.Start();
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot).ConfigureAwait(false);
+            await _protocolService.Main.Start().ConfigureAwait(false);
 
             _deviceViewModel.StartUpdateTask();
         }
 
         private async void PauseProgram()
         {
-            await _protocolService.Main.Pause();
+            await _protocolService.Main.Pause().ConfigureAwait(false);
         }
 
         private async void StopProgram()
         {
-            await _protocolService.Main.Stop();
-            await _deviceViewModel.StopUpdateTask();
+            await _protocolService.Main.Stop().ConfigureAwait(false);
+            await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
         }
 
         public async Task UpdateState()
         {
-            _progress = await _protocolService.Main.GetProgramPercentComplete();
-            _elapsedTime = await _protocolService.Main.GetRunTime();
-            _elapsedShots = await _protocolService.Camera.GetCurrentShots();
+            _progress = await _protocolService.Main.GetProgramPercentComplete().ConfigureAwait(false);
+            _elapsedTime = await _protocolService.Main.GetRunTime().ConfigureAwait(false);
+            _elapsedShots = await _protocolService.Camera.GetCurrentShots().ConfigureAwait(false);
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
@@ -405,17 +405,17 @@ namespace MDKControl.Core.ViewModels
 
         public async Task InitState()
         {
-            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint();
-            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint();
-            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint();
-            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint();
-            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint();
-            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint();
+            _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint().ConfigureAwait(false);
+            _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
+            _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
+            _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint().ConfigureAwait(false);
+            _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
+            _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
 
-            _exposureTime = (decimal)await _protocolService.Camera.GetTriggerTime() / 1000m;
-            _postDelayTime = (decimal)await _protocolService.Camera.GetExposureDelayTime() / 1000m;
-            _intervalTime = (decimal)await _protocolService.Camera.GetInterval() / 1000m;
-            _durationTime = ((decimal)await _protocolService.Camera.GetMaxShots() - 1) * _intervalTime;
+            _exposureTime = (decimal)await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
+            _postDelayTime = (decimal)await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
+            _intervalTime = (decimal)await _protocolService.Camera.GetInterval().ConfigureAwait(false) / 1000m;
+            _durationTime = ((decimal)await _protocolService.Camera.GetMaxShots().ConfigureAwait(false) - 1) * _intervalTime;
             if (_durationTime < 0) _durationTime = 0;
 
             _dispatcherHelper.RunOnUIThread(() =>

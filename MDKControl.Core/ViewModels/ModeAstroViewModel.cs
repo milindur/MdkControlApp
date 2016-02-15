@@ -52,28 +52,28 @@ namespace MDKControl.Core.ViewModels
 
         private async void ResumeProgram()
         {
-            await _protocolService.Main.Start();
+            await _protocolService.Main.Start().ConfigureAwait(false);
 
             _deviceViewModel.StartUpdateTask();
         }
 
         private async void StartProgram()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
-            await _protocolService.Main.Start((byte)Direction, (byte)Speed);
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
+            await _protocolService.Main.Start((byte)Direction, (byte)Speed).ConfigureAwait(false);
 
             _deviceViewModel.StartUpdateTask();
         }
 
         private async void PauseProgram()
         {
-            await _protocolService.Main.Pause();
+            await _protocolService.Main.Pause().ConfigureAwait(false);
         }
 
         private async void StopProgram()
         {
-            await _protocolService.Main.Stop();
-            await _deviceViewModel.StopUpdateTask();
+            await _protocolService.Main.Stop().ConfigureAwait(false);
+            await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
         }
 
         public AstroDirection Direction { get; set; }
