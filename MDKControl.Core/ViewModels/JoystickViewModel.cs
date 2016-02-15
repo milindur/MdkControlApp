@@ -98,7 +98,7 @@ namespace MDKControl.Core.ViewModels
             _sliderOrJoystickIsRunning = true;
 
             _joystickTaskCancellationTokenSource = new CancellationTokenSource();
-            _joystickTask = Task.Factory.StartNew(async () =>
+            _joystickTask = Task.Run(async () =>
                 {
                     var token = _joystickTaskCancellationTokenSource.Token;
                     try

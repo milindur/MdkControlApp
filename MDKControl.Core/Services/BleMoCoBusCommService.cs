@@ -144,7 +144,7 @@ namespace MDKControl.Core.Services
             if (!IsConnected || _moCoBusRxCharacteristic == null)
                 return null;
 
-            return await Task.Factory.StartNew(() =>
+            return await Task.Run(() =>
                 {
                     //if (_rxBytesQueue.IsEmpty)
                     {

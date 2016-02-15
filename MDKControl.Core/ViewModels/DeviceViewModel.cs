@@ -214,7 +214,7 @@ namespace MDKControl.Core.ViewModels
                 return;
             
             _updateTaskCancellationTokenSource = new CancellationTokenSource();
-            _updateTask = Task.Factory.StartNew(async () =>
+            _updateTask = Task.Run(async () =>
                 {
                     var token = _updateTaskCancellationTokenSource.Token;
                     try
