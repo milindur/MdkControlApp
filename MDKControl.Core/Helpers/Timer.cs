@@ -18,7 +18,7 @@ namespace MDKControl.Core.Helpers
                     {
                         if (IsCancellationRequested)
                             break;
-                        await Task.Delay(period);
+                        await Task.Delay(period).ConfigureAwait(false);
                         Task.Run(() => tuple.Item1(tuple.Item2));
                     }
 

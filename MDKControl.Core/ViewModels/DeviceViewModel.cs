@@ -181,7 +181,7 @@ namespace MDKControl.Core.ViewModels
                 }
             }
 
-            _runStatus = await _protocolService.Main.GetRunStatus();
+            _runStatus = await _protocolService.Main.GetRunStatus().ConfigureAwait(false);
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {
@@ -192,20 +192,20 @@ namespace MDKControl.Core.ViewModels
 
         private async void SetModeSms()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot);
-            await UpdateState();
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot).ConfigureAwait(false);
+            await UpdateState().ConfigureAwait(false);
         }
 
         private async void SetModePano()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama);
-            await UpdateState();
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
+            await UpdateState().ConfigureAwait(false);
         }
 
         private async void SetModeAstro()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro);
-            await UpdateState();
+            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
+            await UpdateState().ConfigureAwait(false);
         }
 
         public void StartUpdateTask()
@@ -214,35 +214,36 @@ namespace MDKControl.Core.ViewModels
                 return;
             
             _updateTaskCancellationTokenSource = new CancellationTokenSource();
-            _updateTask = Task.Factory.StartNew(async () =>
+            _updateTask = Task.Run(async () =>
                 {
                     var token = _updateTaskCancellationTokenSource.Token;
                     try
                     {
                         while (true)
                         {
-                            await Task.Delay(500, token);
+                            await Task.Delay(500, token).ConfigureAwait(false);
                             token.ThrowIfCancellationRequested();
 
                             try
                             {
                                 Debug.WriteLine("UpdateTask: Updating...");
-                                await UpdateState();
+                                await UpdateState().ConfigureAwait(false);
                                 switch (ProgramMode)
                                 {
                                     case MoCoBusProgramMode.ShootMoveShoot:
-                                        await ModeSmsViewModel.UpdateState();
+                                        await ModeSmsViewModel.UpdateState().ConfigureAwait(false);
                                         break;
                                     case MoCoBusProgramMode.Panorama:
-                                        await ModePanoViewModel.UpdateState();
+                                        await ModePanoViewModel.UpdateState().ConfigureAwait(false);
                                         break;
                                     case MoCoBusProgramMode.Astro:
-                                        await ModeAstroViewModel.UpdateState();
+                                        await ModeAstroViewModel.UpdateState().ConfigureAwait(false);
                                         break;
                                 }
                             }
-                            catch (OperationCanceledException)
+                            catch (OperationCanceledException ex)
                             {
+                                Debug.WriteLine("UpdateTask: inner operation canceled {0}", ex);
                                 break;
                             }
                             catch (Exception ex)
@@ -251,8 +252,9 @@ namespace MDKControl.Core.ViewModels
                             }
                         }
                     }
-                    catch (OperationCanceledException)
+                    catch (OperationCanceledException ex)
                     {
+                        Debug.WriteLine("UpdateTask: outer operation canceled {0}", ex);
                     }
                     catch (Exception ex)
                     {
@@ -269,20 +271,28 @@ namespace MDKControl.Core.ViewModels
             Debug.WriteLine("Stop UpdateTask");
 
             _updateTaskCancellationTokenSource.Cancel();
-            await _updateTask;
+            await _updateTask.ConfigureAwait(false);
 
+            _updateTaskCancellationTokenSource.Dispose();
             _updateTaskCancellationTokenSource = null;
             _updateTask = null;
         }
 
         public override void Cleanup()
         {
+            Debug.WriteLine("DeviceViewModel.Cleanup: StopUpdateTask");
             StopUpdateTask().Wait();
-            
+            Debug.WriteLine("DeviceViewModel.Cleanup: StopUpdateTask done");
+
+            Debug.WriteLine("DeviceViewModel.Cleanup: Mode*ViewModel");
             ModeAstroViewModel.Cleanup();
             ModePanoViewModel.Cleanup();
             ModeSmsViewModel.Cleanup();
+            Debug.WriteLine("DeviceViewModel.Cleanup: Mode*ViewModel done");
+
+            Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel");
             JoystickViewModel.Cleanup();
+            Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel done");
 
             IsConnected = false;
 

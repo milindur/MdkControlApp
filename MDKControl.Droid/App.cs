@@ -92,7 +92,7 @@ namespace MDKControl.Droid
                     };
 
 #if DEBUG
-                Insights.Initialize(Insights.DebugModeKey, context);
+                Insights.Initialize("1532003910b06b50a709d0e691a8054e904922c8", context);
 #else
                 Insights.Initialize("76d51a30602c5fd9a5e64f263e25d14947533c61", context);
 #endif

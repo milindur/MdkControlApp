@@ -66,7 +66,7 @@ namespace MDKControl.Core.ViewModels
 
             _joystickIsRunning = true;
 
-            Debug.WriteLine("Start Joystick");
+            Debug.WriteLine($"Start Joystick X={point.X} Y={point.Y}");
 
             _joystickCurrentPoint = point;
 
@@ -83,7 +83,7 @@ namespace MDKControl.Core.ViewModels
 
             _sliderIsRunning = true;
 
-            Debug.WriteLine("Start Slider");
+            Debug.WriteLine($"Start Slider Z={point}");
 
             _sliderCurrentPoint = point;
 
@@ -98,20 +98,22 @@ namespace MDKControl.Core.ViewModels
             _sliderOrJoystickIsRunning = true;
 
             _joystickTaskCancellationTokenSource = new CancellationTokenSource();
-            _joystickTask = Task.Factory.StartNew(async () =>
+            _joystickTask = Task.Run(async () =>
                 {
+                    var taskName = "SliderOrJoystickTask_" + Guid.NewGuid().ToString("N");
                     var token = _joystickTaskCancellationTokenSource.Token;
                     try
                     {
                         while (true)
                         {
-                            await Task.Delay(100, token);
                             token.ThrowIfCancellationRequested();
+
+                            await Task.Delay(100, token).ConfigureAwait(false);
                             try
                             {
-                                Debug.WriteLine("MoveSliderOrJoystickTask: Trigger Watchdog!");
-                                await _protocolService.Main.GetJoystickWatchdogStatus();
-                                await Task.Delay(20, token);
+                                Debug.WriteLine("SliderOrJoystickTask: Trigger Watchdog!");
+                                await _protocolService.Main.GetJoystickWatchdogStatus().ConfigureAwait(false);
+                                await Task.Delay(20, token).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException)
                             {
@@ -119,19 +121,19 @@ namespace MDKControl.Core.ViewModels
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("MoveSliderOrJoystickTask: {0}", ex);
+                                Debug.WriteLine("SliderOrJoystickTask: Exception while triggering: {0}", ex);
                             }
                             try
                             {
-                                Debug.WriteLine("MoveJoystickTask: Move!");
                                 var currentJoystick = _joystickCurrentPoint;
                                 var currentSlider = _sliderCurrentPoint;
+                                Debug.WriteLine($"SliderOrJoystickTask: Move! X={currentJoystick.X} Y={currentJoystick.Y} Z={currentSlider}");
                                 await _protocolService.Motor2.SetContinuousSpeed(currentJoystick.X).ConfigureAwait(false);
-                                await Task.Delay(20, token);
+                                await Task.Delay(20, token).ConfigureAwait(false);
                                 await _protocolService.Motor3.SetContinuousSpeed(currentJoystick.Y).ConfigureAwait(false);
-                                await Task.Delay(20, token);
+                                await Task.Delay(20, token).ConfigureAwait(false);
                                 await _protocolService.Motor1.SetContinuousSpeed(currentSlider).ConfigureAwait(false);
-                                await Task.Delay(20, token);
+                                await Task.Delay(20, token).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException)
                             {
@@ -139,28 +141,31 @@ namespace MDKControl.Core.ViewModels
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("MoveSliderOrJoystickTask: {0}", ex);
+                                Debug.WriteLine("SliderOrJoystickTask: Exception while moving: {0}", ex);
                             }
                         }
                     }
                     catch (OperationCanceledException)
                     {
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    try
-                    {
-                        await _protocolService.Motor2.SetContinuousSpeed(0).ConfigureAwait(false);
-                        await Task.Delay(20);
-                        await _protocolService.Motor3.SetContinuousSpeed(0).ConfigureAwait(false);
-                        await Task.Delay(20);
-                        await _protocolService.Motor1.SetContinuousSpeed(0).ConfigureAwait(false);
-                        await Task.Delay(20);
+                        Debug.WriteLine("SliderOrJoystickTask: Canceled!");
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("MoveSliderOrJoystickTask: {0}", ex);
+                        Debug.WriteLine("SliderOrJoystickTask: Exception overall: {0}", ex);
+                    }
+                    try
+                    {
+                        Debug.WriteLine("SliderOrJoystickTask: Stop!");
+                        await _protocolService.Motor2.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await Task.Delay(20).ConfigureAwait(false);
+                        await _protocolService.Motor3.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await Task.Delay(20).ConfigureAwait(false);
+                        await _protocolService.Motor1.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await Task.Delay(20).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("SliderOrJoystickTask: Exception while stopping: {0}", ex);
                     }
 
                     _joystickCurrentPoint = new Point(0, 0);
@@ -186,8 +191,9 @@ namespace MDKControl.Core.ViewModels
                 return;
 
             _joystickTaskCancellationTokenSource.Cancel();
-            await _joystickTask;
+            await _joystickTask.ConfigureAwait(false);
 
+            _joystickTaskCancellationTokenSource.Dispose();
             _joystickTaskCancellationTokenSource = null;
             _joystickTask = null;
         }
@@ -206,8 +212,9 @@ namespace MDKControl.Core.ViewModels
                 return;
 
             _joystickTaskCancellationTokenSource.Cancel();
-            await _joystickTask;
+            await _joystickTask.ConfigureAwait(false);
 
+            _joystickTaskCancellationTokenSource.Dispose();
             _joystickTaskCancellationTokenSource = null;
             _joystickTask = null;
         }
@@ -216,6 +223,8 @@ namespace MDKControl.Core.ViewModels
         {
             if (!_joystickIsRunning)
                 return;
+            
+            Debug.WriteLine($"Move Joystick X={point.X} Y={point.Y}");
 
             _joystickCurrentPoint = point;
         }
@@ -224,6 +233,8 @@ namespace MDKControl.Core.ViewModels
         {
             if (!_sliderIsRunning)
                 return;
+
+            Debug.WriteLine($"Move Slider Z={point}");
 
             _sliderCurrentPoint = point;
         }

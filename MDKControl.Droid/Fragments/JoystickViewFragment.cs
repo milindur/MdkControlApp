@@ -86,6 +86,14 @@ namespace MDKControl.Droid.Fragments
             Slider.SliderMove.SetCommand(Vm.MoveSliderCommand);
         }
 
+        public override void OnPause()
+        {
+            Vm.StopJoystickCommand.Execute();
+            Vm.StopSliderCommand.Execute();
+
+            base.OnPause();
+        }
+
         public JoystickViewModel Vm
         {
             get
