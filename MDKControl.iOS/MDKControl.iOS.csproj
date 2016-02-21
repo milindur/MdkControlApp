@@ -168,12 +168,6 @@
     <Reference Include="GalaSoft.MvvmLight.Platform">
       <HintPath>..\libs\MvvmLight\iOS\GalaSoft.MvvmLight.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.Insights">
-      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.iOS10\Xamarin.Insights.dll</HintPath>
-    </Reference>
-    <Reference Include="PLCrashReporterUnifiedBinding">
-      <HintPath>..\packages\Xamarin.Insights.1.11.3\lib\Xamarin.iOS10\PLCrashReporterUnifiedBinding.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -189,14 +183,20 @@
     <Reference Include="Nito.AsyncEx.Enlightenment">
       <HintPath>..\packages\Nito.AsyncEx.3.0.1\lib\Xamarin.iOS10\Nito.AsyncEx.Enlightenment.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Insights">
+      <HintPath>..\packages\Xamarin.Insights.1.11.4\lib\Xamarin.iOS10\Xamarin.Insights.dll</HintPath>
+    </Reference>
+    <Reference Include="PLCrashReporterUnifiedBinding">
+      <HintPath>..\packages\Xamarin.Insights.1.11.4\lib\Xamarin.iOS10\PLCrashReporterUnifiedBinding.dll</HintPath>
+    </Reference>
     <Reference Include="ReactiveProperty.DataAnnotations">
-      <HintPath>..\packages\ReactiveProperty.2.4.2\lib\Xamarin.iOS10\ReactiveProperty.DataAnnotations.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.5\lib\Xamarin.iOS10\ReactiveProperty.DataAnnotations.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveProperty">
-      <HintPath>..\packages\ReactiveProperty.2.4.2\lib\Xamarin.iOS10\ReactiveProperty.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.5\lib\Xamarin.iOS10\ReactiveProperty.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveProperty.iOS">
-      <HintPath>..\packages\ReactiveProperty.2.4.2\lib\Xamarin.iOS10\ReactiveProperty.iOS.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.2.5\lib\Xamarin.iOS10\ReactiveProperty.iOS.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +217,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\packages\Xamarin.Insights.1.11.3\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.3\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
+  <Import Project="..\packages\Xamarin.Insights.1.11.4\build\Xamarin.iOS10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.11.4\build\Xamarin.iOS10\Xamarin.Insights.targets')" />
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
