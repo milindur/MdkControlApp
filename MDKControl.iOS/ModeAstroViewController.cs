@@ -60,6 +60,51 @@ namespace MDKControl.iOS
                 };
             HemisphereValuePickerView.Model = _hemispherePickerViewModel;
 
+            _speedPickerViewModel = new ListPickerViewModel<string>(new[] { "Sidereal/Stars", "Lunar" });
+            _speedPickerViewModel.ValueChanged += (sender, e) =>
+                {
+                    var t = (MDKControl.Core.Models.AstroSpeed)_speedPickerViewModel.SelectedIndex;
+                    if (Vm.Speed != t)
+                        Vm.Speed = t;
+                };
+            SpeedValuePickerView.Model = _speedPickerViewModel;
+
+            StartButton.Clicked += (sender, e) => 
+                {
+                    navigatedToStatusView = true;
+                    Vm.StartProgramCommand.Execute(null);
+                    ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeAstroStatusViewKey, Vm);
+                };
+
+            SetupBindings();
+            
+            base.ViewDidLoad();
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeAstroViewController ViewWillAppear");
+
+            navigatedToStatusView = false;
+            
+            SetupBindings();
+
+            base.ViewWillAppear(animated);
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeAstroViewController ViewWillDisappear");
+
+            DetachBindings();
+
+            base.ViewWillDisappear(animated);
+        }
+
+        void SetupBindings()
+        {
+            DetachBindings();
+
             _hemisphereBinding = this.SetBinding(() => Vm.Direction)
                 .WhenSourceChanges(() =>
                     { 
@@ -71,15 +116,6 @@ namespace MDKControl.iOS
                         }
                     });
             _hemisphereBinding.ForceUpdateValueFromSourceToTarget();
-
-            _speedPickerViewModel = new ListPickerViewModel<string>(new[] { "Sidereal/Stars", "Lunar" });
-            _speedPickerViewModel.ValueChanged += (sender, e) =>
-                {
-                    var t = (MDKControl.Core.Models.AstroSpeed)_speedPickerViewModel.SelectedIndex;
-                    if (Vm.Speed != t)
-                        Vm.Speed = t;
-                };
-            SpeedValuePickerView.Model = _speedPickerViewModel;
 
             _speedBinding = this.SetBinding(() => Vm.Speed)
                 .WhenSourceChanges(() =>
@@ -93,13 +129,6 @@ namespace MDKControl.iOS
                     });
             _speedBinding.ForceUpdateValueFromSourceToTarget();
 
-            StartButton.Clicked += (sender, e) => 
-                {
-                    navigatedToStatusView = true;
-                    Vm.StartProgramCommand.Execute(null);
-                    ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeAstroStatusViewKey, Vm);
-                };            
-            
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
                     var nav = ServiceLocator.Current.GetInstance<INavigationService>();
@@ -113,15 +142,18 @@ namespace MDKControl.iOS
                     }
                 });
             _runStatusBinding.ForceUpdateValueFromSourceToTarget();
-
-            base.ViewDidLoad();
         }
 
-        public override void ViewDidAppear(bool animated)
+        void DetachBindings()
         {
-            navigatedToStatusView = false;
-            
-            base.ViewDidAppear(animated);
+            _hemisphereBinding?.Detach();
+            _hemisphereBinding = null;
+
+            _speedBinding?.Detach();
+            _speedBinding = null;
+
+            _runStatusBinding?.Detach();
+            _runStatusBinding = null;
         }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

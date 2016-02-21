@@ -66,34 +66,12 @@ namespace MDKControl.iOS
 
             PreDelayValueLabel.Text = string.Format("{0:F1}s", 0.1f); 
             
-            _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
-                .WhenSourceChanges(() =>
-                { 
-                    ExposureValueLabel.Text = string.Format("{0:F1}s", Vm.ExposureTime);
-                    if ((decimal)ExposureValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.ExposureTime)
-                    {
-                        ExposureValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.ExposureTime);
-                    }
-                });
-            _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
-
             ExposureValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
             {
                 var t = (decimal)ExposureValuePickerTableViewCell.Model.SelectedTime.TotalSeconds;
                 if (Vm.ExposureTime != t)
                     Vm.ExposureTime = t;
             };
-
-            _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
-                .WhenSourceChanges(() =>
-                { 
-                    PostDelayValueLabel.Text = string.Format("{0:F1}s", Vm.DelayTime); 
-                    if ((decimal)PostDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DelayTime)
-                    {
-                        PostDelayValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DelayTime);
-                    }
-                });
-            _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             PostDelayValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
             {
@@ -102,34 +80,12 @@ namespace MDKControl.iOS
                     Vm.DelayTime = t;
             };
 
-            _intervalTimeBinding = this.SetBinding(() => Vm.IntervalTime)
-                .WhenSourceChanges(() =>
-                {
-                    IntervalValueLabel.Text = string.Format("{0:F1}s", Vm.IntervalTime);
-                    if ((decimal)IntervalValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.IntervalTime)
-                    {
-                        IntervalValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.IntervalTime);
-                    }
-                });
-            _intervalTimeBinding.ForceUpdateValueFromSourceToTarget();
-
             IntervalValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
             {
                 var t = (decimal)IntervalValuePickerTableViewCell.Model.SelectedTime.TotalSeconds;
                 if (Vm.IntervalTime != t)
                     Vm.IntervalTime = t;
             };
-
-            _durationTimeBinding = this.SetBinding(() => Vm.DurationTime)
-                .WhenSourceChanges(() =>
-                {
-                    DurationValueLabel.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
-                    if ((decimal)DurationValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DurationTime)
-                    {
-                        DurationValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DurationTime);
-                    }
-                });
-            _durationTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             DurationValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
             {
@@ -138,65 +94,12 @@ namespace MDKControl.iOS
                     Vm.DurationTime = t;
             };
 
-            _maxShotsBinding = this.SetBinding(() => Vm.MaxShots)
-                .WhenSourceChanges(() =>
-                {
-                    ShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
-                    if (ShotsValuePickerTableViewCell.Model.SelectedNumber != Vm.MaxShots)
-                    {
-                        ShotsValuePickerTableViewCell.Model.SelectedNumber = Vm.MaxShots;
-                    }
-                });
-            _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
-
             ShotsValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
                 {
                     var t = (ushort)ShotsValuePickerTableViewCell.Model.SelectedNumber;
                     if (Vm.MaxShots != t)
                         Vm.MaxShots = t;
                 };
-
-            _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition)
-                .WhenSourceChanges(() =>
-                {
-                    SliderStartPosValueLabel.Text = string.Format("{0}", Vm.SliderStartPosition);
-                });
-            _sliderStartPosBinding.ForceUpdateValueFromSourceToTarget();
-
-            _sliderStopPosBinding = this.SetBinding(() => Vm.SliderStopPosition)
-                .WhenSourceChanges(() =>
-                {
-                    SliderStopPosValueLabel.Text = string.Format("{0}", Vm.SliderStopPosition);
-                });
-            _sliderStopPosBinding.ForceUpdateValueFromSourceToTarget();
-
-            _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
-                .WhenSourceChanges(() =>
-                {
-                    PanStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
-                });
-            _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
-
-            _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition)
-                .WhenSourceChanges(() =>
-                {
-                    PanStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
-                });
-            _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
-
-            _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition)
-                .WhenSourceChanges(() =>
-                {
-                    TiltStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
-                });
-            _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
-
-            _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition)
-                .WhenSourceChanges(() =>
-                {
-                    TiltStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
-                });
-            _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             SwapStartStopButton.SetCommand(
                 "TouchUpInside",
@@ -207,30 +110,175 @@ namespace MDKControl.iOS
                     navigatedToStatusView = true;
                     Vm.StartProgramCommand.Execute(null);
                     ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
-                };            
+                };
+
+            SetupBindings();
             
-            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
-                {
-                    var nav = ServiceLocator.Current.GetInstance<INavigationService>();
-                    if (nav.CurrentPageKey != AppDelegate.ModeSmsViewKey) return;
-
-                    if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey && !navigatedToStatusView)
-                    {
-                        navigatedToStatusView = true;
-                        DeviceVm.StartUpdateTask();
-                        nav.NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
-                    }
-                });
-            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
-
             base.ViewDidLoad();
         }
 
         public override void ViewDidAppear(bool animated)
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewDidAppear");
+
             navigatedToStatusView = false;
-            
+
+            SetupBindings();
+
             base.ViewDidAppear(animated);
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewDidDisappear");
+
+            DetachBindings();
+
+            base.ViewDidDisappear(animated);
+        }
+
+        void SetupBindings()
+        {
+            DetachBindings();
+            
+            _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime).WhenSourceChanges(() => 
+            {
+                ExposureValueLabel.Text = string.Format("{0:F1}s", Vm.ExposureTime);
+                if ((decimal)ExposureValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.ExposureTime)
+                {
+                    ExposureValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.ExposureTime);
+                }
+            });
+            _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _delayTimeBinding = this.SetBinding(() => Vm.DelayTime).WhenSourceChanges(() => 
+            {
+                PostDelayValueLabel.Text = string.Format("{0:F1}s", Vm.DelayTime);
+                if ((decimal)PostDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DelayTime)
+                {
+                    PostDelayValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DelayTime);
+                }
+            });
+            _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _intervalTimeBinding = this.SetBinding(() => Vm.IntervalTime).WhenSourceChanges(() => 
+            {
+                IntervalValueLabel.Text = string.Format("{0:F1}s", Vm.IntervalTime);
+                if ((decimal)IntervalValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.IntervalTime)
+                {
+                    IntervalValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.IntervalTime);
+                }
+            });
+            _intervalTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _durationTimeBinding = this.SetBinding(() => Vm.DurationTime).WhenSourceChanges(() => 
+            {
+                DurationValueLabel.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                if ((decimal)DurationValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DurationTime)
+                {
+                    DurationValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DurationTime);
+                }
+            });
+            _durationTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _maxShotsBinding = this.SetBinding(() => Vm.MaxShots).WhenSourceChanges(() => 
+            {
+                ShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
+                if (ShotsValuePickerTableViewCell.Model.SelectedNumber != Vm.MaxShots)
+                {
+                    ShotsValuePickerTableViewCell.Model.SelectedNumber = Vm.MaxShots;
+                }
+            });
+            _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
+
+            _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition).WhenSourceChanges(() => 
+            {
+                SliderStartPosValueLabel.Text = string.Format("{0}", Vm.SliderStartPosition);
+            });
+            _sliderStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _sliderStopPosBinding = this.SetBinding(() => Vm.SliderStopPosition).WhenSourceChanges(() => 
+            {
+                SliderStopPosValueLabel.Text = string.Format("{0}", Vm.SliderStopPosition);
+            });
+            _sliderStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition).WhenSourceChanges(() => 
+            {
+                PanStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+            });
+            _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition).WhenSourceChanges(() => 
+            {
+                PanStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+            });
+            _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition).WhenSourceChanges(() => 
+            {
+                TiltStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+            });
+            _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition).WhenSourceChanges(() => 
+            {
+                TiltStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+            });
+            _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
+
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() => 
+            {
+                var nav = ServiceLocator.Current.GetInstance<INavigationService>();
+                if (nav.CurrentPageKey != AppDelegate.ModeSmsViewKey)
+                    return;
+                if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey && !navigatedToStatusView)
+                {
+                    navigatedToStatusView = true;
+                    DeviceVm.StartUpdateTask();
+                    nav.NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
+                }
+            });
+            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
+        }
+
+        void DetachBindings()
+        {
+            _exposureTimeBinding?.Detach();
+            _exposureTimeBinding = null;
+
+            _delayTimeBinding?.Detach();
+            _delayTimeBinding = null;
+
+            _intervalTimeBinding?.Detach();
+            _intervalTimeBinding = null;
+
+            _durationTimeBinding?.Detach();
+            _durationTimeBinding = null;
+
+            _maxShotsBinding?.Detach();
+            _maxShotsBinding = null;
+
+            _sliderStartPosBinding?.Detach();
+            _sliderStartPosBinding = null;
+
+            _sliderStopPosBinding?.Detach();
+            _sliderStopPosBinding = null;
+
+            _panStartPosBinding?.Detach();
+            _panStartPosBinding = null;
+
+            _panStopPosBinding?.Detach();
+            _panStopPosBinding = null;
+
+            _tiltStartPosBinding?.Detach();
+            _tiltStartPosBinding = null;
+
+            _tiltStopPosBinding?.Detach();
+            _tiltStopPosBinding = null;
+
+            _runStatusBinding?.Detach();
+            _runStatusBinding = null;
         }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

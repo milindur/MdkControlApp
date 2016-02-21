@@ -54,22 +54,52 @@ namespace MDKControl.iOS
                     }
                 };
 
-            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
-                {
-                    PauseResumeButton.Enabled = true;
-                    CancelButton.Enabled = true;
-
-                    if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
-                    {
-                        PauseResumeButton.Title = "Pause";
-                    }
-                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
-                    {
-                        PauseResumeButton.Title = "Resume";
-                    }
-                });
+            SetupBindings();
 
             base.ViewDidLoad();
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeAstroStatusViewController ViewWillAppear");
+
+            SetupBindings();
+
+            base.ViewWillAppear(animated);
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeAstroStatusViewController ViewWillDisappear");
+
+            DetachBindings();
+
+            base.ViewWillDisappear(animated);
+        }
+
+        void SetupBindings()
+        {
+            DetachBindings();
+
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() => 
+            {
+                PauseResumeButton.Enabled = true;
+                CancelButton.Enabled = true;
+                if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
+                {
+                    PauseResumeButton.Title = "Pause";
+                }
+                else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
+                {
+                    PauseResumeButton.Title = "Resume";
+                }
+            });
+        }
+
+        void DetachBindings()
+        {
+            _runStatusBinding?.Detach();
+            _runStatusBinding = null;
         }
 	}
 }

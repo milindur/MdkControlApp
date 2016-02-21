@@ -55,27 +55,60 @@ namespace MDKControl.iOS
                     }
                 };
 
-            _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() =>
-                {
-                    ProgressBar.Progress = Vm.Progress / 100f;
-                });
-
-            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
-                {
-                    PauseResumeButton.Enabled = true;
-                    CancelButton.Enabled = true;
-
-                    if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
-                    {
-                        PauseResumeButton.Title = "Pause";
-                    }
-                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
-                    {
-                        PauseResumeButton.Title = "Resume";
-                    }
-                });
+            SetupBindings();
 
             base.ViewDidLoad();
+        }
+
+        public override void ViewWillAppear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewController ViewWillAppear");
+
+            SetupBindings();
+            
+            base.ViewWillAppear(animated);
+        }
+
+        public override void ViewWillDisappear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewController ViewWillDisappear");
+
+            DetachBindings();
+
+            base.ViewWillDisappear(animated);
+        }
+
+        private void SetupBindings()
+        {
+            DetachBindings();
+            
+            _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() => 
+            {
+                ProgressBar.Progress = Vm.Progress / 100f;
+            });
+            
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() => 
+            {
+                PauseResumeButton.Enabled = true;
+                CancelButton.Enabled = true;
+                if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
+                {
+                    PauseResumeButton.Title = "Pause";
+                }
+                else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
+                {
+                    PauseResumeButton.Title = "Resume";
+                }
+            });
+        }
+
+        void DetachBindings()
+        {
+            _progressBarBinding?.Detach();
+            _progressBarBinding = null;
+
+            _runStatusBinding?.Detach();
+            _runStatusBinding = null;
         }
 	}
 }
