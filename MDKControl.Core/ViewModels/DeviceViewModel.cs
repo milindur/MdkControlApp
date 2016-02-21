@@ -241,11 +241,6 @@ namespace MDKControl.Core.ViewModels
                                         break;
                                 }
                             }
-                            catch (OperationCanceledException ex)
-                            {
-                                Debug.WriteLine("UpdateTask: inner operation canceled {0}", ex);
-                                break;
-                            }
                             catch (Exception ex)
                             {
                                 Debug.WriteLine("UpdateTask: {0}", ex);
