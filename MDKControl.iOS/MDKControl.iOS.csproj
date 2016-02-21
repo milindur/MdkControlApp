@@ -132,6 +132,15 @@
     <Compile Include="JoystickView.cs" />
     <Compile Include="SliderView.cs" />
     <Compile Include="Helpers\JoystickNavigationHelper.cs" />
+    <Compile Include="ModeAstroViewController.cs" />
+    <Compile Include="ModeAstroViewController.designer.cs">
+      <DependentUpon>ModeAstroViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModeAstroStatusViewController.cs" />
+    <Compile Include="ModeAstroStatusViewController.designer.cs">
+      <DependentUpon>ModeAstroStatusViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ListPickerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

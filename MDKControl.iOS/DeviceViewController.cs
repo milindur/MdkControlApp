@@ -8,6 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using MDKControl.iOS.Extensions;
+using System.Threading.Tasks;
 
 namespace MDKControl.iOS
 {
@@ -61,7 +62,7 @@ namespace MDKControl.iOS
             _isConnectedBinding.ForceUpdateValueFromSourceToTarget();
 
             _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
-                .WhenSourceChanges(() => 
+                .WhenSourceChanges(async () => 
                     {
                         System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged ProgramMode");
 
@@ -82,7 +83,7 @@ namespace MDKControl.iOS
                                     else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to another mode");
-                                        navService.NavigateTo(ViewModelLocator.DeviceViewKey, Vm);
+                                        await NavigateBackToDeviceView();
                                     }
                                 }
                                 break;
@@ -98,7 +99,7 @@ namespace MDKControl.iOS
                                     else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to another mode");
-                                        navService.NavigateTo(ViewModelLocator.DeviceViewKey, Vm);
+                                        await NavigateBackToDeviceView();
                                     }
                                 }
                                 break;
@@ -109,13 +110,20 @@ namespace MDKControl.iOS
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating to ModeAstroView since a mode change was requested");
                                         _modeChangeRequested = false;
-                                        //navService.NavigateTo(AppDelegate.ModeAstroViewKey, Vm.ModeAstroViewModel);
+                                        navService.NavigateTo(AppDelegate.ModeAstroViewKey, Vm.ModeAstroViewModel);
                                     }
                                     else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to another mode");
-                                        navService.NavigateTo(ViewModelLocator.DeviceViewKey, Vm);
+                                        await NavigateBackToDeviceView();
                                     }
+                                }
+                                break;
+                            case MoCoBusProgramMode.Invalid:
+                                if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to invalid mode");
+                                    await NavigateBackToDeviceView();
                                 }
                                 break;
                         }
@@ -143,6 +151,19 @@ namespace MDKControl.iOS
                         View.UserInteractionEnabled = true;
                         View.Alpha = 1.0f;
                     });                
+            }
+        }
+
+        private async Task NavigateBackToDeviceView()
+        {
+            var navService = ServiceLocator.Current.GetInstance<INavigationService>();
+
+            while (navService.CurrentPageKey != NavigationService.RootPageKey 
+                && navService.CurrentPageKey != NavigationService.UnknownPageKey 
+                && navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
+            {
+                navService.GoBack();
+                await Task.Delay(100);
             }
         }
 
@@ -175,15 +196,31 @@ namespace MDKControl.iOS
         {
             System.Diagnostics.Debug.WriteLine("DeviceViewController RowSelected");
 
-            var cell = tableView.CellAt(indexPath);
-            System.Diagnostics.Debug.WriteLine(cell);
-
             _modeChangeRequested = true;
 
-            // TODO: Select command based on indexPath
-            Vm.SetModeSmsCommand.Execute(null);
+            System.Diagnostics.Debug.WriteLine(tableView.CellAt(indexPath));
 
-            //cell.SetSelected(false, false);
+            switch (indexPath.Section)
+            {
+                case 0:
+                    {
+                        switch (indexPath.Row)
+                        {
+                            case 0: // sms
+                                Vm.SetModeSmsCommand.Execute(null);
+                                break;
+                            case 1: // pano
+                                //Vm.SetModePanoCommand.Execute(null);
+                                break;
+                            case 2: // astro
+                                Vm.SetModeAstroCommand.Execute(null);
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            tableView.DeselectRow(indexPath, true);
         }
 	}
 }

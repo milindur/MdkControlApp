@@ -30,6 +30,8 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
+        public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
+
         public RelayCommand ResumeProgramCommand
         {
             get { return _resumeProgramCommand ?? (_resumeProgramCommand = new RelayCommand(ResumeProgram)); }
@@ -76,8 +78,39 @@ namespace MDKControl.Core.ViewModels
             await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
         }
 
-        public AstroDirection Direction { get; set; }
-        public AstroSpeed Speed { get; set; }
+        private AstroDirection _direction;
+        public AstroDirection Direction
+        {
+            get
+            {
+                return _direction;
+            }
+            set
+            {
+                _direction = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => Direction);
+                    });
+            }
+        }
+
+        private AstroSpeed _speed;
+        public AstroSpeed Speed
+        {
+            get
+            {
+                return _speed;
+            }
+            set
+            {
+                _speed = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => Speed);
+                    });
+            }
+        }
 
         public Task UpdateState()
         {
