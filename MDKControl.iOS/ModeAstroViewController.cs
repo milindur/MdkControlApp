@@ -91,7 +91,7 @@ namespace MDKControl.iOS
                             SpeedValuePickerView.Select((int)Vm.Speed, 0, !SpeedValuePickerView.Hidden);
                         }
                     });
-            _hemisphereBinding.ForceUpdateValueFromSourceToTarget();
+            _speedBinding.ForceUpdateValueFromSourceToTarget();
 
             StartButton.Clicked += (sender, e) => 
                 {
@@ -103,6 +103,8 @@ namespace MDKControl.iOS
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
                     var nav = ServiceLocator.Current.GetInstance<INavigationService>();
+                    if (nav.CurrentPageKey != AppDelegate.ModeAstroViewKey) return;
+
                     if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey && !navigatedToStatusView)
                     {
                         navigatedToStatusView = true;

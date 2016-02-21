@@ -212,6 +212,8 @@ namespace MDKControl.iOS
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
                     var nav = ServiceLocator.Current.GetInstance<INavigationService>();
+                    if (nav.CurrentPageKey != AppDelegate.ModeSmsViewKey) return;
+
                     if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey && !navigatedToStatusView)
                     {
                         navigatedToStatusView = true;
