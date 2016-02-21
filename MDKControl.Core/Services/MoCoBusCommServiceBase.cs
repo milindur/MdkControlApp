@@ -41,8 +41,10 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(1000));
-            return await SendAndReceiveAsync(frame, cts.Token).ConfigureAwait(false);
+            using (var cts = new CancellationTokenSource(1000))
+            {
+                return await SendAndReceiveAsync(frame, cts.Token).ConfigureAwait(false);
+            }
         }
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token)
@@ -51,12 +53,22 @@ namespace MDKControl.Core.Services
             {
                 for (var retry = 0; retry < 3; retry++)
                 {
+                    token.ThrowIfCancellationRequested();
+                    
                     try
                     {
                         ClearReceiveBuffer();
 
                         Send(frame);
-                        return await ReceiveAsync(token).ConfigureAwait(false);
+
+                        using (var subCts = new CancellationTokenSource(400))
+                        {
+                            var subToken = subCts.Token;
+                            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, subToken))
+                            {
+                                return await ReceiveAsync(linkedCts.Token).ConfigureAwait(false);
+                            }
+                        }
                     }
                     catch (TimeoutException)
                     {

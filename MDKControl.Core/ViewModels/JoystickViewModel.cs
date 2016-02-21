@@ -193,6 +193,7 @@ namespace MDKControl.Core.ViewModels
             _joystickTaskCancellationTokenSource.Cancel();
             await _joystickTask.ConfigureAwait(false);
 
+            _joystickTaskCancellationTokenSource.Dispose();
             _joystickTaskCancellationTokenSource = null;
             _joystickTask = null;
         }
@@ -213,6 +214,7 @@ namespace MDKControl.Core.ViewModels
             _joystickTaskCancellationTokenSource.Cancel();
             await _joystickTask.ConfigureAwait(false);
 
+            _joystickTaskCancellationTokenSource.Dispose();
             _joystickTaskCancellationTokenSource = null;
             _joystickTask = null;
         }

@@ -273,6 +273,7 @@ namespace MDKControl.Core.ViewModels
             _updateTaskCancellationTokenSource.Cancel();
             await _updateTask.ConfigureAwait(false);
 
+            _updateTaskCancellationTokenSource.Dispose();
             _updateTaskCancellationTokenSource = null;
             _updateTask = null;
         }
