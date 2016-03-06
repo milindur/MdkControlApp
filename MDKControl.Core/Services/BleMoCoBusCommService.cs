@@ -46,6 +46,24 @@ namespace MDKControl.Core.Services
                 return;
 
             _device = e.Device;
+            _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
+            try 
+            {
+                _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
+            }
+            catch
+            {
+                // ignore
+            }
+            try 
+            {
+                _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
+            }
+            catch
+            {
+                // ignore
+            }
+
             ConnectionState = ConnectionState.Disconnected;
         }
 
