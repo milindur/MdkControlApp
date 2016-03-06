@@ -1,16 +1,17 @@
-using Foundation;
 using System;
 using System.CodeDom.Compiler;
-using UIKit;
+using Foundation;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
-using Microsoft.Practices.ServiceLocation;
 using MDKControl.iOS.Helpers;
+using Microsoft.Practices.ServiceLocation;
+using UIKit;
 
 namespace MDKControl.iOS
 {
-    partial class ModeAstroViewController : UITableViewController, INavigationTarget
+    partial class ModeAstroViewController : SubDeviceTableViewControllerBase, INavigationTarget
     {
         private Binding _runStatusBinding;
 
@@ -26,15 +27,21 @@ namespace MDKControl.iOS
         private ListPickerViewModel<string> _speedPickerViewModel;
 
         public ModeAstroViewController(IntPtr handle)
-            : base(handle)
+            : base(handle, MoCoBusProgramMode.Astro, AppDelegate.ModeAstroViewKey)
         {
-            
         }
 
         public object NavigationParameter { get; set; }
 
         public ModeAstroViewModel Vm { get; private set; }
-        public DeviceViewModel DeviceVm { get { return Vm.DeviceViewModel; } }
+
+        public override DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return Vm.DeviceViewModel;
+            }
+        }
 
         public override void ViewDidLoad()
         {
@@ -101,9 +108,11 @@ namespace MDKControl.iOS
             base.ViewWillDisappear(animated);
         }
 
-        void SetupBindings()
+        protected override void SetupBindings()
         {
             DetachBindings();
+
+            base.SetupBindings();
 
             _hemisphereBinding = this.SetBinding(() => Vm.Direction)
                 .WhenSourceChanges(() =>
@@ -144,7 +153,7 @@ namespace MDKControl.iOS
             _runStatusBinding.ForceUpdateValueFromSourceToTarget();
         }
 
-        void DetachBindings()
+        protected override void DetachBindings()
         {
             _hemisphereBinding?.Detach();
             _hemisphereBinding = null;
@@ -154,6 +163,8 @@ namespace MDKControl.iOS
 
             _runStatusBinding?.Detach();
             _runStatusBinding = null;
+
+            base.DetachBindings();
         }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)

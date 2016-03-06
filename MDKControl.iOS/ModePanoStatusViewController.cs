@@ -1,28 +1,36 @@
-using Foundation;
 using System;
 using System.CodeDom.Compiler;
-using UIKit;
+using Foundation;
+using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
-using MDKControl.Core.Models;
-using GalaSoft.MvvmLight.Helpers;
+using UIKit;
 
 namespace MDKControl.iOS
 {
-	partial class ModePanoStatusViewController : UIViewController, INavigationTarget
+    partial class ModePanoStatusViewController : SubDeviceViewControllerBase, INavigationTarget
 	{
         private Binding _runStatusBinding;
         private Binding _progressBarBinding;
         
-		public ModePanoStatusViewController (IntPtr handle) : base (handle)
+        public ModePanoStatusViewController(IntPtr handle)
+            : base(handle, MoCoBusProgramMode.Panorama, AppDelegate.ModePanoStatusViewKey)
 		{
 		}
 
         public object NavigationParameter { get; set; }
 
         public ModePanoViewModel Vm { get; private set; }
-        public DeviceViewModel DeviceVm { get { return Vm.DeviceViewModel; } }
+
+        public override DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return Vm.DeviceViewModel;
+            }
+        }
 
         public override void ViewDidLoad()
         {
@@ -78,10 +86,12 @@ namespace MDKControl.iOS
             base.ViewWillDisappear(animated);
         }
 
-        private void SetupBindings()
+        protected override void SetupBindings()
         {
             DetachBindings();
-            
+
+            base.SetupBindings();
+
             _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() => 
             {
                 ProgressBar.Progress = Vm.Progress / 100f;
@@ -102,13 +112,15 @@ namespace MDKControl.iOS
             });
         }
 
-        void DetachBindings()
+        protected override void DetachBindings()
         {
             _progressBarBinding?.Detach();
             _progressBarBinding = null;
 
             _runStatusBinding?.Detach();
             _runStatusBinding = null;
+
+            base.DetachBindings();
         }
 	}
 }

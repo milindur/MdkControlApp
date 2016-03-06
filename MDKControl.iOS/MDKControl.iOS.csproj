@@ -149,6 +149,8 @@
     <Compile Include="ModePanoViewController.designer.cs">
       <DependentUpon>ModePanoViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="SubDeviceViewControllerBase.cs" />
+    <Compile Include="SubDeviceTableViewControllerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

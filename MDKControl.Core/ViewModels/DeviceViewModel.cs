@@ -56,7 +56,7 @@ namespace MDKControl.Core.ViewModels
             _modePanoViewModel = new ModePanoViewModel(_dispatcherHelper, this, _protocolService);
             _modeSmsViewModel = new ModeSmsViewModel(_dispatcherHelper, this, _protocolService);
 
-            _joystickViewModel = new JoystickViewModel(_dispatcherHelper, _protocolService);
+            _joystickViewModel = new JoystickViewModel(_dispatcherHelper, this, _protocolService);
         }
 
         private async void CommServiceOnConnectionChanged(object sender, EventArgs e)
@@ -163,6 +163,8 @@ namespace MDKControl.Core.ViewModels
         {
             Debug.WriteLine("UpdateState");
 
+            _runStatus = await _protocolService.Main.GetRunStatus().ConfigureAwait(false);
+
             var tmpProgramMode = _programMode;
             _programMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
             if (tmpProgramMode != _programMode)
@@ -180,8 +182,6 @@ namespace MDKControl.Core.ViewModels
                         break;
                 }
             }
-
-            _runStatus = await _protocolService.Main.GetRunStatus().ConfigureAwait(false);
 
             _dispatcherHelper.RunOnUIThread(() =>
                 {

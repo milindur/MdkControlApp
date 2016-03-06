@@ -1,27 +1,35 @@
-using Foundation;
 using System;
 using System.CodeDom.Compiler;
-using UIKit;
+using Foundation;
+using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
-using MDKControl.Core.Models;
-using GalaSoft.MvvmLight.Helpers;
+using UIKit;
 
 namespace MDKControl.iOS
 {
-	partial class ModeAstroStatusViewController : UIViewController, INavigationTarget
+    partial class ModeAstroStatusViewController : SubDeviceViewControllerBase, INavigationTarget
 	{
         private Binding _runStatusBinding;
 
-        public ModeAstroStatusViewController (IntPtr handle) : base (handle)
+        public ModeAstroStatusViewController(IntPtr handle)
+            : base(handle, MoCoBusProgramMode.Astro, AppDelegate.ModeAstroStatusViewKey)
 		{
 		}
 
         public object NavigationParameter { get; set; }
 
         public ModeAstroViewModel Vm { get; private set; }
-        public DeviceViewModel DeviceVm { get { return Vm.DeviceViewModel; } }
+
+        public override DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return Vm.DeviceViewModel;
+            }
+        }
 
         public override void ViewDidLoad()
         {
@@ -77,9 +85,11 @@ namespace MDKControl.iOS
             base.ViewWillDisappear(animated);
         }
 
-        void SetupBindings()
+        protected override void SetupBindings()
         {
             DetachBindings();
+
+            base.SetupBindings();
 
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() => 
             {
@@ -96,10 +106,12 @@ namespace MDKControl.iOS
             });
         }
 
-        void DetachBindings()
+        protected override void DetachBindings()
         {
             _runStatusBinding?.Detach();
             _runStatusBinding = null;
+
+            base.DetachBindings();
         }
 	}
 }

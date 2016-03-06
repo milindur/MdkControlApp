@@ -1,14 +1,14 @@
+using System;
+using System.Threading.Tasks;
 using CoreGraphics;
 using Foundation;
-using System;
-using UIKit;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
-using Microsoft.Practices.ServiceLocation;
 using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using MDKControl.iOS.Extensions;
-using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
+using UIKit;
 
 namespace MDKControl.iOS
 {
@@ -18,7 +18,6 @@ namespace MDKControl.iOS
         
         private Binding _isConnectedBinding;
         private Binding _programModeBinding;
-        private Binding _runStatusBinding;
 
 		public DeviceViewController (IntPtr handle) : base (handle)
 		{
@@ -51,86 +50,91 @@ namespace MDKControl.iOS
 
             NavigationItem.SetRightBarButtonItem(new UIBarButtonItem(ConnectButton), false);
 
-            _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectButton.On, BindingMode.TwoWay)
-                .UpdateTargetTrigger("ValueChanged");
-            _isConnectedBinding.ValueChanged += (sender, e) => 
-                {
-                    System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged IsConnected");
-
-                    OnConnectionOrProgramModeChanged();
-                };
-            _isConnectedBinding.ForceUpdateValueFromSourceToTarget();
-
-            _programModeBinding = this.SetBinding(() => Vm.ProgramMode)
-                .WhenSourceChanges(async () => 
-                    {
-                        System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged ProgramMode");
-
-                        OnConnectionOrProgramModeChanged();
-
-                        var navService = ServiceLocator.Current.GetInstance<INavigationService>();
-                        switch (Vm.ProgramMode)
-                        {
-                            case MoCoBusProgramMode.ShootMoveShoot:
-                                if (navService.CurrentPageKey != AppDelegate.ModeSmsViewKey && navService.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey)
-                                {
-                                    if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Navigating to ModeSmsView since a mode change was requested");
-                                        _modeChangeRequested = false;
-                                        navService.NavigateTo(AppDelegate.ModeSmsViewKey, Vm.ModeSmsViewModel);
-                                    }
-                                    else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to another mode");
-                                        await NavigateBackToDeviceView();
-                                    }
-                                }
-                                break;
-                            case MoCoBusProgramMode.Panorama:
-                                if (navService.CurrentPageKey != AppDelegate.ModePanoViewKey && navService.CurrentPageKey != AppDelegate.ModePanoStatusViewKey)
-                                {
-                                    if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Navigating to ModePanoView since a mode change was requested");
-                                        _modeChangeRequested = false;
-                                        navService.NavigateTo(AppDelegate.ModePanoViewKey, Vm.ModePanoViewModel);
-                                    }
-                                    else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to another mode");
-                                        await NavigateBackToDeviceView();
-                                    }
-                                }
-                                break;
-                            case MoCoBusProgramMode.Astro:
-                                if (navService.CurrentPageKey != AppDelegate.ModeAstroViewKey && navService.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey)
-                                {
-                                    if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Navigating to ModeAstroView since a mode change was requested");
-                                        _modeChangeRequested = false;
-                                        navService.NavigateTo(AppDelegate.ModeAstroViewKey, Vm.ModeAstroViewModel);
-                                    }
-                                    else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to another mode");
-                                        await NavigateBackToDeviceView();
-                                    }
-                                }
-                                break;
-                            case MoCoBusProgramMode.Invalid:
-                                if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
-                                {
-                                    System.Diagnostics.Debug.WriteLine("Navigating back to DeviceView since ProgramMode was changed to invalid mode");
-                                    await NavigateBackToDeviceView();
-                                }
-                                break;
-                        }
-                    });
-            _programModeBinding.ForceUpdateValueFromSourceToTarget();
+            SetupBindings();
 
             base.ViewDidLoad();
+        }
+
+        public override void ViewDidAppear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("DeviceViewController ViewDidAppear");
+
+            SetupBindings();
+
+            base.ViewDidAppear(animated);
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            System.Diagnostics.Debug.WriteLine("DeviceViewController ViewDidDisappear");
+
+            DetachBindings();
+
+            base.ViewDidDisappear(animated);
+        }
+
+        void SetupBindings()
+        {
+            _isConnectedBinding = this.SetBinding(() => Vm.IsConnected, () => ConnectButton.On, BindingMode.TwoWay).UpdateTargetTrigger("ValueChanged");
+            _isConnectedBinding.ValueChanged += (sender, e) => 
+            {
+                System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged IsConnected");
+                OnConnectionOrProgramModeChanged();
+            };
+            _isConnectedBinding.ForceUpdateValueFromSourceToTarget();
+
+            _programModeBinding = this.SetBinding(() => Vm.ProgramMode).WhenSourceChanges(() => 
+            {
+                System.Diagnostics.Debug.WriteLine("DeviceViewModel PropertyChanged ProgramMode");
+                OnConnectionOrProgramModeChanged();
+                var navService = ServiceLocator.Current.GetInstance<INavigationService>();
+                switch (Vm.ProgramMode)
+                {
+                    case MoCoBusProgramMode.ShootMoveShoot:
+                        if (navService.CurrentPageKey != AppDelegate.ModeSmsViewKey && navService.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey)
+                        {
+                            if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Navigating to ModeSmsView since a mode change was requested");
+                                _modeChangeRequested = false;
+                                navService.NavigateTo(AppDelegate.ModeSmsViewKey, Vm.ModeSmsViewModel);
+                            }
+                        }
+                        break;
+                    case MoCoBusProgramMode.Panorama:
+                        if (navService.CurrentPageKey != AppDelegate.ModePanoViewKey && navService.CurrentPageKey != AppDelegate.ModePanoStatusViewKey)
+                        {
+                            if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Navigating to ModePanoView since a mode change was requested");
+                                _modeChangeRequested = false;
+                                navService.NavigateTo(AppDelegate.ModePanoViewKey, Vm.ModePanoViewModel);
+                            }
+                        }
+                        break;
+                    case MoCoBusProgramMode.Astro:
+                        if (navService.CurrentPageKey != AppDelegate.ModeAstroViewKey && navService.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey)
+                        {
+                            if (_modeChangeRequested || Vm.RunStatus != MoCoBusRunStatus.Stopped)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Navigating to ModeAstroView since a mode change was requested");
+                                _modeChangeRequested = false;
+                                navService.NavigateTo(AppDelegate.ModeAstroViewKey, Vm.ModeAstroViewModel);
+                            }
+                        }
+                        break;
+                }
+            });
+            _programModeBinding.ForceUpdateValueFromSourceToTarget();
+        }
+
+        private void DetachBindings()
+        {
+            _isConnectedBinding?.Detach();
+            _isConnectedBinding = null;
+
+            _programModeBinding?.Detach();
+            _programModeBinding = null;
         }
 
         private void OnConnectionOrProgramModeChanged()
@@ -154,50 +158,9 @@ namespace MDKControl.iOS
             }
         }
 
-        private async Task NavigateBackToDeviceView()
-        {
-            var navService = ServiceLocator.Current.GetInstance<INavigationService>();
-
-            while (navService.CurrentPageKey != NavigationService.RootPageKey 
-                && navService.CurrentPageKey != NavigationService.UnknownPageKey 
-                && navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
-            {
-                navService.GoBack();
-                await Task.Delay(100);
-            }
-        }
-
-        /*public override void ViewWillUnload()
-        {
-            
-        }*/
-
-        /*public override void ViewWillDisappear(bool animated)
-        {
-            if (IsMovingFromParentViewController || IsBeingDismissed)
-            {
-                Vm.IsConnected = false;
-            }
-            
-            base.ViewWillDisappear(animated);
-        }
-
-        public override void WillMoveToParentViewController(UIViewController parent)
-        {
-            if (IsMovingFromParentViewController || IsBeingDismissed)
-            {
-                Vm.IsConnected = false;
-            }
-
-            base.WillMoveToParentViewController(parent);
-        }*/
-
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             System.Diagnostics.Debug.WriteLine("DeviceViewController RowSelected");
-
-            _modeChangeRequested = true;
-
             System.Diagnostics.Debug.WriteLine(tableView.CellAt(indexPath));
 
             switch (indexPath.Section)
@@ -207,12 +170,15 @@ namespace MDKControl.iOS
                         switch (indexPath.Row)
                         {
                             case 0: // sms
+                                _modeChangeRequested = true;
                                 Vm.SetModeSmsCommand.Execute(null);
                                 break;
                             case 1: // pano
+                                _modeChangeRequested = true;
                                 Vm.SetModePanoCommand.Execute(null);
                                 break;
                             case 2: // astro
+                                _modeChangeRequested = true;
                                 Vm.SetModeAstroCommand.Execute(null);
                                 break;
                         }

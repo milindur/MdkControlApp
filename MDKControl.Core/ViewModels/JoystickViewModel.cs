@@ -14,6 +14,7 @@ namespace MDKControl.Core.ViewModels
     public class JoystickViewModel : ViewModelBase
     {
         private readonly IDispatcherHelper _dispatcherHelper;
+        private readonly DeviceViewModel _deviceViewModel;
         private readonly IMoCoBusProtocolService _protocolService;
 
         private Point _joystickCurrentPoint;
@@ -26,10 +27,10 @@ namespace MDKControl.Core.ViewModels
         private Task _joystickTask;
         private CancellationTokenSource _joystickTaskCancellationTokenSource;
 
-        public JoystickViewModel(IDispatcherHelper dispatcherHelper, IMoCoBusProtocolService protocolService)
+        public JoystickViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
             _dispatcherHelper = dispatcherHelper;
-
+            _deviceViewModel = deviceViewModel;
             _protocolService = protocolService;
 
             StartJoystickCommand = new ReactiveCommand<Point>();
@@ -46,6 +47,8 @@ namespace MDKControl.Core.ViewModels
             MoveSliderCommand = new ReactiveCommand<float>();
             MoveSliderCommand.Sample(TimeSpan.FromMilliseconds(60)).Throttle(TimeSpan.FromMilliseconds(50)).Subscribe(MoveSlider);
         }
+
+        public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
 
         public ReactiveCommand<Point> StartJoystickCommand { get; private set; }
 

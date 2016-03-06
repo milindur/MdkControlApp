@@ -1,16 +1,17 @@
-using Foundation;
 using System;
 using System.CodeDom.Compiler;
-using UIKit;
+using Foundation;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
-using Microsoft.Practices.ServiceLocation;
 using MDKControl.iOS.Helpers;
+using Microsoft.Practices.ServiceLocation;
+using UIKit;
 
 namespace MDKControl.iOS
 {
-    partial class ModeSmsViewController : UITableViewController, INavigationTarget
+    partial class ModeSmsViewController : SubDeviceTableViewControllerBase, INavigationTarget
     {
         private Binding _runStatusBinding;
 
@@ -37,14 +38,21 @@ namespace MDKControl.iOS
         private bool _editingShots;
 
         public ModeSmsViewController(IntPtr handle)
-            : base(handle)
+            : base(handle, MoCoBusProgramMode.ShootMoveShoot, AppDelegate.ModeSmsViewKey)
         {
         }
 
         public object NavigationParameter { get; set; }
 
         public ModeSmsViewModel Vm { get; private set; }
-        public DeviceViewModel DeviceVm { get { return Vm.DeviceViewModel; } }
+
+        public override DeviceViewModel DeviceVm
+        {
+            get
+            {
+                return Vm.DeviceViewModel;
+            }
+        }
 
         public override void ViewDidLoad()
         {
@@ -117,30 +125,32 @@ namespace MDKControl.iOS
             base.ViewDidLoad();
         }
 
-        public override void ViewDidAppear(bool animated)
+        public override void ViewWillAppear(bool animated)
         {
-            System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewDidAppear");
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewWillAppear");
 
             navigatedToStatusView = false;
 
             SetupBindings();
 
-            base.ViewDidAppear(animated);
+            base.ViewWillAppear(animated);
         }
 
-        public override void ViewDidDisappear(bool animated)
+        public override void ViewWillDisappear(bool animated)
         {
-            System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewDidDisappear");
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewWillDisappear");
 
             DetachBindings();
 
-            base.ViewDidDisappear(animated);
+            base.ViewWillDisappear(animated);
         }
 
-        void SetupBindings()
+        protected override void SetupBindings()
         {
             DetachBindings();
-            
+
+            base.SetupBindings();
+
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime).WhenSourceChanges(() => 
             {
                 ExposureValueLabel.Text = string.Format("{0:F1}s", Vm.ExposureTime);
@@ -242,7 +252,7 @@ namespace MDKControl.iOS
             _runStatusBinding.ForceUpdateValueFromSourceToTarget();
         }
 
-        void DetachBindings()
+        protected override void DetachBindings()
         {
             _exposureTimeBinding?.Detach();
             _exposureTimeBinding = null;
@@ -279,6 +289,8 @@ namespace MDKControl.iOS
 
             _runStatusBinding?.Detach();
             _runStatusBinding = null;
+
+            base.DetachBindings();
         }
 
         public override nfloat GetHeightForRow(UITableView tableView, NSIndexPath indexPath)
