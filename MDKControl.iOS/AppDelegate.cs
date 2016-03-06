@@ -108,8 +108,8 @@ namespace MDKControl.iOS
                 nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
                 nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
                 nav.Configure(AppDelegate.ModeSmsStatusViewKey, "ModeSmsStatusViewController");
-                //nav.Configure(AppDelegate.ModePanoViewKey, "ModePanoViewController");
-                //nav.Configure(AppDelegate.ModePanoStatusViewKey, "ModePanoStatusViewController");
+                nav.Configure(AppDelegate.ModePanoViewKey, "ModePanoViewController");
+                nav.Configure(AppDelegate.ModePanoStatusViewKey, "ModePanoStatusViewController");
                 nav.Configure(AppDelegate.ModeAstroViewKey, "ModeAstroViewController");
                 nav.Configure(AppDelegate.ModeAstroStatusViewKey, "ModeAstroStatusViewController");
                 nav.Configure(AppDelegate.JoystickViewKey, "JoystickViewController");

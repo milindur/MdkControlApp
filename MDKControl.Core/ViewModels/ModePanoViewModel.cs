@@ -128,6 +128,16 @@ namespace MDKControl.Core.ViewModels
             get { return _overallRows; }
         }
 
+        public int PanRefSize
+        {
+            get { return 0; }
+        }
+
+        public int TiltRefSize
+        {
+            get { return 0; }
+        }
+
         public int PanStartPosition
         {
             get { return _panStartPos; }

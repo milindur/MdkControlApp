@@ -141,6 +141,14 @@
       <DependentUpon>ModeAstroStatusViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="ListPickerViewModel.cs" />
+    <Compile Include="ModePanoStatusViewController.cs" />
+    <Compile Include="ModePanoViewController.cs" />
+    <Compile Include="ModePanoStatusViewController.designer.cs">
+      <DependentUpon>ModePanoStatusViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModePanoViewController.designer.cs">
+      <DependentUpon>ModePanoViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

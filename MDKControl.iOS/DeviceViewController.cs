@@ -94,7 +94,7 @@ namespace MDKControl.iOS
                                     {
                                         System.Diagnostics.Debug.WriteLine("Navigating to ModePanoView since a mode change was requested");
                                         _modeChangeRequested = false;
-                                        //navService.NavigateTo(AppDelegate.ModePanoViewKey, Vm.ModePanoViewModel);
+                                        navService.NavigateTo(AppDelegate.ModePanoViewKey, Vm.ModePanoViewModel);
                                     }
                                     else if (navService.CurrentPageKey != ViewModelLocator.DeviceViewKey)
                                     {
@@ -210,7 +210,7 @@ namespace MDKControl.iOS
                                 Vm.SetModeSmsCommand.Execute(null);
                                 break;
                             case 1: // pano
-                                //Vm.SetModePanoCommand.Execute(null);
+                                Vm.SetModePanoCommand.Execute(null);
                                 break;
                             case 2: // astro
                                 Vm.SetModeAstroCommand.Execute(null);
