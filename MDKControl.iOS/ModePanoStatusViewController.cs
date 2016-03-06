@@ -11,14 +11,15 @@ using UIKit;
 namespace MDKControl.iOS
 {
     partial class ModePanoStatusViewController : SubDeviceViewControllerBase, INavigationTarget
-	{
+    {
         private Binding _runStatusBinding;
         private Binding _progressBarBinding;
-        
+        private bool _canceled = false;
+
         public ModePanoStatusViewController(IntPtr handle)
             : base(handle, MoCoBusProgramMode.Panorama, AppDelegate.ModePanoStatusViewKey)
-		{
-		}
+        {
+        }
 
         public object NavigationParameter { get; set; }
 
@@ -38,30 +39,30 @@ namespace MDKControl.iOS
 
             Vm = (ModePanoViewModel)NavigationParameter;
 
-            CancelButton.Clicked += (sender, e) => 
+            CancelButton.Clicked += (sender, e) =>
+            {
+                PauseResumeButton.Enabled = false;
+                CancelButton.Enabled = false;
+
+                _canceled = true;
+                Vm.StopProgramCommand.Execute(null);
+            };
+
+            PauseResumeButton.Clicked += (sender, e) =>
+            {
+                PauseResumeButton.Enabled = false;
+                CancelButton.Enabled = false;
+
+                switch (DeviceVm.RunStatus)
                 {
-                    PauseResumeButton.Enabled = false;
-                    CancelButton.Enabled = false;
-
-                    Vm.StopProgramCommand.Execute(null);
-                    ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
-                };
-
-            PauseResumeButton.Clicked += (sender, e) => 
-                {
-                    PauseResumeButton.Enabled = false;
-                    CancelButton.Enabled = false;
-
-                    switch (DeviceVm.RunStatus)
-                    {
-                        case MoCoBusRunStatus.Paused:
-                            Vm.StartProgramCommand.Execute(null);
-                            break;
-                        case MoCoBusRunStatus.Running:
-                            Vm.PauseProgramCommand.Execute(null);
-                            break;
-                    }
-                };
+                    case MoCoBusRunStatus.Paused:
+                        Vm.StartProgramCommand.Execute(null);
+                        break;
+                    case MoCoBusRunStatus.Running:
+                        Vm.PauseProgramCommand.Execute(null);
+                        break;
+                }
+            };
 
             SetupBindings();
 
@@ -71,6 +72,8 @@ namespace MDKControl.iOS
         public override void ViewWillAppear(bool animated)
         {
             System.Diagnostics.Debug.WriteLine("ModePanoStatusViewController ViewWillAppear");
+
+            _canceled = false;
 
             SetupBindings();
             
@@ -92,24 +95,30 @@ namespace MDKControl.iOS
 
             base.SetupBindings();
 
-            _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() => 
-            {
-                ProgressBar.Progress = Vm.Progress / 100f;
-            });
+            _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() =>
+                {
+                    ProgressBar.Progress = Vm.Progress / 100f;
+                });
             
-            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() => 
-            {
-                PauseResumeButton.Enabled = true;
-                CancelButton.Enabled = true;
-                if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
-                    PauseResumeButton.Title = "Pause";
-                }
-                else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
-                {
-                    PauseResumeButton.Title = "Resume";
-                }
-            });
+                    PauseResumeButton.Enabled = true;
+                    CancelButton.Enabled = true;
+                    if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
+                    {
+                        PauseResumeButton.Title = "Pause";
+                    }
+                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
+                    {
+                        PauseResumeButton.Title = "Resume";
+                    }
+                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Stopped)
+                    {
+                        PauseResumeButton.Title = "Finished";
+                        if (_canceled)
+                            ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+                    }
+                });
         }
 
         protected override void DetachBindings()
@@ -122,5 +131,5 @@ namespace MDKControl.iOS
 
             base.DetachBindings();
         }
-	}
+    }
 }

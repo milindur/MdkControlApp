@@ -76,6 +76,7 @@ namespace MDKControl.Core.ViewModels
         {
             await _protocolService.Main.Stop().ConfigureAwait(false);
             await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
+            await _deviceViewModel.UpdateState().ConfigureAwait(false);
         }
 
         private AstroDirection _direction;
