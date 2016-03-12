@@ -34,9 +34,22 @@ namespace MDKControl.Droid
         {
             base.OnCreate();
 
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += (sender, e) =>
+            {
+                if (e.ExceptionObject is TimeoutException)
+                {
+                    // ignore (for the moment, should communicate to user that there is a communication issue)
+                }
+                else
+                {
+                    Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
+                }
+            };
+
             Bootstrap();
         }
-        
+
         private static void Bootstrap()
         {
             System.Diagnostics.Debug.WriteLine("Bootstrap");
@@ -85,11 +98,12 @@ namespace MDKControl.Droid
             if (!Insights.IsInitialized)
             {
                 Insights.HasPendingCrashReport += (sender, isStartupCrash) =>
+                {
+                    if (isStartupCrash)
                     {
-                        if (isStartupCrash) {
-                            Insights.PurgePendingCrashReports().Wait();
-                        }
-                    };
+                        Insights.PurgePendingCrashReports().Wait();
+                    }
+                };
 
 #if DEBUG
                 Insights.Initialize("1532003910b06b50a709d0e691a8054e904922c8", context);
