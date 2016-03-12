@@ -36,16 +36,16 @@ namespace MDKControl.Droid
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += (sender, e) =>
-            {
-                if (e.ExceptionObject is TimeoutException)
                 {
-                    // ignore (for the moment, should communicate to user that there is a communication issue)
-                }
-                else
-                {
-                    Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
-                }
-            };
+                    if (e.ExceptionObject is TimeoutException)
+                    {
+                        // ignore (for the moment, should communicate to user that there is a communication issue)
+                    }
+                    else
+                    {
+                        Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
+                    }
+                };
 
             Bootstrap();
         }

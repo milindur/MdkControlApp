@@ -29,7 +29,20 @@ namespace MDKControl.iOS
 
             Insights.Track("Initialize");
 
-			// if you want to use a different Application Delegate class from "AppDelegate"
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += (sender, e) =>
+                {
+                    if (e.ExceptionObject is TimeoutException)
+                    {
+                        // ignore (for the moment, should communicate to user that there is a communication issue)
+                    }
+                    else
+                    {
+                        Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
+                    }
+                };
+
+            // if you want to use a different Application Delegate class from "AppDelegate"
 			// you can specify it here.
 			UIApplication.Main(args, null, "AppDelegate");
 		}
