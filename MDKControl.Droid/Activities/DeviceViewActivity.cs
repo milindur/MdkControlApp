@@ -96,6 +96,17 @@ namespace MDKControl.Droid.Activities
                         }
                         else
                         {
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+                            if (dlg != null)
+                            {
+                                dlg.Dismiss();
+                            }
+                            dlg = FragmentManager.FindFragmentByTag<DialogFragment>("joystickDlg");
+                            if (dlg != null)
+                            {
+                                dlg.Dismiss();
+                            }
+
                             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
                         }
                     });
