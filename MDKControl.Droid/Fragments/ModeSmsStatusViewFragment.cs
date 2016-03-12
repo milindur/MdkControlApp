@@ -123,7 +123,7 @@ namespace MDKControl.Droid.Fragments
                 });
             _elapsedTimeBinding = this.SetBinding(() => Vm.ElapsedTime).WhenSourceChanges(() =>
                 {
-                    ElapsedTimeEditText.Text = string.Format("{0}:{1:00}m", Vm.ElapsedTime.Minutes, Vm.ElapsedTime.Seconds);
+                    ElapsedTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.ElapsedTime.TotalMinutes, Vm.ElapsedTime.Seconds);
                 });
             _elapsedShotsBinding = this.SetBinding(() => Vm.ElapsedShots).WhenSourceChanges(() =>
                 {
@@ -131,7 +131,7 @@ namespace MDKControl.Droid.Fragments
                 });
             _remainingTimeBinding = this.SetBinding(() => Vm.RemainingTime).WhenSourceChanges(() =>
                 {
-                    RemainingTimeEditText.Text = string.Format("{0}:{1:00}m", Vm.RemainingTime.Minutes, Vm.RemainingTime.Seconds);
+                    RemainingTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.RemainingTime.TotalMinutes, Vm.RemainingTime.Seconds);
                 });
             _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
                 {
@@ -147,15 +147,15 @@ namespace MDKControl.Droid.Fragments
                 });
             _videoLength24Binding = this.SetBinding(() => Vm.VideoLength24).WhenSourceChanges(() =>
                 {
-                    VideoLength24EditText.Text = string.Format("{0}:{1:00}m", Vm.VideoLength24.Minutes, Vm.VideoLength24.Seconds);
+                    VideoLength24EditText.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength24.TotalMinutes, Vm.VideoLength24.Seconds);
                 });
             _videoLength25Binding = this.SetBinding(() => Vm.VideoLength25).WhenSourceChanges(() =>
                 {
-                    VideoLength25EditText.Text = string.Format("{0}:{1:00}m", Vm.VideoLength25.Minutes, Vm.VideoLength25.Seconds);
+                    VideoLength25EditText.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength25.TotalMinutes, Vm.VideoLength25.Seconds);
                 });
             _videoLength30Binding = this.SetBinding(() => Vm.VideoLength30).WhenSourceChanges(() =>
                 {
-                    VideoLength30EditText.Text = string.Format("{0}:{1:00}m", Vm.VideoLength30.Minutes, Vm.VideoLength30.Seconds);
+                    VideoLength30EditText.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength30.TotalMinutes, Vm.VideoLength30.Seconds);
                 });
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {

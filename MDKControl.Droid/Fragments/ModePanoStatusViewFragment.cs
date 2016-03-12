@@ -121,7 +121,7 @@ namespace MDKControl.Droid.Fragments
                 });
             _elapsedTimeBinding = this.SetBinding(() => Vm.ElapsedTime).WhenSourceChanges(() =>
                 {
-                    ElapsedTimeEditText.Text = string.Format("{0}:{1:00}m", Vm.ElapsedTime.Minutes, Vm.ElapsedTime.Seconds);
+                    ElapsedTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.ElapsedTime.TotalMinutes, Vm.ElapsedTime.Seconds);
                 });
             _elapsedShotsBinding = this.SetBinding(() => Vm.ElapsedShots).WhenSourceChanges(() =>
                 {
@@ -129,7 +129,7 @@ namespace MDKControl.Droid.Fragments
                 });
             _remainingTimeBinding = this.SetBinding(() => Vm.RemainingTime).WhenSourceChanges(() =>
                 {
-                    RemainingTimeEditText.Text = string.Format("{0}:{1:00}m", Vm.RemainingTime.Minutes, Vm.RemainingTime.Seconds);
+                    RemainingTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.RemainingTime.TotalMinutes, Vm.RemainingTime.Seconds);
                 });
             _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
                 {
@@ -137,7 +137,7 @@ namespace MDKControl.Droid.Fragments
                 });
             _overallTimeBinding = this.SetBinding(() => Vm.OverallTime).WhenSourceChanges(() =>
                 {
-                    OverallTimeEditText.Text = string.Format("{0}:{1:00}m", Vm.OverallTime.Minutes, Vm.OverallTime.Seconds);
+                    OverallTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.OverallTime.TotalMinutes, Vm.OverallTime.Seconds);
                 });
             _overallShotsBinding = this.SetBinding(() => Vm.OverallShots).WhenSourceChanges(() =>
                 {
