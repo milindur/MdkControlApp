@@ -8,7 +8,6 @@ namespace MDKControl.Core.Services
     public interface IMoCoBusCommService
     {
         event EventHandler ConnectionChanged;
-        event EventHandler DataReceived;
 
         void Connect();
         void Disconnect();

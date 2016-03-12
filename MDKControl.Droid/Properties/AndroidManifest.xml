@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.milindur.mdkcontrol" android:versionName="0.10.0" android:installLocation="auto" android:versionCode="1001">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="de.milindur.mdkcontrol" android:versionName="0.10.0" android:installLocation="auto" android:versionCode="1002">
 	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="22" />
 	<application android:label="MDK Control" android:icon="@drawable/ic_launcher" android:theme="@android:style/Theme.Holo"></application>
 	<uses-permission android:name="android.permission.BLUETOOTH" />

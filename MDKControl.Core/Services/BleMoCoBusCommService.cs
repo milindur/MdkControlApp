@@ -114,7 +114,6 @@ namespace MDKControl.Core.Services
             Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Value received", DateTime.UtcNow);
             _rxBytesQueue.Enqueue(e.Characteristic.Value);
             _newRxBytesReceived.Set();
-            OnDataReceived();
         }
 
         public override void Connect()
@@ -176,7 +175,7 @@ namespace MDKControl.Core.Services
                     {
                         Debug.WriteLine("ReceiveAsync: Got bytes");
 
-                        token.ThrowIfCancellationRequested();
+                        //token.ThrowIfCancellationRequested();
                         
                         MoCoBusFrame frame;
                         if (MoCoBusFrame.TryParse(bytes, out frame))

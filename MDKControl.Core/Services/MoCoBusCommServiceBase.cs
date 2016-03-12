@@ -14,7 +14,6 @@ namespace MDKControl.Core.Services
         private ConnectionState _connectionState = ConnectionState.Disconnected;
 
         public event EventHandler ConnectionChanged;
-        public event EventHandler DataReceived;
 
         public abstract void Connect();
 
@@ -41,9 +40,9 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            using (var cts = new CancellationTokenSource(1000))
+            //using (var cts = new CancellationTokenSource(1000))
             {
-                return await SendAndReceiveAsync(frame, cts.Token).ConfigureAwait(false);
+                return await SendAndReceiveAsync(frame, CancellationToken.None /*cts.Token*/).ConfigureAwait(false);
             }
         }
 
@@ -61,12 +60,12 @@ namespace MDKControl.Core.Services
 
                         Send(frame);
 
-                        using (var subCts = new CancellationTokenSource(400))
+                        //using (var subCts = new CancellationTokenSource(400))
                         {
-                            var subToken = subCts.Token;
-                            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, subToken))
+                            //var subToken = subCts.Token;
+                            //using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, subToken))
                             {
-                                return await ReceiveAsync(linkedCts.Token).ConfigureAwait(false);
+                                return await ReceiveAsync(CancellationToken.None /*linkedCts.Token*/).ConfigureAwait(false);
                             }
                         }
                     }
@@ -88,15 +87,6 @@ namespace MDKControl.Core.Services
         protected virtual void OnConnectionChanged()
         {
             var handler = ConnectionChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
-        }
-
-        protected virtual void OnDataReceived()
-        {
-            var handler = DataReceived;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
