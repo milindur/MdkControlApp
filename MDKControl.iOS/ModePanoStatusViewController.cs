@@ -1,12 +1,9 @@
 using System;
-using System.CodeDom.Compiler;
-using Foundation;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
-using UIKit;
 
 namespace MDKControl.iOS
 {
@@ -14,6 +11,12 @@ namespace MDKControl.iOS
     {
         private Binding _runStatusBinding;
         private Binding _progressBarBinding;
+        private Binding _elapsedShotsBinding;
+        private Binding _remainingShotsBinding;
+        private Binding _overallShotsBinding;
+        private Binding _overallColsBinding;
+        private Binding _overallRowsBinding;
+
         private bool _canceled = false;
 
         public ModePanoStatusViewController(IntPtr handle)
@@ -95,6 +98,27 @@ namespace MDKControl.iOS
 
             base.SetupBindings();
 
+            _elapsedShotsBinding = this.SetBinding(() => Vm.ElapsedShots).WhenSourceChanges(() =>
+                {
+                    ElapsedShotsValueLabel.Text = string.Format("{0}", Vm.ElapsedShots);
+                });
+            _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
+                {
+                    RemainingShotsValueLabel.Text = string.Format("{0}", Vm.RemainingShots);
+                });
+            _overallShotsBinding = this.SetBinding(() => Vm.OverallShots).WhenSourceChanges(() =>
+                {
+                    OverallShotsValueLabel.Text = string.Format("{0}", Vm.OverallShots);
+                });
+            _overallColsBinding = this.SetBinding(() => Vm.OverallCols).WhenSourceChanges(() =>
+                {
+                    OverallColsValueLabel.Text = string.Format("{0}", Vm.OverallCols);
+                });
+            _overallRowsBinding = this.SetBinding(() => Vm.OverallRows).WhenSourceChanges(() =>
+                {
+                    OverallRowsValueLabel.Text = string.Format("{0}", Vm.OverallRows);
+                });
+
             _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() =>
                 {
                     ProgressBar.Progress = Vm.Progress / 100f;
@@ -123,6 +147,21 @@ namespace MDKControl.iOS
 
         protected override void DetachBindings()
         {
+            _elapsedShotsBinding?.Detach();
+            _elapsedShotsBinding = null;
+
+            _remainingShotsBinding?.Detach();
+            _remainingShotsBinding = null;
+
+            _overallShotsBinding?.Detach();
+            _overallShotsBinding = null;
+
+            _overallColsBinding?.Detach();
+            _overallColsBinding = null;
+
+            _overallRowsBinding?.Detach();
+            _overallRowsBinding = null;
+
             _progressBarBinding?.Detach();
             _progressBarBinding = null;
 
