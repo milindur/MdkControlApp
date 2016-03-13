@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extras.CommonServiceLocator;
 using Foundation;
 using GalaSoft.MvvmLight.Views;
@@ -8,6 +10,7 @@ using MDKControl.Core.ViewModels;
 using MDKControl.iOS.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using UIKit;
+using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.iOS
@@ -36,6 +39,9 @@ namespace MDKControl.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
+            AppDomain.CurrentDomain.UnhandledException += AppDomain_CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+
             Bootstrap();
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
 
@@ -70,7 +76,7 @@ namespace MDKControl.iOS
 
         public override void WillTerminate(UIApplication application)
         {
-            // Called when the application is about to terminate. Save data, if needed. See also DidEnterBackground.
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
 
             ServiceLocator.Current.GetInstance<DeviceListViewModel>().Cleanup();
         }
@@ -123,6 +129,33 @@ namespace MDKControl.iOS
             {
                 var csl = new AutofacServiceLocator(_container);
                 ServiceLocator.SetLocatorProvider(() => csl);
+            }
+        }
+
+        private static void AppDomain_CurrentDomain_UnhandledException (object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is TimeoutException)
+            {
+                // ignore (for the moment, should communicate to user that there is a communication issue)
+                Insights.Report(e.ExceptionObject as Exception);
+            }
+            else
+            {
+                Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
+            }
+        }
+
+        private static void TaskScheduler_UnobservedTaskException (object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            if (e.Exception.InnerException is TimeoutException)
+            {
+                // ignore (for the moment, should communicate to user that there is a communication issue)
+                Insights.Report(e.Exception);
+                e.SetObserved();
+            }
+            else
+            {
+                Insights.Report(e.Exception, Insights.Severity.Error);
             }
         }
     }

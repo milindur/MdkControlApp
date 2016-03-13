@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -34,20 +35,17 @@ namespace MDKControl.Droid
         {
             base.OnCreate();
 
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += (sender, e) =>
-                {
-                    if (e.ExceptionObject is TimeoutException)
-                    {
-                        // ignore (for the moment, should communicate to user that there is a communication issue)
-                    }
-                    else
-                    {
-                        Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
-                    }
-                };
+            AppDomain.CurrentDomain.UnhandledException += AppDomain_CurrentDomain_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             Bootstrap();
+        }
+
+        public override void OnTerminate()
+        {
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+            
+            base.OnTerminate();
         }
 
         private static void Bootstrap()
@@ -112,6 +110,33 @@ namespace MDKControl.Droid
 #endif
 
                 Insights.Track("Initialize");
+            }
+        }
+
+        private static void AppDomain_CurrentDomain_UnhandledException (object sender, UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is TimeoutException)
+            {
+                // ignore (for the moment, should communicate to user that there is a communication issue)
+                Insights.Report(e.ExceptionObject as Exception);
+            }
+            else
+            {
+                Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
+            }
+        }
+
+        private static void TaskScheduler_UnobservedTaskException (object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            if (e.Exception.InnerException is TimeoutException)
+            {
+                // ignore (for the moment, should communicate to user that there is a communication issue)
+                Insights.Report(e.Exception);
+                e.SetObserved();
+            }
+            else
+            {
+                Insights.Report(e.Exception, Insights.Severity.Error);
             }
         }
     }
