@@ -1,10 +1,10 @@
 ﻿using System;
-using UIKit;
 using GalaSoft.MvvmLight.Helpers;
-using MDKControl.Core.ViewModels;
-using Microsoft.Practices.ServiceLocation;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.Models;
+using MDKControl.Core.ViewModels;
+using Microsoft.Practices.ServiceLocation;
+using UIKit;
 
 namespace MDKControl.iOS
 {

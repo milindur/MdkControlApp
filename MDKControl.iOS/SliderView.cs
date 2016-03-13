@@ -1,12 +1,12 @@
 ﻿using System;
-using UIKit;
-using Foundation;
 using System.ComponentModel;
-using CoreGraphics;
 using System.Reactive;
 using System.Reactive.Concurrency;
-using System.Reactive.Subjects;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using CoreGraphics;
+using Foundation;
+using UIKit;
 
 namespace MDKControl.iOS
 {

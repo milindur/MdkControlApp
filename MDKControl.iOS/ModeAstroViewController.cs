@@ -1,11 +1,9 @@
 using System;
-using System.CodeDom.Compiler;
 using Foundation;
 using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
-using MDKControl.iOS.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using UIKit;
 

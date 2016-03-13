@@ -1,10 +1,10 @@
-using Foundation;
 using System;
-using UIKit;
+using Foundation;
 using GalaSoft.MvvmLight.Helpers;
+using MDKControl.Core.ViewModels;
 using Microsoft.Practices.ServiceLocation;
 using Robotics.Mobile.Core.Bluetooth.LE;
-using MDKControl.Core.ViewModels;
+using UIKit;
 
 namespace MDKControl.iOS
 {

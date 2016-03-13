@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Foundation;
-using UIKit;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extras.CommonServiceLocator;
-using GalaSoft.MvvmLight.Helpers;
+using Foundation;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core;
 using MDKControl.Core.Helpers;
 using MDKControl.Core.ViewModels;
 using MDKControl.iOS.Helpers;
 using Microsoft.Practices.ServiceLocation;
-using Xamarin;
+using UIKit;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.iOS
