@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using MDKControl.Core.Helpers;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
-using Reactive.Bindings;
+using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -54,32 +51,61 @@ namespace MDKControl.Core.ViewModels
 
         private async void ResumeProgram()
         {
-            await _protocolService.Main.Start().ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.Start().ConfigureAwait(false);
 
-            _deviceViewModel.StartUpdateTask();
+                _deviceViewModel.StartUpdateTask();
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private async void StartProgram()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
-            await _protocolService.Main.Start((byte)Direction, (byte)Speed).ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
+                await _protocolService.Main.Start((byte)Direction, (byte)Speed).ConfigureAwait(false);
 
-            _deviceViewModel.StartUpdateTask();
+                _deviceViewModel.StartUpdateTask();
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private async void PauseProgram()
         {
-            await _protocolService.Main.Pause().ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.Pause().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private async void StopProgram()
         {
-            await _protocolService.Main.Stop().ConfigureAwait(false);
-            await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
-            await _deviceViewModel.UpdateState().ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.Stop().ConfigureAwait(false);
+                await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
+                await _deviceViewModel.UpdateState().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private AstroDirection _direction;
+
         public AstroDirection Direction
         {
             get
@@ -97,6 +123,7 @@ namespace MDKControl.Core.ViewModels
         }
 
         private AstroSpeed _speed;
+
         public AstroSpeed Speed
         {
             get

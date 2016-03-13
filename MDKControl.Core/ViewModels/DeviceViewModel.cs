@@ -14,6 +14,7 @@ using MDKControl.Core.Services;
 using Reactive.Bindings;
 using Robotics.Mobile.Core.Bluetooth.LE;
 using Microsoft.Practices.ServiceLocation;
+using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -83,7 +84,9 @@ namespace MDKControl.Core.ViewModels
         }
 
         public ModeAstroViewModel ModeAstroViewModel { get { return _modeAstroViewModel; } }
+
         public ModePanoViewModel ModePanoViewModel { get { return _modePanoViewModel; } }
+
         public ModeSmsViewModel ModeSmsViewModel { get { return _modeSmsViewModel; } }
 
         public JoystickViewModel JoystickViewModel { get { return _joystickViewModel; } }
@@ -163,49 +166,77 @@ namespace MDKControl.Core.ViewModels
         {
             Debug.WriteLine("UpdateState");
 
-            _runStatus = await _protocolService.Main.GetRunStatus().ConfigureAwait(false);
-
-            var tmpProgramMode = _programMode;
-            _programMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
-            if (tmpProgramMode != _programMode)
+            try
             {
-                switch (_programMode)
-                {
-                    case MoCoBusProgramMode.ShootMoveShoot:
-                        await ModeSmsViewModel.InitState().ConfigureAwait(false);
-                        break;
-                    case MoCoBusProgramMode.Panorama:
-                        await ModePanoViewModel.InitState().ConfigureAwait(false);
-                        break;
-                    case MoCoBusProgramMode.Astro:
-                        //await ModeAstroViewModel.InitState().ConfigureAwait(false);
-                        break;
-                }
-            }
+                _runStatus = await _protocolService.Main.GetRunStatus().ConfigureAwait(false);
 
-            _dispatcherHelper.RunOnUIThread(() =>
+                var tmpProgramMode = _programMode;
+                _programMode = await _protocolService.Main.GetProgramMode().ConfigureAwait(false);
+                if (tmpProgramMode != _programMode)
                 {
-                    RaisePropertyChanged(() => ProgramMode);
-                    RaisePropertyChanged(() => RunStatus);
-                });
+                    switch (_programMode)
+                    {
+                        case MoCoBusProgramMode.ShootMoveShoot:
+                            await ModeSmsViewModel.InitState().ConfigureAwait(false);
+                            break;
+                        case MoCoBusProgramMode.Panorama:
+                            await ModePanoViewModel.InitState().ConfigureAwait(false);
+                            break;
+                        case MoCoBusProgramMode.Astro:
+                            //await ModeAstroViewModel.InitState().ConfigureAwait(false);
+                            break;
+                    }
+                }
+
+                _dispatcherHelper.RunOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(() => ProgramMode);
+                        RaisePropertyChanged(() => RunStatus);
+                    });
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private async void SetModeSms()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot).ConfigureAwait(false);
-            await UpdateState().ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot).ConfigureAwait(false);
+                await UpdateState().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private async void SetModePano()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
-            await UpdateState().ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
+                await UpdateState().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         private async void SetModeAstro()
         {
-            await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
-            await UpdateState().ConfigureAwait(false);
+            try
+            {
+                await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
+                await UpdateState().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
         }
 
         public void StartUpdateTask()

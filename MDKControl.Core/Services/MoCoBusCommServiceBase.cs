@@ -74,7 +74,7 @@ namespace MDKControl.Core.Services
                         Debug.WriteLine("{0}: SendAndReceiveAsync: Timeout!", DateTime.UtcNow);
                     }
 
-                    //await Task.Delay(50).ConfigureAwait(false);
+                    await Task.Delay(50).ConfigureAwait(false);
                     Debug.WriteLine("{0}: SendAndReceiveAsync: Retry!", DateTime.UtcNow);
                 }
             }
