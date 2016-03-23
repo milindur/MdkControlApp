@@ -419,10 +419,5 @@ namespace MDKControl.Core.ViewModels
                 Insights.Report(toe, Insights.Severity.Error);
             }
         }
-
-        public override void Cleanup()
-        {
-            base.Cleanup();
-        }
     }
 }

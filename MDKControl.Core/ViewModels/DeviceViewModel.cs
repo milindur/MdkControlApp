@@ -320,8 +320,6 @@ namespace MDKControl.Core.ViewModels
             JoystickViewModel.Cleanup();
             Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel done");
 
-            IsConnected = false;
-
             base.Cleanup();
         }
     }

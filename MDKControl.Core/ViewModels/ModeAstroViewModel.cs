@@ -144,10 +144,5 @@ namespace MDKControl.Core.ViewModels
         {
             return Task.FromResult(0);
         }
-
-        public override void Cleanup()
-        {
-            base.Cleanup();
-        }
     }
 }
