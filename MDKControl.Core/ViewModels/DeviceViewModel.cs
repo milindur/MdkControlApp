@@ -13,7 +13,7 @@ using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
-    public class DeviceViewModel : ViewModelBase
+    public class DeviceViewModel : ViewModelBase, IState
     {
         private readonly IDispatcherHelper _dispatcherHelper;
         private readonly INavigationService _navigationService;
@@ -157,6 +157,36 @@ namespace MDKControl.Core.ViewModels
             get { return _setModeAstroCommand ?? (_setModeAstroCommand = new RelayCommand(SetModeAstro)); }
         }
 
+        public Task InitState()
+        {
+            return Task.FromResult(0);
+        }
+
+        public async Task SaveState()
+        {
+            Debug.WriteLine("SaveState");
+
+            try
+            {
+                switch (ProgramMode)
+                {
+                    case MoCoBusProgramMode.ShootMoveShoot:
+                        await ModeSmsViewModel.SaveState().ConfigureAwait(false);
+                        break;
+                    case MoCoBusProgramMode.Panorama:
+                        await ModePanoViewModel.SaveState().ConfigureAwait(false);
+                        break;
+                    case MoCoBusProgramMode.Astro:
+                        await ModeAstroViewModel.SaveState().ConfigureAwait(false);
+                        break;
+                }
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
+        }
+
         public async Task UpdateState()
         {
             Debug.WriteLine("UpdateState");
@@ -172,13 +202,16 @@ namespace MDKControl.Core.ViewModels
                     switch (_programMode)
                     {
                         case MoCoBusProgramMode.ShootMoveShoot:
+                            System.Diagnostics.Debug.WriteLine("Updatestate: Call ModeSmsViewModel.InitState()");
                             await ModeSmsViewModel.InitState().ConfigureAwait(false);
                             break;
                         case MoCoBusProgramMode.Panorama:
+                            System.Diagnostics.Debug.WriteLine("Updatestate: Call ModePanoViewModel.InitState()");
                             await ModePanoViewModel.InitState().ConfigureAwait(false);
                             break;
                         case MoCoBusProgramMode.Astro:
-                            //await ModeAstroViewModel.InitState().ConfigureAwait(false);
+                            System.Diagnostics.Debug.WriteLine("Updatestate: Call ModeAstroViewModel.InitState()");
+                            await ModeAstroViewModel.InitState().ConfigureAwait(false);
                             break;
                     }
                 }
@@ -199,6 +232,7 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
+                await SaveState().ConfigureAwait(false);
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.ShootMoveShoot).ConfigureAwait(false);
                 await UpdateState().ConfigureAwait(false);
             }
@@ -212,6 +246,7 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
+                await SaveState().ConfigureAwait(false);
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
                 await UpdateState().ConfigureAwait(false);
             }
@@ -225,6 +260,7 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
+                await SaveState().ConfigureAwait(false);
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
                 await UpdateState().ConfigureAwait(false);
             }

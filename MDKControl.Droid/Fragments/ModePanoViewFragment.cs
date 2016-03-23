@@ -129,6 +129,8 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnResume();
 
+            System.Diagnostics.Debug.WriteLine("ModePanoViewFragment OnResume");
+
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
                 .WhenSourceChanges(() =>
                     {

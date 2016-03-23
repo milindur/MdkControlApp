@@ -9,7 +9,7 @@ using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
-    public class ModeAstroViewModel : ViewModelBase
+    public class ModeAstroViewModel : ViewModelBase, IState
     {
         private readonly IDispatcherHelper _dispatcherHelper;
         private readonly DeviceViewModel _deviceViewModel;
@@ -140,7 +140,17 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
+        public Task SaveState()
+        {
+            return Task.FromResult(0);
+        }
+
         public Task UpdateState()
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task InitState()
         {
             return Task.FromResult(0);
         }

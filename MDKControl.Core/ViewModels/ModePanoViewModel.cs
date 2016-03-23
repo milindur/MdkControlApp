@@ -9,7 +9,7 @@ using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
-    public class ModePanoViewModel : ViewModelBase
+    public class ModePanoViewModel : ViewModelBase, IState
     {
         private readonly IDispatcherHelper _dispatcherHelper;
         private readonly DeviceViewModel _deviceViewModel;
@@ -353,6 +353,28 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Main.Stop().ConfigureAwait(false);
                 await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
                 await _deviceViewModel.UpdateState().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
+        }
+
+        public async Task SaveState()
+        {
+            try
+            {
+                ushort preDelay = 100;
+                ushort focusTime = 100;
+                var exposureTime = ExposureTime * 1000m;
+                var postDelay = DelayTime * 1000m;
+
+                if (postDelay > ushort.MaxValue)
+                    postDelay = 60000m;
+
+                await _protocolService.Camera.SetFocusTime(focusTime).ConfigureAwait(false);
+                await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
+                await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
             }
             catch (TimeoutException toe)
             {

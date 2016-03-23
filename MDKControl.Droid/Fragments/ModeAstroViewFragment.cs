@@ -69,6 +69,8 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnResume();
 
+            System.Diagnostics.Debug.WriteLine("ModeAstroViewFragment OnResume");
+
             _northRadioBinding = this.SetBinding(() => NorthRadioButton.Checked)
                 .WhenSourceChanges(() =>
                     {

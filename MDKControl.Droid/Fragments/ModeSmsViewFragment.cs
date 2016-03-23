@@ -141,6 +141,8 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnResume();
 
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnResume");
+
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
                 .WhenSourceChanges(() =>
                     {

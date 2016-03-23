@@ -9,7 +9,7 @@ using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
-    public class ModeSmsViewModel : ViewModelBase
+    public class ModeSmsViewModel : ViewModelBase, IState
     {
         private readonly IDispatcherHelper _dispatcherHelper;
         private readonly DeviceViewModel _deviceViewModel;
@@ -415,6 +415,35 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Main.Stop().ConfigureAwait(false);
                 await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
                 await _deviceViewModel.UpdateState().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe, Insights.Severity.Error);
+            }
+        }
+
+        public async Task SaveState()
+        {
+            try
+            {
+                var preDelay = _preDelayTime * 1000m;
+                var focusTime = _focusTime * 1000m;
+                var exposureTime = _exposureTime * 1000m;
+                var postDelay = _postDelayTime * 1000m;
+                var interval = _intervalTime * 1000m;
+
+                if (preDelay > ushort.MaxValue)
+                    preDelay = 60000m;
+                if (focusTime > ushort.MaxValue)
+                    focusTime = 60000m;
+                if (postDelay > ushort.MaxValue)
+                    postDelay = 60000m;
+
+                await _protocolService.Camera.SetFocusTime((ushort)focusTime).ConfigureAwait(false);
+                await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
+                await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
+                await _protocolService.Camera.SetInterval((uint)interval).ConfigureAwait(false);
+                await _protocolService.Camera.SetMaxShots(MaxShots).ConfigureAwait(false);
             }
             catch (TimeoutException toe)
             {
