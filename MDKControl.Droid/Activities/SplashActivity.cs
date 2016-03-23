@@ -1,11 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
-using Android.Runtime;
-using MDKControl.Core;
-using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using Xamarin;

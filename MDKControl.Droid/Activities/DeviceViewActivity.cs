@@ -5,16 +5,11 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using GalaSoft.MvvmLight.Views;
+using MDKControl.Core.Models;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Fragments;
 using MDKControl.Droid.Helpers;
-using MDKControl.Droid.Widgets;
 using Microsoft.Practices.ServiceLocation;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
-using System.Reactive.Linq;
-using MDKControl.Core.Models;
 
 namespace MDKControl.Droid.Activities
 {
@@ -45,9 +40,9 @@ namespace MDKControl.Droid.Activities
 
         public DeviceViewModel Vm { get; private set; }
 
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(bundle);
+            base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.DeviceView);
 
@@ -119,8 +114,6 @@ namespace MDKControl.Droid.Activities
 
         protected override void OnPause()
         {
-            base.OnPause();
-
             _isConnectedBinding.Detach();
             _showDisconnectedBinding.Detach();
             _showConnectingBinding.Detach();
@@ -130,13 +123,15 @@ namespace MDKControl.Droid.Activities
             Vm.StopUpdateTask();
             Vm.JoystickViewModel.StopJoystick(null);
             Vm.JoystickViewModel.StopSlider(null);
+
+            base.OnPause();
         }
 
         protected override void OnApplicationStop()
         {
-            base.OnApplicationStop();
-
             Vm.Cleanup();
+
+            base.OnApplicationStop();
         }
 
         private void ShowModeSmsFragment()

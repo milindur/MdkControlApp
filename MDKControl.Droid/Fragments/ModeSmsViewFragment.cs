@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using MDKControl.Core.ViewModels;
-using MDKControl.Droid.Widgets;
-using MDKControl.Droid.Activities;
-using Reactive.Bindings;
-using Reactive.Bindings.Extensions;
 using MDKControl.Core.Models;
+using MDKControl.Core.ViewModels;
+using MDKControl.Droid.Activities;
 
 namespace MDKControl.Droid.Fragments
 {

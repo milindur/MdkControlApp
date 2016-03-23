@@ -5,7 +5,6 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
@@ -32,9 +31,9 @@ namespace MDKControl.Droid.Activities
             Vm.SelectDeviceCommand.Execute(Vm.Devices[position]);
         }
 
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(bundle);
+            base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.DeviceListView);
 
             App.Initialize(this);

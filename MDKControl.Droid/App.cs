@@ -2,13 +2,9 @@
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Autofac;
 using Autofac.Extras.CommonServiceLocator;
-using GalaSoft.MvvmLight.Helpers;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core;
 using MDKControl.Core.Helpers;
