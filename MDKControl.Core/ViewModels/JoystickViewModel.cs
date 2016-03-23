@@ -8,6 +8,7 @@ using MDKControl.Core.Helpers;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
 using Reactive.Bindings;
+using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -185,20 +186,27 @@ namespace MDKControl.Core.ViewModels
             if (_joystickTaskCancellationTokenSource == null)
                 return;
 
-            Debug.WriteLine("Stop Joystick");
+            try
+            {
+                Debug.WriteLine("Stop Joystick");
 
-            _joystickCurrentPoint = new Point(0, 0);
-            _joystickIsRunning = false;
+                _joystickCurrentPoint = new Point(0, 0);
+                _joystickIsRunning = false;
 
-            if (_sliderIsRunning)
-                return;
+                if (_sliderIsRunning)
+                    return;
 
-            _joystickTaskCancellationTokenSource.Cancel();
-            await _joystickTask.ConfigureAwait(false);
+                _joystickTaskCancellationTokenSource?.Cancel();
+                await _joystickTask.ConfigureAwait(false);
 
-            _joystickTaskCancellationTokenSource.Dispose();
-            _joystickTaskCancellationTokenSource = null;
-            _joystickTask = null;
+                _joystickTaskCancellationTokenSource?.Dispose();
+                _joystickTaskCancellationTokenSource = null;
+                _joystickTask = null;
+            }
+            catch (Exception ex)
+            {
+                Insights.Report(ex);
+            }
         }
 
         public async void StopSlider(object unit)
@@ -206,20 +214,27 @@ namespace MDKControl.Core.ViewModels
             if (_joystickTaskCancellationTokenSource == null)
                 return;
 
-            Debug.WriteLine("Stop Slider");
+            try
+            {
+                Debug.WriteLine("Stop Slider");
 
-            _sliderCurrentPoint = 0;
-            _sliderIsRunning = false;
+                _sliderCurrentPoint = 0;
+                _sliderIsRunning = false;
 
-            if (_joystickIsRunning)
-                return;
+                if (_joystickIsRunning)
+                    return;
 
-            _joystickTaskCancellationTokenSource.Cancel();
-            await _joystickTask.ConfigureAwait(false);
+                _joystickTaskCancellationTokenSource?.Cancel();
+                await _joystickTask.ConfigureAwait(false);
 
-            _joystickTaskCancellationTokenSource.Dispose();
-            _joystickTaskCancellationTokenSource = null;
-            _joystickTask = null;
+                _joystickTaskCancellationTokenSource?.Dispose();
+                _joystickTaskCancellationTokenSource = null;
+                _joystickTask = null;
+            }
+            catch (Exception ex)
+            {
+                Insights.Report(ex);
+            }
         }
 
         public void MoveJoystick(Point point)

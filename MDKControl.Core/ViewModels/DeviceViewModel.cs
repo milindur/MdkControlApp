@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -57,7 +56,7 @@ namespace MDKControl.Core.ViewModels
 
         private async void CommServiceOnConnectionChanged(object sender, EventArgs e)
         {
-            Debug.WriteLine("CommServiceOnConnectionChanged: {0}", _commService.ConnectionState);
+            System.Diagnostics.Debug.WriteLine("CommServiceOnConnectionChanged: {0}", _commService.ConnectionState);
             
             _programMode = MoCoBusProgramMode.Invalid;
             if (_commService.ConnectionState == ConnectionState.Connected)
@@ -115,11 +114,11 @@ namespace MDKControl.Core.ViewModels
             get { return _programMode; }
             set
             {
-                Debug.WriteLine("Setting ProgramMode");
+                System.Diagnostics.Debug.WriteLine("Setting ProgramMode");
                 _programMode = value;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
-                        Debug.WriteLine("RaisePropertyChanged ProgramMode");
+                        System.Diagnostics.Debug.WriteLine("RaisePropertyChanged ProgramMode");
                         RaisePropertyChanged(() => ProgramMode);
                     });
             }
@@ -130,11 +129,11 @@ namespace MDKControl.Core.ViewModels
             get { return _runStatus; }
             set
             {
-                Debug.WriteLine("Setting RunStatus");
+                System.Diagnostics.Debug.WriteLine("Setting RunStatus");
                 _runStatus = value;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
-                        Debug.WriteLine("RaisePropertyChanged RunStatus");
+                        System.Diagnostics.Debug.WriteLine("RaisePropertyChanged RunStatus");
                         RaisePropertyChanged(() => RunStatus);
                     });
             }
@@ -164,7 +163,7 @@ namespace MDKControl.Core.ViewModels
 
         public async Task SaveState()
         {
-            Debug.WriteLine("SaveState");
+            System.Diagnostics.Debug.WriteLine("SaveState");
 
             try
             {
@@ -189,7 +188,7 @@ namespace MDKControl.Core.ViewModels
 
         public async Task UpdateState()
         {
-            Debug.WriteLine("UpdateState");
+            System.Diagnostics.Debug.WriteLine("UpdateState");
 
             try
             {
@@ -288,7 +287,7 @@ namespace MDKControl.Core.ViewModels
 
                             try
                             {
-                                Debug.WriteLine("UpdateTask: Updating...");
+                                System.Diagnostics.Debug.WriteLine("UpdateTask: Updating...");
                                 await UpdateState().ConfigureAwait(false);
                                 switch (ProgramMode)
                                 {
@@ -305,17 +304,17 @@ namespace MDKControl.Core.ViewModels
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("UpdateTask: {0}", ex);
+                                System.Diagnostics.Debug.WriteLine("UpdateTask: {0}", ex);
                             }
                         }
                     }
                     catch (OperationCanceledException ex)
                     {
-                        Debug.WriteLine("UpdateTask: outer operation canceled {0}", ex);
+                        System.Diagnostics.Debug.WriteLine("UpdateTask: outer operation canceled {0}", ex);
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine("UpdateTask: {0}", ex);
+                        System.Diagnostics.Debug.WriteLine("UpdateTask: {0}", ex);
                     }
                 }, _updateTaskCancellationTokenSource.Token);
         }
@@ -325,31 +324,38 @@ namespace MDKControl.Core.ViewModels
             if (_updateTaskCancellationTokenSource == null)
                 return;
 
-            Debug.WriteLine("Stop UpdateTask");
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("Stop UpdateTask");
 
-            _updateTaskCancellationTokenSource.Cancel();
-            await _updateTask.ConfigureAwait(false);
+                _updateTaskCancellationTokenSource?.Cancel();
+                await _updateTask.ConfigureAwait(false);
 
-            _updateTaskCancellationTokenSource.Dispose();
-            _updateTaskCancellationTokenSource = null;
-            _updateTask = null;
+                _updateTaskCancellationTokenSource?.Dispose();
+                _updateTaskCancellationTokenSource = null;
+                _updateTask = null;
+            }
+            catch (Exception ex)
+            {
+                Insights.Report(ex);
+            }
         }
 
         public override void Cleanup()
         {
-            Debug.WriteLine("DeviceViewModel.Cleanup: StopUpdateTask");
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel.Cleanup: StopUpdateTask");
             StopUpdateTask().Wait();
-            Debug.WriteLine("DeviceViewModel.Cleanup: StopUpdateTask done");
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel.Cleanup: StopUpdateTask done");
 
-            Debug.WriteLine("DeviceViewModel.Cleanup: Mode*ViewModel");
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel.Cleanup: Mode*ViewModel");
             ModeAstroViewModel.Cleanup();
             ModePanoViewModel.Cleanup();
             ModeSmsViewModel.Cleanup();
-            Debug.WriteLine("DeviceViewModel.Cleanup: Mode*ViewModel done");
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel.Cleanup: Mode*ViewModel done");
 
-            Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel");
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel");
             JoystickViewModel.Cleanup();
-            Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel done");
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel.Cleanup: JoystickViewModel done");
 
             base.Cleanup();
         }
