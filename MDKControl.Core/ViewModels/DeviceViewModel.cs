@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reactive;
-using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Views;
 using MDKControl.Core.Helpers;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
-using Reactive.Bindings;
 using Robotics.Mobile.Core.Bluetooth.LE;
-using Microsoft.Practices.ServiceLocation;
 using Xamarin;
 
 namespace MDKControl.Core.ViewModels

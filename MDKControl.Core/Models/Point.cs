@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MDKControl.Core.Models
+﻿namespace MDKControl.Core.Models
 {
     public class Point
     {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using MDKControl.Core.Models;
+﻿using System.Threading.Tasks;
 
 namespace MDKControl.Core.Services
 {

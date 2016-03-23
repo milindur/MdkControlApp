@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
 using Nito.AsyncEx;
-using System.Diagnostics;
 
 namespace MDKControl.Core.Services
 {
@@ -40,10 +40,7 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            //using (var cts = new CancellationTokenSource(1000))
-            {
-                return await SendAndReceiveAsync(frame, CancellationToken.None /*cts.Token*/).ConfigureAwait(false);
-            }
+            return await SendAndReceiveAsync(frame, CancellationToken.None /*cts.Token*/).ConfigureAwait(false);
         }
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token)
@@ -57,17 +54,8 @@ namespace MDKControl.Core.Services
                     try
                     {
                         ClearReceiveBuffer();
-
                         Send(frame);
-
-                        //using (var subCts = new CancellationTokenSource(400))
-                        {
-                            //var subToken = subCts.Token;
-                            //using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, subToken))
-                            {
-                                return await ReceiveAsync(CancellationToken.None /*linkedCts.Token*/).ConfigureAwait(false);
-                            }
-                        }
+                        return await ReceiveAsync(CancellationToken.None).ConfigureAwait(false);
                     }
                     catch (TimeoutException)
                     {

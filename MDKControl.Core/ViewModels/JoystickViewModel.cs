@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +8,6 @@ using MDKControl.Core.Helpers;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
 using Reactive.Bindings;
-using System.Diagnostics;
 
 namespace MDKControl.Core.ViewModels
 {

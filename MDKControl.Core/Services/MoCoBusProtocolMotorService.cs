@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
-using System.Diagnostics;
 
 namespace MDKControl.Core.Services
 {

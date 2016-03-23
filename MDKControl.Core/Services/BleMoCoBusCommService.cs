@@ -47,7 +47,7 @@ namespace MDKControl.Core.Services
 
             _device = e.Device;
             _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
-            try 
+            try
             {
                 _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
             }
@@ -55,7 +55,7 @@ namespace MDKControl.Core.Services
             {
                 // ignore
             }
-            try 
+            try
             {
                 _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
             }
@@ -163,11 +163,8 @@ namespace MDKControl.Core.Services
 
             return await Task.Run(() =>
                 {
-                    //if (_rxBytesQueue.IsEmpty)
-                    {
-                        Debug.WriteLine("ReceiveAsync: Waiting for answer!");
-                        _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(500));
-                    }
+                    Debug.WriteLine("ReceiveAsync: Waiting for answer!");
+                    _newRxBytesReceived.WaitOne(TimeSpan.FromMilliseconds(500));
 
                     Debug.WriteLine("ReceiveAsync: TryDequeue");
                     byte[] bytes;
@@ -175,8 +172,6 @@ namespace MDKControl.Core.Services
                     {
                         Debug.WriteLine("ReceiveAsync: Got bytes");
 
-                        //token.ThrowIfCancellationRequested();
-                        
                         MoCoBusFrame frame;
                         if (MoCoBusFrame.TryParse(bytes, out frame))
                         {
