@@ -14,7 +14,6 @@ namespace MDKControl.Core.ViewModels
 {
     public class JoystickViewModel : ViewModelBase
     {
-        private readonly IDispatcherHelper _dispatcherHelper;
         private readonly DeviceViewModel _deviceViewModel;
         private readonly IMoCoBusProtocolService _protocolService;
 
@@ -28,9 +27,8 @@ namespace MDKControl.Core.ViewModels
         private Task _joystickTask;
         private CancellationTokenSource _joystickTaskCancellationTokenSource;
 
-        public JoystickViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
+        public JoystickViewModel(DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
-            _dispatcherHelper = dispatcherHelper;
             _deviceViewModel = deviceViewModel;
             _protocolService = protocolService;
 
@@ -104,7 +102,6 @@ namespace MDKControl.Core.ViewModels
             _joystickTaskCancellationTokenSource = new CancellationTokenSource();
             _joystickTask = Task.Run(async () =>
                 {
-                    var taskName = "SliderOrJoystickTask_" + Guid.NewGuid().ToString("N");
                     var token = _joystickTaskCancellationTokenSource.Token;
                     try
                     {

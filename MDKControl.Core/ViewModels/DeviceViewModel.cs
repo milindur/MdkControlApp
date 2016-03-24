@@ -51,7 +51,7 @@ namespace MDKControl.Core.ViewModels
             _modePanoViewModel = new ModePanoViewModel(_dispatcherHelper, this, _protocolService);
             _modeSmsViewModel = new ModeSmsViewModel(_dispatcherHelper, this, _protocolService);
 
-            _joystickViewModel = new JoystickViewModel(_dispatcherHelper, this, _protocolService);
+            _joystickViewModel = new JoystickViewModel(this, _protocolService);
         }
 
         private async void CommServiceOnConnectionChanged(object sender, EventArgs e)

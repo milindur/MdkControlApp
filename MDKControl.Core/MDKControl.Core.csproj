@@ -54,7 +54,6 @@
     <Compile Include="ViewModels\DeviceViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Helpers\PropertySupport.cs" />
-    <Compile Include="Helpers\Timer.cs" />
     <Compile Include="Helpers\IDispatcherHelper.cs" />
     <Compile Include="Models\Point.cs" />
     <Compile Include="Services\IMoCoBusProtocolMotorService.cs" />
