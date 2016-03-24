@@ -106,10 +106,12 @@ namespace MDKControl.Droid.Fragments
                                 dlg.SetCommand("Paused", Vm.PauseProgramCommand);
                                 dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
                                 dlg.Show(FragmentManager, "statusDlg");
-                                DeviceVm.StartUpdateTask();
                             }
+
+                            DeviceVm.StartUpdateTask();
                         }
                     });
+            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         public override void OnPause()

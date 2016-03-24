@@ -274,6 +274,8 @@ namespace MDKControl.Core.ViewModels
             if (_updateTask != null)
                 return;
             
+            System.Diagnostics.Debug.WriteLine("DeviceViewModel StartUpdateTask");
+
             _updateTaskCancellationTokenSource = new CancellationTokenSource();
             _updateTask = Task.Run(async () =>
                 {
@@ -337,6 +339,8 @@ namespace MDKControl.Core.ViewModels
             }
             catch (Exception ex)
             {
+                _updateTaskCancellationTokenSource = null;
+                _updateTask = null;
                 Insights.Report(ex);
             }
         }

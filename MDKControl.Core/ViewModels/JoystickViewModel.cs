@@ -205,6 +205,8 @@ namespace MDKControl.Core.ViewModels
             }
             catch (Exception ex)
             {
+                _joystickTaskCancellationTokenSource = null;
+                _joystickTask = null;
                 Insights.Report(ex);
             }
         }
@@ -233,6 +235,8 @@ namespace MDKControl.Core.ViewModels
             }
             catch (Exception ex)
             {
+                _joystickTaskCancellationTokenSource = null;
+                _joystickTask = null;
                 Insights.Report(ex);
             }
         }

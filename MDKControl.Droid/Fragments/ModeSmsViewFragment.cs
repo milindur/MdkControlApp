@@ -156,10 +156,12 @@ namespace MDKControl.Droid.Fragments
                                 dlg.SetCommand("Paused", Vm.PauseProgramCommand);
                                 dlg.SetCommand("Resumed", Vm.StartProgramCommand);
                                 dlg.Show(FragmentManager, "statusDlg");
-                                DeviceVm.StartUpdateTask();
                             }
+
+                            DeviceVm.StartUpdateTask();
                         }
                     });
+            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
 
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
