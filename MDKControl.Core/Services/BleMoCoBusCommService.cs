@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
+using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Core.Services
@@ -32,8 +33,12 @@ namespace MDKControl.Core.Services
 
         private void AdapterOnDeviceConnected(object sender, Ble.DeviceConnectionEventArgs e)
         {
+            Debug.WriteLine("AdapterOnDeviceConnected 1");
+
             if (e.Device.ID != _device.ID)
                 return;
+
+            Debug.WriteLine("AdapterOnDeviceConnected 2");
 
             _device = e.Device;
             _device.ServicesDiscovered += DeviceOnServicesDiscovered;
@@ -42,29 +47,16 @@ namespace MDKControl.Core.Services
 
         private void AdapterOnDeviceDisconnected(object sender, Ble.DeviceConnectionEventArgs e)
         {
+            Debug.WriteLine("AdapterOnDeviceDisconnected 1");
+
             if (e.Device.ID != _device.ID)
                 return;
 
-            _device = e.Device;
-            _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
-            try
-            {
-                _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
-            }
-            catch
-            {
-                // ignore
-            }
-            try
-            {
-                _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
-            }
-            catch
-            {
-                // ignore
-            }
+            Debug.WriteLine("AdapterOnDeviceDisconnected 2");
 
-            ConnectionState = ConnectionState.Disconnected;
+            _device = e.Device;
+
+            OnDisconnect();
         }
 
         private void DeviceOnServicesDiscovered(object sender, EventArgs e)
@@ -96,50 +88,84 @@ namespace MDKControl.Core.Services
 
         private void MoCoBusRxCharacteristicOnValueUpdated(object sender, Ble.CharacteristicReadEventArgs e)
         {
-            Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Entering", DateTime.UtcNow);
+            Debug.WriteLine("MoCoBusRxCharacteristicOnValueUpdated: Entering");
             try
             {
                 if (e.Characteristic == null || e.Characteristic.Value == null)
                 {
-                    Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Characteristic or Characteristic value is null", DateTime.UtcNow);
+                    Debug.WriteLine("MoCoBusRxCharacteristicOnValueUpdated: Characteristic or Characteristic value is null");
                     return;
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Exception: {1}", DateTime.UtcNow, ex);
+                Debug.WriteLine("MoCoBusRxCharacteristicOnValueUpdated: Exception: {0}", ex);
                 return;
             }
 
-            Debug.WriteLine("{0}: MoCoBusRxCharacteristicOnValueUpdated: Value received", DateTime.UtcNow);
+            Debug.WriteLine("MoCoBusRxCharacteristicOnValueUpdated: Value received");
             _rxBytesQueue.Enqueue(e.Characteristic.Value);
             _newRxBytesReceived.Set();
         }
 
+        void OnDisconnect()
+        {
+            _moCoBusTxCharacteristic = null;
+
+            if (_moCoBusRxCharacteristic != null)
+            {
+                try
+                {
+                    _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
+                }
+                catch (Exception)
+                {
+                    // ignore
+                }
+                _moCoBusRxCharacteristic = null;
+            }
+
+            if (_moCoBusService != null)
+            {
+                try
+                {
+                    _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
+                }
+                catch (Exception)
+                {
+                    // ignore
+                }
+                _moCoBusService = null;
+            }
+
+            try
+            {
+                _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
+            }
+            catch (Exception)
+            {
+                // ignore
+            }
+
+            ConnectionState = ConnectionState.Disconnected;
+        }
+
         public override void Connect()
         {
+            Debug.WriteLine("BleMoCoBusCommService: Connect");
+            Insights.Track("BleMoCoBusCommServiceConnect");
+
             _adapter.ConnectToDevice(_device);
             ConnectionState = ConnectionState.Connecting;
         }
 
         public override void Disconnect()
         {
-            _moCoBusTxCharacteristic = null;
+            Debug.WriteLine("BleMoCoBusCommService: Disconnect");
+            Insights.Track("BleMoCoBusCommServiceDisconnect");
 
-            if (_moCoBusRxCharacteristic != null)
-            {
-                _moCoBusRxCharacteristic.ValueUpdated -= MoCoBusRxCharacteristicOnValueUpdated;
-                _moCoBusRxCharacteristic.StopUpdates();
-                _moCoBusRxCharacteristic = null;
-            }
+            OnDisconnect();
 
-            if (_moCoBusService != null)
-            {
-                _moCoBusService.CharacteristicsDiscovered -= MoCoBusServiceOnCharacteristicsDiscovered;
-                _moCoBusService = null;
-            }
-
-            _device.ServicesDiscovered -= DeviceOnServicesDiscovered;
             _adapter.DisconnectDevice(_device);
         }
 
@@ -179,7 +205,7 @@ namespace MDKControl.Core.Services
                         }
                     }
 
-                    Debug.WriteLine("{0}: ReceiveAsync: Timeout!", DateTime.UtcNow);
+                    Debug.WriteLine("ReceiveAsync: Timeout!");
                     throw new TimeoutException();
                 }, token).ConfigureAwait(false);
         }

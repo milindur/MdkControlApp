@@ -1,16 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
 using Nito.AsyncEx;
+using Xamarin;
 
 namespace MDKControl.Core.Services
 {
     public abstract class MoCoBusCommServiceBase : IMoCoBusCommService
     {
+        private const int MaxRetry = 3;
+
         private readonly AsyncLock _mutex = new AsyncLock();
 
+        private int _retryCounter = 0;
         private ConnectionState _connectionState = ConnectionState.Disconnected;
 
         public event EventHandler ConnectionChanged;
@@ -25,6 +30,10 @@ namespace MDKControl.Core.Services
             protected set
             {
                 _connectionState = value;
+                if (_connectionState == ConnectionState.Connected)
+                {
+                    _retryCounter = 0;
+                }
                 OnConnectionChanged();
             }
         }
@@ -47,7 +56,7 @@ namespace MDKControl.Core.Services
         {
             using (await _mutex.LockAsync(token).ConfigureAwait(false))
             {
-                for (var retry = 0; retry < 3; retry++)
+                for (var retry = 0; retry < MaxRetry; retry++)
                 {
                     token.ThrowIfCancellationRequested();
                     
@@ -55,15 +64,39 @@ namespace MDKControl.Core.Services
                     {
                         ClearReceiveBuffer();
                         Send(frame);
-                        return await ReceiveAsync(CancellationToken.None).ConfigureAwait(false);
+                        var result = await ReceiveAsync(CancellationToken.None).ConfigureAwait(false);
+                        if (_retryCounter > 0) 
+                        {
+                            _retryCounter--;   
+                        }
+                        return result;
                     }
                     catch (TimeoutException)
                     {
-                        Debug.WriteLine("{0}: SendAndReceiveAsync: Timeout!", DateTime.UtcNow);
+                        Debug.WriteLine("SendAndReceiveAsync: Timeout! (Counter: {0})", _retryCounter);
+
+                        if (_retryCounter < 1000)
+                        {
+                            _retryCounter += 5;
+                        }
+                        if (_retryCounter >= 100)
+                        {
+                            Debug.WriteLine("RetryCounter >= 100 ({0}): Try to reconnect!", _retryCounter);
+                            Insights.Track("MoCoBusCommServiceBaseRetryCounterOverrun", 
+                                new Dictionary<string, string> 
+                                { 
+                                    { "RetryCounter", _retryCounter.ToString() } 
+                                });
+
+                            _retryCounter = 0;
+                            Task.Run(Disconnect);
+                            await Task.Delay(500).ConfigureAwait(false);
+                            break;
+                        }
                     }
 
                     await Task.Delay(50).ConfigureAwait(false);
-                    Debug.WriteLine("{0}: SendAndReceiveAsync: Retry!", DateTime.UtcNow);
+                    Debug.WriteLine("SendAndReceiveAsync: Retry!");
                 }
             }
 
