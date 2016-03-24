@@ -306,7 +306,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -329,7 +329,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -358,7 +358,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -392,7 +392,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -404,7 +404,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -418,7 +418,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -447,7 +447,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -475,7 +475,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
 
@@ -514,7 +514,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe, Insights.Severity.Error);
+                Insights.Report(toe);
             }
         }
     }

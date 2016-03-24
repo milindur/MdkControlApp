@@ -40,7 +40,7 @@ namespace MDKControl.Core.Services
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame)
         {
-            return await SendAndReceiveAsync(frame, CancellationToken.None /*cts.Token*/).ConfigureAwait(false);
+            return await SendAndReceiveAsync(frame, CancellationToken.None).ConfigureAwait(false);
         }
 
         public virtual async Task<MoCoBusFrame> SendAndReceiveAsync(MoCoBusFrame frame, CancellationToken token)
