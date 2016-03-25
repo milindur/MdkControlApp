@@ -15,6 +15,7 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
+        private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _exposureTimeBinding;
         private Binding _delayTimeBinding;
@@ -47,13 +48,10 @@ namespace MDKControl.Droid.Fragments
         private EditText _tiltStartPosEditText;
         private EditText _tiltStopPosEditText;
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-        }
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnCreateView");
+
             return inflater.Inflate(Resource.Layout.ModeSmsView, container, false);
         }
 
@@ -61,65 +59,60 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnActivityCreated");
+
             ExposureTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Exposure", Vm.ExposureTime);
                     dlg.Closed += (oo, ee) => { Vm.ExposureTime = ee; };
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
             
             DelayTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Delay", Vm.DelayTime);
                     dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
             IntervalTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Interval", Vm.IntervalTime);
                     dlg.Closed += (oo, ee) => { System.Diagnostics.Debug.WriteLine("Setting IntervalTime from dialog"); Vm.IntervalTime = ee; };
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
             DurationTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Duration", Vm.DurationTime);
                     dlg.Closed += (oo, ee) => { Vm.DurationTime = ee; };
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
             MaxShotsEditText.Click += (o, e) => 
                 {
                     var dlg = IntegerViewFragment.NewInstance("Shots", Vm.MaxShots);
                     dlg.Closed += (oo, ee) => { Vm.MaxShots = (ushort)ee; };
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
             SetStartButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Start");
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
             SetStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
                     dlg.SetCommand("Closed", Vm.SetStopCommand);
-                    dlg.Show(FragmentManager, "joystickDlg");
+                    dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
             SwapStartStopButton.Click += (o, e) => {};
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
 
-            StartProgramButton.Click += (o, e) => 
-                {  
-                    var dlg = ModeSmsStatusViewFragment.NewInstance();
-                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
-                    dlg.Show(FragmentManager, "statusDlg");
-                };
+            StartProgramButton.Click += (o, e) => {};
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
         }
 
@@ -127,12 +120,16 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnAttach(activity);
 
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnAttach");
+
             _activity = activity;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
+
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnDestroy");
 
             _activity = null;
         }
@@ -143,23 +140,31 @@ namespace MDKControl.Droid.Fragments
 
             System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnResume");
 
+            _prevRunStatus = MoCoBusRunStatus.Stopped;
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
                 .WhenSourceChanges(() =>
                     {
-                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped)
+                        System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed");
+
+                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && DeviceVm.RunStatus != _prevRunStatus)
                         {
-                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+                            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed: Looking for dialog");
+
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
                             if (dlg == null)
                             {
+                                System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed: Create ModeSmsStatusViewFragment");
+
                                 dlg = ModeSmsStatusViewFragment.NewInstance();
                                 dlg.SetCommand("Stoped", Vm.StopProgramCommand);
                                 dlg.SetCommand("Paused", Vm.PauseProgramCommand);
                                 dlg.SetCommand("Resumed", Vm.StartProgramCommand);
-                                dlg.Show(FragmentManager, "statusDlg");
+                                dlg.Show(FragmentManager, Consts.DialogTag);
                             }
-
                             DeviceVm.StartUpdateTask();
                         }
+
+                        _prevRunStatus = DeviceVm.RunStatus;
                     });
             _runStatusBinding.ForceUpdateValueFromSourceToTarget();
 
@@ -243,30 +248,27 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
-            _runStatusBinding.Detach();
+            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnPause");
 
-            _exposureTimeBinding.Detach();
-            _delayTimeBinding.Detach();
-            _intervalTimeBinding.Detach();
-            _durationTimeBinding.Detach();
-            _maxShotsBinding.Detach();
+            _runStatusBinding?.Detach();
 
-            _sliderStartPosBinding.Detach();
-            _sliderStopPosBinding.Detach();
-            _panStartPosBinding.Detach();
-            _panStopPosBinding.Detach();
-            _tiltStartPosBinding.Detach();
-            _tiltStopPosBinding.Detach();
+            _exposureTimeBinding?.Detach();
+            _delayTimeBinding?.Detach();
+            _intervalTimeBinding?.Detach();
+            _durationTimeBinding?.Detach();
+            _maxShotsBinding?.Detach();
 
-            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+            _sliderStartPosBinding?.Detach();
+            _sliderStopPosBinding?.Detach();
+            _panStartPosBinding?.Detach();
+            _panStopPosBinding?.Detach();
+            _tiltStartPosBinding?.Detach();
+            _tiltStopPosBinding?.Detach();
+
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
             if (dlg != null)
             {
-                dlg.Dismiss();
-            }
-            dlg = FragmentManager.FindFragmentByTag<DialogFragment>("joystickDlg");
-            if (dlg != null)
-            {
-                dlg.Dismiss();
+                dlg.DismissAllowingStateLoss();
             }
 
             base.OnPause();

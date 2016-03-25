@@ -115,7 +115,7 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
-            _runStatusBinding.Detach();
+            _runStatusBinding?.Detach();
 
             base.OnPause();
         }

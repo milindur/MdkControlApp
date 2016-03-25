@@ -15,6 +15,8 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
+        private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
+
         private Binding _northRadioBinding;
         private Binding _southRadioBinding;
         private Binding _siderealRadioBinding;
@@ -26,11 +28,6 @@ namespace MDKControl.Droid.Fragments
         private RadioButton _siderealRadioButton;
         private RadioButton _lunarRadioButton;
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-        }
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             return inflater.Inflate(Resource.Layout.ModeAstroView, container, false);
@@ -40,14 +37,7 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            StartProgramButton.Click += (o, e) => 
-                {  
-                    var dlg = ModeAstroStatusViewFragment.NewInstance();
-                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                    dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
-                    dlg.Show(FragmentManager, "statusDlg");
-                };
+            StartProgramButton.Click += (o, e) => {};
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
         }
 
@@ -71,6 +61,29 @@ namespace MDKControl.Droid.Fragments
 
             System.Diagnostics.Debug.WriteLine("ModeAstroViewFragment OnResume");
 
+            _prevRunStatus = MoCoBusRunStatus.Stopped;
+            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
+                .WhenSourceChanges(() =>
+                    {
+                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && DeviceVm.RunStatus != _prevRunStatus)
+                        {
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
+                            if (dlg == null)
+                            {
+                                dlg = ModeAstroStatusViewFragment.NewInstance();
+                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                                dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
+                                dlg.Show(FragmentManager, Consts.DialogTag);
+                            }
+
+                            DeviceVm.StartUpdateTask();
+                        }
+
+                        _prevRunStatus = DeviceVm.RunStatus;
+                    });
+            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
+
             _northRadioBinding = this.SetBinding(() => NorthRadioButton.Checked)
                 .WhenSourceChanges(() =>
                     {
@@ -92,40 +105,20 @@ namespace MDKControl.Droid.Fragments
                     {
                         if (LunarRadioButton.Checked) Vm.Speed = AstroSpeed.Lunar;
                     });
-
-            _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
-                .WhenSourceChanges(() =>
-                    {
-                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped)
-                        {
-                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
-                            if (dlg == null)
-                            {
-                                dlg = ModeAstroStatusViewFragment.NewInstance();
-                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                                dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
-                                dlg.Show(FragmentManager, "statusDlg");
-                            }
-
-                            DeviceVm.StartUpdateTask();
-                        }
-                    });
-            _runStatusBinding.ForceUpdateValueFromSourceToTarget();
         }
 
         public override void OnPause()
         {
-            _northRadioBinding.Detach();
-            _southRadioBinding.Detach();
-            _siderealRadioBinding.Detach();
-            _lunarRadioBinding.Detach();
-            _runStatusBinding.Detach();
+            _northRadioBinding?.Detach();
+            _southRadioBinding?.Detach();
+            _siderealRadioBinding?.Detach();
+            _lunarRadioBinding?.Detach();
+            _runStatusBinding?.Detach();
 
-            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
             if (dlg != null)
             {
-                dlg.Dismiss();
+                dlg.DismissAllowingStateLoss();
             }
 
             base.OnPause();

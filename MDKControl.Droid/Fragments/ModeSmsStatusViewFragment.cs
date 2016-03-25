@@ -47,6 +47,8 @@ namespace MDKControl.Droid.Fragments
 
         public static ModeSmsStatusViewFragment NewInstance() 
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment NewInstance");
+
             var args = new Bundle();
 
             var f = new ModeSmsStatusViewFragment();
@@ -59,12 +61,16 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnCreate(Bundle savedInstanceState)
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnCreate");
+
             base.OnCreate(savedInstanceState);
             SetStyle(DialogFragmentStyle.Normal, 0);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnCreateView");
+
             Dialog.SetTitle("SMS");
             
             return inflater.Inflate(Resource.Layout.ModeSmsStatusView, container, false);
@@ -72,6 +78,8 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnActivityCreated(Bundle savedInstanceState)
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnActivityCreated");
+
             base.OnActivityCreated(savedInstanceState);
 
             ResumeButton.Click += (o, e) => 
@@ -94,6 +102,8 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnAttach(Activity activity)
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnAttach");
+
             base.OnAttach(activity);
 
             _activity = activity;
@@ -101,6 +111,8 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnDestroy()
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnDestroy");
+
             base.OnDestroy();
 
             _activity = null;
@@ -108,6 +120,8 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnResume()
         {
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnResume");
+
             base.OnResume();
 
             _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() =>
@@ -176,17 +190,19 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
-            _progressBarBinding.Detach();
-            _elapsedTimeBinding.Detach();
-            _elapsedShotsBinding.Detach();
-            _remainingTimeBinding.Detach();
-            _remainingShotsBinding.Detach();
-            _overallTimeBinding.Detach();
-            _overallShotsBinding.Detach();
-            _videoLength24Binding.Detach();
-            _videoLength25Binding.Detach();
-            _videoLength30Binding.Detach();
-            _runStatusBinding.Detach();
+            System.Diagnostics.Debug.WriteLine("ModeSmsStatusViewFragment OnPause");
+
+            _progressBarBinding?.Detach();
+            _elapsedTimeBinding?.Detach();
+            _elapsedShotsBinding?.Detach();
+            _remainingTimeBinding?.Detach();
+            _remainingShotsBinding?.Detach();
+            _overallTimeBinding?.Detach();
+            _overallShotsBinding?.Detach();
+            _videoLength24Binding?.Detach();
+            _videoLength25Binding?.Detach();
+            _videoLength30Binding?.Detach();
+            _runStatusBinding?.Detach();
 
             base.OnPause();
         }

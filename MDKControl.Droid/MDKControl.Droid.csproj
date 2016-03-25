@@ -131,6 +131,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Consts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

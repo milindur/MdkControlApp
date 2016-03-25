@@ -73,7 +73,6 @@ namespace MDKControl.Core.ViewModels
                     RaisePropertyChanged(() => IsConnected);
                     RaisePropertyChanged(() => IsConnecting);
                     RaisePropertyChanged(() => IsDisconnected);
-                    RaisePropertyChanged(() => ProgramMode);
                 });
         }
 
@@ -109,35 +108,9 @@ namespace MDKControl.Core.ViewModels
 
         public bool IsDisconnected { get { return _commService.ConnectionState == ConnectionState.Disconnected; } }
 
-        public MoCoBusProgramMode ProgramMode
-        {
-            get { return _programMode; }
-            set
-            {
-                System.Diagnostics.Debug.WriteLine("Setting ProgramMode");
-                _programMode = value;
-                _dispatcherHelper.RunOnUIThread(() =>
-                    {
-                        System.Diagnostics.Debug.WriteLine("RaisePropertyChanged ProgramMode");
-                        RaisePropertyChanged(() => ProgramMode);
-                    });
-            }
-        }
+        public MoCoBusProgramMode ProgramMode { get { return _programMode; } }
 
-        public MoCoBusRunStatus RunStatus
-        {
-            get { return _runStatus; }
-            set
-            {
-                System.Diagnostics.Debug.WriteLine("Setting RunStatus");
-                _runStatus = value;
-                _dispatcherHelper.RunOnUIThread(() =>
-                    {
-                        System.Diagnostics.Debug.WriteLine("RaisePropertyChanged RunStatus");
-                        RaisePropertyChanged(() => RunStatus);
-                    });
-            }
-        }
+        public MoCoBusRunStatus RunStatus { get { return _runStatus; } }
 
         public int FirmwareVersion { get; private set; }
 
@@ -217,7 +190,9 @@ namespace MDKControl.Core.ViewModels
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
+                        System.Diagnostics.Debug.WriteLine("Updatestate: Call RaisePropertyChanged for ProgramMode");
                         RaisePropertyChanged(() => ProgramMode);
+                        System.Diagnostics.Debug.WriteLine("Updatestate: Call RaisePropertyChanged for RunStatus");
                         RaisePropertyChanged(() => RunStatus);
                     });
             }
@@ -284,7 +259,7 @@ namespace MDKControl.Core.ViewModels
                     {
                         while (true)
                         {
-                            await Task.Delay(500, token).ConfigureAwait(false);
+                            await Task.Delay(1000, token).ConfigureAwait(false);
                             token.ThrowIfCancellationRequested();
 
                             try

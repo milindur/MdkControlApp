@@ -89,7 +89,7 @@ namespace MDKControl.Core.Services
                                 });
 
                             _retryCounter = 0;
-                            Task.Run(Disconnect);
+                            Disconnect();
                             await Task.Delay(500).ConfigureAwait(false);
                             break;
                         }

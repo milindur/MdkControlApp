@@ -272,9 +272,26 @@ namespace MDKControl.Core.ViewModels
             get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop)); }
         }
 
+        private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
         {
-            get { return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(StartProgram)); }
+            get { 
+                return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            _startProgramRunning = true;
+                            _startProgramCommand.RaiseCanExecuteChanged();
+
+                            await StartProgram();
+                        }
+                        finally
+                        {
+                            _startProgramRunning = false;
+                            _startProgramCommand.RaiseCanExecuteChanged();
+                        }
+                    }, () => !_startProgramRunning));
+            }
         }
 
         public RelayCommand PauseProgramCommand
@@ -362,7 +379,7 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        private async void StartProgram()
+        private async Task StartProgram()
         {
             try
             {
@@ -413,6 +430,13 @@ namespace MDKControl.Core.ViewModels
             try
             {
                 await _protocolService.Main.Stop().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe);
+            }
+            try
+            {
                 await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
                 await _deviceViewModel.UpdateState().ConfigureAwait(false);
             }

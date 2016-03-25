@@ -351,6 +351,13 @@ namespace MDKControl.Core.ViewModels
             try
             {
                 await _protocolService.Main.Stop().ConfigureAwait(false);
+            }
+            catch (TimeoutException toe)
+            {
+                Insights.Report(toe);
+            }
+            try
+            {
                 await _deviceViewModel.StopUpdateTask().ConfigureAwait(false);
                 await _deviceViewModel.UpdateState().ConfigureAwait(false);
             }

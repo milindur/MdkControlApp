@@ -170,16 +170,16 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
-            _progressBarBinding.Detach();
-            _elapsedTimeBinding.Detach();
-            _elapsedShotsBinding.Detach();
-            _remainingTimeBinding.Detach();
-            _remainingShotsBinding.Detach();
-            _overallTimeBinding.Detach();
-            _overallShotsBinding.Detach();
-            _overallColsBinding.Detach();
-            _overallRowsBinding.Detach();
-            _runStatusBinding.Detach();
+            _progressBarBinding?.Detach();
+            _elapsedTimeBinding?.Detach();
+            _elapsedShotsBinding?.Detach();
+            _remainingTimeBinding?.Detach();
+            _remainingShotsBinding?.Detach();
+            _overallTimeBinding?.Detach();
+            _overallShotsBinding?.Detach();
+            _overallColsBinding?.Detach();
+            _overallRowsBinding?.Detach();
+            _runStatusBinding?.Detach();
 
             base.OnPause();
         }

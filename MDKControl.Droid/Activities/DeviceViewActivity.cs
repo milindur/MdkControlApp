@@ -82,27 +82,39 @@ namespace MDKControl.Droid.Activities
             _showConnectedBinding = this.SetBinding(() => Vm.IsConnected)
                 .WhenSourceChanges(() =>
                     {
-                        _programMode = MoCoBusProgramMode.Invalid;
+                        System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed");
 
                         ConnectedLayout.Visibility = Vm.IsConnected ? ViewStates.Visible : ViewStates.Gone;
-                        if (Vm.IsConnected) 
+
+                        if (!Vm.IsConnected)
                         {
-                            OnProgramModeChanged();
-                        }
-                        else
-                        {
-                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>("statusDlg");
+                            _programMode = MoCoBusProgramMode.Invalid;
+                            
+                            System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed: Search dialogs and close them");
+
+                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
                             if (dlg != null)
                             {
-                                dlg.Dismiss();
-                            }
-                            dlg = FragmentManager.FindFragmentByTag<DialogFragment>("joystickDlg");
-                            if (dlg != null)
-                            {
-                                dlg.Dismiss();
+                                System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed: Found dialog, dismiss it");
+                                dlg.DismissAllowingStateLoss();
                             }
 
+                            System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed: Search view fragment");
+                            var f = FragmentManager.FindFragmentById<Fragment>(Resource.Id.ConnectedFragmentContainer);
+                            if (f != null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed: Remove view fragment");
+                                var ft = FragmentManager.BeginTransaction();
+                                ft.Remove(f);
+                                ft.SetTransition(FragmentTransit.FragmentFade);
+                                ft.Commit();
+                            }
+
+                            System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed: PopBackStackImmediate");
                             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
+
+                            System.Diagnostics.Debug.WriteLine("DeviceViewActivity IsConnected Changed: ExecutePendingTransactions");
+                            FragmentManager.ExecutePendingTransactions();
                         }
                     });
 
@@ -114,11 +126,11 @@ namespace MDKControl.Droid.Activities
 
         protected override void OnPause()
         {
-            _isConnectedBinding.Detach();
-            _showDisconnectedBinding.Detach();
-            _showConnectingBinding.Detach();
-            _showConnectedBinding.Detach();
-            _programModeBinding.Detach();
+            _isConnectedBinding?.Detach();
+            _showDisconnectedBinding?.Detach();
+            _showConnectingBinding?.Detach();
+            _showConnectedBinding?.Detach();
+            _programModeBinding?.Detach();
 
             Vm.StopUpdateTask();
             Vm.JoystickViewModel.StopJoystick(null);
@@ -138,6 +150,13 @@ namespace MDKControl.Droid.Activities
         {
             System.Diagnostics.Debug.WriteLine("ShowModeSmsFragment");
 
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
+            if (dlg != null)
+            {
+                dlg.DismissAllowingStateLoss();
+            }
+
+            FragmentManager.ExecutePendingTransactions();
             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
 
             var ft = FragmentManager.BeginTransaction();
@@ -152,6 +171,13 @@ namespace MDKControl.Droid.Activities
         {
             System.Diagnostics.Debug.WriteLine("ShowModeAstroFragment");
 
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
+            if (dlg != null)
+            {
+                dlg.DismissAllowingStateLoss();
+            }
+
+            FragmentManager.ExecutePendingTransactions();
             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
 
             var ft = FragmentManager.BeginTransaction();
@@ -166,6 +192,13 @@ namespace MDKControl.Droid.Activities
         {
             System.Diagnostics.Debug.WriteLine("ShowModePanoFragment");
 
+            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
+            if (dlg != null)
+            {
+                dlg.DismissAllowingStateLoss();
+            }
+
+            FragmentManager.ExecutePendingTransactions();
             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
 
             var ft = FragmentManager.BeginTransaction();
@@ -181,26 +214,26 @@ namespace MDKControl.Droid.Activities
             if (!Vm.IsConnected)
                 return;
             
-            if (_programMode == Vm.ProgramMode) 
+            if (_programMode == Vm.ProgramMode)
                 return;
 
             _programMode = Vm.ProgramMode;
 
-            System.Diagnostics.Debug.WriteLine("OnProgramModeChanged");
+            System.Diagnostics.Debug.WriteLine("OnProgramModeChanged: {0}", _programMode);
 
             SetModeAstroButton.Enabled = true;
             SetModePanoButton.Enabled = true;
             SetModeSmsButton.Enabled = true;
 
-            if (Vm.ProgramMode == MoCoBusProgramMode.ShootMoveShoot)
+            if (_programMode == MoCoBusProgramMode.ShootMoveShoot)
             {
                 ShowModeSmsFragment();
             }
-            else if (Vm.ProgramMode == MoCoBusProgramMode.Astro)
+            else if (_programMode == MoCoBusProgramMode.Astro)
             {
                 ShowModeAstroFragment();
             }
-            else if (Vm.ProgramMode == MoCoBusProgramMode.Panorama)
+            else if (_programMode == MoCoBusProgramMode.Panorama)
             {
                 ShowModePanoFragment();
             }
@@ -217,7 +250,7 @@ namespace MDKControl.Droid.Activities
 
         public ViewGroup DisconnectedLayout
         {
-            get 
+            get
             {
                 return _disconnectedLayout
                     ?? (_disconnectedLayout = FindViewById<ViewGroup>(Resource.Id.DisconnectedLayout));
@@ -226,7 +259,7 @@ namespace MDKControl.Droid.Activities
 
         public ViewGroup ConnectingLayout
         {
-            get 
+            get
             {
                 return _connectingLayout
                     ?? (_connectingLayout = FindViewById<ViewGroup>(Resource.Id.ConnectingLayout));
@@ -235,7 +268,7 @@ namespace MDKControl.Droid.Activities
 
         public ViewGroup ConnectedLayout
         {
-            get 
+            get
             {
                 return _connectedLayout
                     ?? (_connectedLayout = FindViewById<ViewGroup>(Resource.Id.ConnectedLayout));
@@ -244,7 +277,7 @@ namespace MDKControl.Droid.Activities
 
         public Button SetModeSmsButton
         {
-            get 
+            get
             {
                 return _setModeSmsButton
                     ?? (_setModeSmsButton = FindViewById<Button>(Resource.Id.SetModeSms));
@@ -253,7 +286,7 @@ namespace MDKControl.Droid.Activities
 
         public Button SetModePanoButton
         {
-            get 
+            get
             {
                 return _setModePanoButton
                     ?? (_setModePanoButton = FindViewById<Button>(Resource.Id.SetModePano));
@@ -262,7 +295,7 @@ namespace MDKControl.Droid.Activities
 
         public Button SetModeAstroButton
         {
-            get 
+            get
             {
                 return _setModeAstroButton
                     ?? (_setModeAstroButton = FindViewById<Button>(Resource.Id.SetModeAstro));
