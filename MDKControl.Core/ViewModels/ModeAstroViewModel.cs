@@ -34,9 +34,26 @@ namespace MDKControl.Core.ViewModels
             get { return _resumeProgramCommand ?? (_resumeProgramCommand = new RelayCommand(ResumeProgram)); }
         }
 
+        private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
         {
-            get { return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(StartProgram)); }
+            get { 
+                return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            _startProgramRunning = true;
+                            _startProgramCommand.RaiseCanExecuteChanged();
+
+                            await StartProgram();
+                        }
+                        finally
+                        {
+                            _startProgramRunning = false;
+                            _startProgramCommand.RaiseCanExecuteChanged();
+                        }
+                    }, () => !_startProgramRunning));
+            }
         }
 
         public RelayCommand PauseProgramCommand
@@ -63,7 +80,7 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        private async void StartProgram()
+        private async Task StartProgram()
         {
             try
             {
