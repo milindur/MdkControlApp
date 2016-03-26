@@ -15,6 +15,7 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
+        private object _runStatusLock = new object();
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _northRadioBinding;
@@ -37,7 +38,20 @@ namespace MDKControl.Droid.Fragments
         {
             base.OnActivityCreated(savedInstanceState);
 
-            StartProgramButton.Click += (o, e) => {};
+            Vm.PropertyChanged += (o, e) => {};
+
+            StartProgramButton.Click += (o, e) => 
+                {
+                    System.Diagnostics.Debug.WriteLine("ModeAstroViewFragment StartProgramButton Clicked");
+
+                    var ft = FragmentManager.BeginTransaction();
+                    ft.DisallowAddToBackStack();
+                    var dlg = ModeAstroStatusViewFragment.NewInstance();
+                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                    dlg.Show(ft, Consts.DialogTag);
+                };
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
         }
 
@@ -65,19 +79,23 @@ namespace MDKControl.Droid.Fragments
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
                 .WhenSourceChanges(() =>
                     {
-                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && DeviceVm.RunStatus != _prevRunStatus)
+                        lock (_runStatusLock)
                         {
-                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-                            if (dlg == null)
+                            if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && DeviceVm.RunStatus != _prevRunStatus && !DeviceVm.IsUpdateTaskRunning)
                             {
-                                dlg = ModeAstroStatusViewFragment.NewInstance();
-                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                                dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
-                                dlg.Show(FragmentManager, Consts.DialogTag);
+                                var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
+                                if (dlg == null)
+                                {
+                                    var ft = FragmentManager.BeginTransaction();
+                                    ft.DisallowAddToBackStack();
+                                    dlg = ModeAstroStatusViewFragment.NewInstance();
+                                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                                    dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
+                                    dlg.Show(ft, Consts.DialogTag);
+                                }
+                                DeviceVm.StartUpdateTask();
                             }
-
-                            DeviceVm.StartUpdateTask();
                         }
 
                         _prevRunStatus = DeviceVm.RunStatus;

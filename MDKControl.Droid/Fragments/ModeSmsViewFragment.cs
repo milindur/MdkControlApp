@@ -15,6 +15,7 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
+        private object _runStatusLock = new object();
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _exposureTimeBinding;
@@ -60,6 +61,8 @@ namespace MDKControl.Droid.Fragments
             base.OnActivityCreated(savedInstanceState);
 
             System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnActivityCreated");
+
+            Vm.PropertyChanged += (o, e) => {};
 
             ExposureTimeEditText.Click += (o, e) => 
                 {
@@ -112,7 +115,18 @@ namespace MDKControl.Droid.Fragments
             SwapStartStopButton.Click += (o, e) => {};
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
 
-            StartProgramButton.Click += (o, e) => {};
+            StartProgramButton.Click += (o, e) => 
+                {
+                    System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment StartProgramButton Clicked");
+
+                    var ft = FragmentManager.BeginTransaction();
+                    ft.DisallowAddToBackStack();
+                    var dlg = ModeSmsStatusViewFragment.NewInstance();
+                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                    dlg.Show(ft, Consts.DialogTag);
+                };
             StartProgramButton.SetCommand("Click", Vm.StartProgramCommand);
         }
 
@@ -144,24 +158,29 @@ namespace MDKControl.Droid.Fragments
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus)
                 .WhenSourceChanges(() =>
                     {
-                        System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed");
+                        System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed (new={0},prev={1})", DeviceVm.RunStatus, _prevRunStatus);
 
-                        if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && DeviceVm.RunStatus != _prevRunStatus)
+                        lock (_runStatusLock)
                         {
-                            System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed: Looking for dialog");
-
-                            var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-                            if (dlg == null)
+                            if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && DeviceVm.RunStatus != _prevRunStatus && !DeviceVm.IsUpdateTaskRunning)
                             {
-                                System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed: Create ModeSmsStatusViewFragment");
+                                System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed: Looking for dialog");
 
-                                dlg = ModeSmsStatusViewFragment.NewInstance();
-                                dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                                dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                                dlg.SetCommand("Resumed", Vm.StartProgramCommand);
-                                dlg.Show(FragmentManager, Consts.DialogTag);
+                                var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
+                                if (dlg == null)
+                                {
+                                    System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment RunStatus Changed: Create ModeSmsStatusViewFragment");
+
+                                    var ft = FragmentManager.BeginTransaction();
+                                    ft.DisallowAddToBackStack();
+                                    dlg = ModeSmsStatusViewFragment.NewInstance();
+                                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
+                                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
+                                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
+                                    dlg.Show(ft, Consts.DialogTag);
+                                }
+                                DeviceVm.StartUpdateTask();
                             }
-                            DeviceVm.StartUpdateTask();
                         }
 
                         _prevRunStatus = DeviceVm.RunStatus;

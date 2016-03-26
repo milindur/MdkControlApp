@@ -174,15 +174,15 @@ namespace MDKControl.Core.ViewModels
                     switch (_programMode)
                     {
                         case MoCoBusProgramMode.ShootMoveShoot:
-                            System.Diagnostics.Debug.WriteLine("Updatestate: Call ModeSmsViewModel.InitState()");
+                            System.Diagnostics.Debug.WriteLine("UpdateState: Call ModeSmsViewModel.InitState()");
                             await ModeSmsViewModel.InitState().ConfigureAwait(false);
                             break;
                         case MoCoBusProgramMode.Panorama:
-                            System.Diagnostics.Debug.WriteLine("Updatestate: Call ModePanoViewModel.InitState()");
+                            System.Diagnostics.Debug.WriteLine("UpdateState: Call ModePanoViewModel.InitState()");
                             await ModePanoViewModel.InitState().ConfigureAwait(false);
                             break;
                         case MoCoBusProgramMode.Astro:
-                            System.Diagnostics.Debug.WriteLine("Updatestate: Call ModeAstroViewModel.InitState()");
+                            System.Diagnostics.Debug.WriteLine("UpdateState: Call ModeAstroViewModel.InitState()");
                             await ModeAstroViewModel.InitState().ConfigureAwait(false);
                             break;
                     }
@@ -190,9 +190,9 @@ namespace MDKControl.Core.ViewModels
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
-                        System.Diagnostics.Debug.WriteLine("Updatestate: Call RaisePropertyChanged for ProgramMode");
+                        System.Diagnostics.Debug.WriteLine("UpdateState: Call RaisePropertyChanged for ProgramMode");
                         RaisePropertyChanged(() => ProgramMode);
-                        System.Diagnostics.Debug.WriteLine("Updatestate: Call RaisePropertyChanged for RunStatus");
+                        System.Diagnostics.Debug.WriteLine("UpdateState: Call RaisePropertyChanged for RunStatus");
                         RaisePropertyChanged(() => RunStatus);
                     });
             }
@@ -243,6 +243,8 @@ namespace MDKControl.Core.ViewModels
                 Insights.Report(toe);
             }
         }
+
+        public bool IsUpdateTaskRunning { get { return _updateTask != null || _updateTaskCancellationTokenSource != null; } }
 
         public void StartUpdateTask()
         {

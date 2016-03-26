@@ -146,7 +146,7 @@ namespace MDKControl.Droid.Fragments
                 });
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine("OnRunStatusChanged 1");
+                    System.Diagnostics.Debug.WriteLine("ModePanoStatusViewFragment OnRunStatusChanged 1");
 
                     ResumeButton.Enabled = false;
                     PauseButton.Enabled = false;
@@ -161,11 +161,6 @@ namespace MDKControl.Droid.Fragments
                         ResumeButton.Enabled = true;
                     }
                 });
-
-            if (!DeviceVm.IsConnected || DeviceVm.RunStatus == MoCoBusRunStatus.Stopped)
-            {
-                Dismiss();
-            }
         }
 
         public override void OnPause()

@@ -50,6 +50,9 @@ namespace MDKControl.Droid.Activities
 
             Vm = GlobalNavigation.GetAndRemoveParameter<DeviceViewModel>(Intent);
 
+            Vm.PropertyChanged += (s, e) => {};
+            ConnectSwitch.CheckedChange += (s, e) => {};
+
             SetModeSmsButton.Click += (o, e) => {};
             SetModeSmsButton.SetCommand("Click", Vm.SetModeSmsCommand);
             SetModePanoButton.Click += (o, e) => {};
