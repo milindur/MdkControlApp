@@ -17,7 +17,6 @@
     <AssemblyName>MDKControl.Droid</AssemblyName>
     <TargetFrameworkVersion>v5.1</TargetFrameworkVersion>
     <ReleaseVersion>0.10.0</ReleaseVersion>
-    <AndroidLinkMode>None</AndroidLinkMode>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <XamarinInsightsApiKey>76d51a30602c5fd9a5e64f263e25d14947533c61</XamarinInsightsApiKey>
@@ -32,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
