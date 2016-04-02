@@ -1,5 +1,4 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -34,10 +33,6 @@ namespace MDKControl.Droid.Activities
 
         private MoCoBusProgramMode _programMode = MoCoBusProgramMode.Invalid;
 
-        public DeviceViewActivity()
-        {
-        }
-
         public DeviceViewModel Vm { get; private set; }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -59,11 +54,6 @@ namespace MDKControl.Droid.Activities
             SetModePanoButton.SetCommand("Click", Vm.SetModePanoCommand);
             SetModeAstroButton.Click += (o, e) => {};
             SetModeAstroButton.SetCommand("Click", Vm.SetModeAstroCommand);
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
         }
 
         protected override void OnResume()
@@ -135,7 +125,7 @@ namespace MDKControl.Droid.Activities
             _showConnectedBinding?.Detach();
             _programModeBinding?.Detach();
 
-            Vm.StopUpdateTask();
+            Vm.StopUpdateTask().Wait();
             Vm.JoystickViewModel.StopJoystick(null);
             Vm.JoystickViewModel.StopSlider(null);
 
@@ -154,10 +144,7 @@ namespace MDKControl.Droid.Activities
             System.Diagnostics.Debug.WriteLine("ShowModeSmsFragment");
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-            if (dlg != null)
-            {
-                dlg.DismissAllowingStateLoss();
-            }
+            dlg?.DismissAllowingStateLoss();
 
             FragmentManager.ExecutePendingTransactions();
             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
@@ -175,10 +162,7 @@ namespace MDKControl.Droid.Activities
             System.Diagnostics.Debug.WriteLine("ShowModeAstroFragment");
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-            if (dlg != null)
-            {
-                dlg.DismissAllowingStateLoss();
-            }
+            dlg?.DismissAllowingStateLoss();
 
             FragmentManager.ExecutePendingTransactions();
             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
@@ -196,10 +180,7 @@ namespace MDKControl.Droid.Activities
             System.Diagnostics.Debug.WriteLine("ShowModePanoFragment");
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-            if (dlg != null)
-            {
-                dlg.DismissAllowingStateLoss();
-            }
+            dlg?.DismissAllowingStateLoss();
 
             FragmentManager.ExecutePendingTransactions();
             FragmentManager.PopBackStackImmediate(null, PopBackStackFlags.Inclusive);
@@ -242,67 +223,18 @@ namespace MDKControl.Droid.Activities
             }
         }
 
-        public Switch ConnectSwitch
-        {
-            get
-            {
-                return _connectSwitch
-                    ?? (_connectSwitch = FindViewById<Switch>(Resource.Id.ConnectSwitch));
-            }
-        }
+        public Switch ConnectSwitch => _connectSwitch ?? (_connectSwitch = FindViewById<Switch>(Resource.Id.ConnectSwitch));
 
-        public ViewGroup DisconnectedLayout
-        {
-            get
-            {
-                return _disconnectedLayout
-                    ?? (_disconnectedLayout = FindViewById<ViewGroup>(Resource.Id.DisconnectedLayout));
-            }
-        }
+        public ViewGroup DisconnectedLayout => _disconnectedLayout ?? (_disconnectedLayout = FindViewById<ViewGroup>(Resource.Id.DisconnectedLayout));
 
-        public ViewGroup ConnectingLayout
-        {
-            get
-            {
-                return _connectingLayout
-                    ?? (_connectingLayout = FindViewById<ViewGroup>(Resource.Id.ConnectingLayout));
-            }
-        }
+        public ViewGroup ConnectingLayout => _connectingLayout ?? (_connectingLayout = FindViewById<ViewGroup>(Resource.Id.ConnectingLayout));
 
-        public ViewGroup ConnectedLayout
-        {
-            get
-            {
-                return _connectedLayout
-                    ?? (_connectedLayout = FindViewById<ViewGroup>(Resource.Id.ConnectedLayout));
-            }
-        }
+        public ViewGroup ConnectedLayout => _connectedLayout ?? (_connectedLayout = FindViewById<ViewGroup>(Resource.Id.ConnectedLayout));
 
-        public Button SetModeSmsButton
-        {
-            get
-            {
-                return _setModeSmsButton
-                    ?? (_setModeSmsButton = FindViewById<Button>(Resource.Id.SetModeSms));
-            }
-        }
+        public Button SetModeSmsButton => _setModeSmsButton ?? (_setModeSmsButton = FindViewById<Button>(Resource.Id.SetModeSms));
 
-        public Button SetModePanoButton
-        {
-            get
-            {
-                return _setModePanoButton
-                    ?? (_setModePanoButton = FindViewById<Button>(Resource.Id.SetModePano));
-            }
-        }
+        public Button SetModePanoButton => _setModePanoButton ?? (_setModePanoButton = FindViewById<Button>(Resource.Id.SetModePano));
 
-        public Button SetModeAstroButton
-        {
-            get
-            {
-                return _setModeAstroButton
-                    ?? (_setModeAstroButton = FindViewById<Button>(Resource.Id.SetModeAstro));
-            }
-        }
+        public Button SetModeAstroButton => _setModeAstroButton ?? (_setModeAstroButton = FindViewById<Button>(Resource.Id.SetModeAstro));
     }
 }

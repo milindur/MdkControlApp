@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
 using Android.Util;
@@ -15,9 +13,9 @@ namespace MDKControl.Droid.Widgets
     public class JoystickView : View
     {
         private readonly EventLoopScheduler _scheduler = new EventLoopScheduler();
-        private readonly Subject<MDKControl.Core.Models.Point> _joystickStartSubject = new Subject<MDKControl.Core.Models.Point>();
+        private readonly Subject<Core.Models.Point> _joystickStartSubject = new Subject<Core.Models.Point>();
         private readonly Subject<Unit> _joystickStopSubject = new Subject<Unit>();
-        private readonly Subject<MDKControl.Core.Models.Point> _joystickMoveSubject = new Subject<MDKControl.Core.Models.Point>();
+        private readonly Subject<Core.Models.Point> _joystickMoveSubject = new Subject<Core.Models.Point>();
 
         private RectF _bounds = new RectF();
         private Paint _paintBorder;
@@ -26,9 +24,9 @@ namespace MDKControl.Droid.Widgets
         private Paint _paintGridText;
         private Paint _paintPos;
 
-        private bool _isActive = false;
+        private bool _isActive;
         private PointF _joystickPositionRaw = new PointF();
-        private MDKControl.Core.Models.Point _joystickPosition = new MDKControl.Core.Models.Point(0, 0);
+        private Core.Models.Point _joystickPosition = new Core.Models.Point(0, 0);
 
         public JoystickView(Context context)
             : base(context)
@@ -53,8 +51,7 @@ namespace MDKControl.Droid.Widgets
 
         private void Initialize()
         {
-            float density = Context.Resources.DisplayMetrics.Density;
-            float scaledDensity = Context.Resources.DisplayMetrics.ScaledDensity;
+            var scaledDensity = Context.Resources.DisplayMetrics.ScaledDensity;
 
             SetLayerType(LayerType.Software, null);
 
@@ -72,15 +69,18 @@ namespace MDKControl.Droid.Widgets
 
             _paintPos = new Paint(PaintFlags.AntiAlias) { Color = Color.CornflowerBlue };
 
-            _paintGridText = new Paint(PaintFlags.AntiAlias) { Color = Color.LightGray };
-            _paintGridText.TextSize = 20 * scaledDensity;
+            _paintGridText = new Paint(PaintFlags.AntiAlias)
+            {
+                Color = Color.LightGray,
+                TextSize = 20*scaledDensity
+            };
         }
 
-        public IObservable<MDKControl.Core.Models.Point> JoystickStart { get { return _joystickStartSubject.ObserveOn(_scheduler); } }
+        public IObservable<Core.Models.Point> JoystickStart => _joystickStartSubject.ObserveOn(_scheduler);
 
-        public IObservable<Unit> JoystickStop { get { return _joystickStopSubject.ObserveOn(_scheduler); } }
+        public IObservable<Unit> JoystickStop => _joystickStopSubject.ObserveOn(_scheduler);
 
-        public IObservable<MDKControl.Core.Models.Point> JoystickMove { get { return _joystickMoveSubject.ObserveOn(_scheduler); } }
+        public IObservable<Core.Models.Point> JoystickMove => _joystickMoveSubject.ObserveOn(_scheduler);
 
         protected override void OnMeasure(int widthMeasureSpec, int heightMeasureSpec)
         {
@@ -130,8 +130,8 @@ namespace MDKControl.Droid.Widgets
             var xpad = (float)(PaddingLeft + PaddingRight);
             var ypad = (float)(PaddingTop + PaddingBottom);
 
-            var ww = (float)w - xpad;
-            var hh = (float)h - ypad;
+            var ww = w - xpad;
+            var hh = h - ypad;
 
             _bounds = new RectF(0f, 0f, ww, hh);
             _bounds.OffsetTo(PaddingLeft, PaddingTop);
@@ -180,13 +180,14 @@ namespace MDKControl.Droid.Widgets
             }
             catch (Exception)
             {
+                // ignore
             }
         }
 
         public override bool OnTouchEvent(MotionEvent e)
         {
-            var x = 0f;
-            var y = 0f;
+            float x;
+            float y;
 
             if (e.PointerCount == 1)
             {
@@ -259,7 +260,7 @@ namespace MDKControl.Droid.Widgets
 
         protected void OnJoystickStart(float x, float y)
         {
-            _joystickPosition = new MDKControl.Core.Models.Point(x, y);
+            _joystickPosition = new Core.Models.Point(x, y);
             _joystickStartSubject.OnNext(_joystickPosition);
         }
 
@@ -270,7 +271,7 @@ namespace MDKControl.Droid.Widgets
 
         protected void OnJoystickMove(float x, float y)
         {
-            _joystickPosition = new MDKControl.Core.Models.Point(x, y);
+            _joystickPosition = new Core.Models.Point(x, y);
             _joystickMoveSubject.OnNext(_joystickPosition);
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using UIKit;
+﻿using UIKit;
 using CoreGraphics;
 
 namespace MDKControl.iOS.Extensions

@@ -28,10 +28,12 @@ namespace MDKControl.Droid.Fragments
         {
             var args = new Bundle();
 
-            var f = new ModeAstroStatusViewFragment();
-            f.Arguments = args;
-            f.ShowsDialog = true;
-            f.Cancelable = false;
+            var f = new ModeAstroStatusViewFragment
+            {
+                Arguments = args,
+                ShowsDialog = true,
+                Cancelable = false
+            };
 
             return f;
         }
@@ -55,18 +57,15 @@ namespace MDKControl.Droid.Fragments
 
             ResumeButton.Click += (o, e) => 
                 { 
-                    var handler = Resumed;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Resumed?.Invoke(this, EventArgs.Empty);
                 };
             PauseButton.Click += (o, e) => 
                 { 
-                    var handler = Paused;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Paused?.Invoke(this, EventArgs.Empty);
                 };
             StopButton.Click += (o, e) => 
                 { 
-                    var handler = Stoped;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Stoped?.Invoke(this, EventArgs.Empty);
                     Dismiss();
                 };
         }
@@ -115,48 +114,15 @@ namespace MDKControl.Droid.Fragments
             base.OnPause();
         }
 
-        public ModeAstroViewModel Vm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
-            }
-        }
+        public ModeAstroViewModel Vm => ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
 
-        public DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm;
-            }
-        }
+        public DeviceViewModel DeviceVm => ((DeviceViewActivity)_activity).Vm;
 
-        public Button ResumeButton
-        {
-            get
-            {
-                return _resumeButton
-                    ?? (_resumeButton = View.FindViewById<Button>(Resource.Id.Resume));
-            }
-        }
+        public Button ResumeButton => _resumeButton ?? (_resumeButton = View.FindViewById<Button>(Resource.Id.Resume));
 
-        public Button PauseButton
-        {
-            get
-            {
-                return _pauseButton
-                    ?? (_pauseButton = View.FindViewById<Button>(Resource.Id.Pause));
-            }
-        }
+        public Button PauseButton => _pauseButton ?? (_pauseButton = View.FindViewById<Button>(Resource.Id.Pause));
 
-        public Button StopButton
-        {
-            get
-            {
-                return _stopButton
-                    ?? (_stopButton = View.FindViewById<Button>(Resource.Id.Stop));
-            }
-        }
+        public Button StopButton => _stopButton ?? (_stopButton = View.FindViewById<Button>(Resource.Id.Stop));
     }
 }
     

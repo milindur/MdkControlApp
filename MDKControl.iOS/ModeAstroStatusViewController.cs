@@ -10,7 +10,7 @@ namespace MDKControl.iOS
     partial class ModeAstroStatusViewController : SubDeviceViewControllerBase, INavigationTarget
     {
         private Binding _runStatusBinding;
-        private bool _canceled = false;
+        private bool _canceled;
 
         public ModeAstroStatusViewController(IntPtr handle)
             : base(handle, MoCoBusProgramMode.Astro, AppDelegate.ModeAstroStatusViewKey)
@@ -21,13 +21,7 @@ namespace MDKControl.iOS
 
         public ModeAstroViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         public override void ViewDidLoad()
         {

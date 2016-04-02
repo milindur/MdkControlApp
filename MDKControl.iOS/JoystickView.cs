@@ -11,20 +11,20 @@ using UIKit;
 namespace MDKControl.iOS
 {
     [Register("JoystickView"), DesignTimeVisible(true)]
-    public class JoystickView : UIView
+    internal class JoystickView : UIView
     {
-        private const int padding = 10;
+        private const int Padding = 10;
         
         private readonly EventLoopScheduler _scheduler = new EventLoopScheduler();
-        private readonly Subject<MDKControl.Core.Models.Point> _joystickStartSubject = new Subject<MDKControl.Core.Models.Point>();
+        private readonly Subject<Core.Models.Point> _joystickStartSubject = new Subject<Core.Models.Point>();
         private readonly Subject<Unit> _joystickStopSubject = new Subject<Unit>();
-        private readonly Subject<MDKControl.Core.Models.Point> _joystickMoveSubject = new Subject<MDKControl.Core.Models.Point>();
+        private readonly Subject<Core.Models.Point> _joystickMoveSubject = new Subject<Core.Models.Point>();
 
-        private CGRect _bounds = new CGRect();
+        private CGRect _bounds;
 
-        private bool _isActive = false;
-        private CGPoint _joystickPositionRaw = new CGPoint();
-        private MDKControl.Core.Models.Point _joystickPosition = new MDKControl.Core.Models.Point(0, 0);
+        private bool _isActive;
+        private CGPoint _joystickPositionRaw;
+        private Core.Models.Point _joystickPosition = new Core.Models.Point(0, 0);
 
         public JoystickView(IntPtr handle)
             : base(handle)
@@ -36,17 +36,17 @@ namespace MDKControl.iOS
         {
         }
 
-        public IObservable<MDKControl.Core.Models.Point> JoystickStart { get { return _joystickStartSubject.ObserveOn(_scheduler); } }
+        public IObservable<Core.Models.Point> JoystickStart => _joystickStartSubject.ObserveOn(_scheduler);
 
-        public IObservable<Unit> JoystickStop { get { return _joystickStopSubject.ObserveOn(_scheduler); } }
+        public IObservable<Unit> JoystickStop => _joystickStopSubject.ObserveOn(_scheduler);
 
-        public IObservable<MDKControl.Core.Models.Point> JoystickMove { get { return _joystickMoveSubject.ObserveOn(_scheduler); } }
+        public IObservable<Core.Models.Point> JoystickMove => _joystickMoveSubject.ObserveOn(_scheduler);
 
         public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
-            _bounds = new CGRect(rect.X + padding, rect.Y + padding, rect.Width - 2 * padding, rect.Height - 2 * padding);
+            _bounds = new CGRect(rect.X + Padding, rect.Y + Padding, rect.Width - 2 * Padding, rect.Height - 2 * Padding);
             
             using (var ctx = UIGraphics.GetCurrentContext())
             {
@@ -170,7 +170,7 @@ namespace MDKControl.iOS
             SetNeedsDisplay();
         }
 
-        private MDKControl.Core.Models.Point GetTouchPoint(UITouch touch)
+        private Core.Models.Point GetTouchPoint(UITouch touch)
         {
             var location = touch.LocationInView(this);
 
@@ -196,12 +196,12 @@ namespace MDKControl.iOS
 
             System.Diagnostics.Debug.WriteLine($"GetTouchPoint: x={x}, y={y}");
 
-            return new MDKControl.Core.Models.Point((float)x, (float)y);
+            return new Core.Models.Point((float)x, (float)y);
         }
 
         protected void OnJoystickStart(float x, float y)
         {
-            _joystickPosition = new MDKControl.Core.Models.Point(x, y);
+            _joystickPosition = new Core.Models.Point(x, y);
             _joystickStartSubject.OnNext(_joystickPosition);
         }
 
@@ -212,7 +212,7 @@ namespace MDKControl.iOS
 
         protected void OnJoystickMove(float x, float y)
         {
-            _joystickPosition = new MDKControl.Core.Models.Point(x, y);
+            _joystickPosition = new Core.Models.Point(x, y);
             _joystickMoveSubject.OnNext(_joystickPosition);
         }
     }

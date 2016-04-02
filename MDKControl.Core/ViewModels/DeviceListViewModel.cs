@@ -18,7 +18,7 @@ namespace MDKControl.Core.ViewModels
         private readonly IAdapter _adapter;
         private readonly Func<IDevice, DeviceViewModel> _deviceViewModelFactory;
         private ObservableCollection<IDevice> _devices = new ObservableCollection<IDevice>();
-        private Dictionary<Guid, DeviceViewModel> _deviceViewModels = new Dictionary<Guid, DeviceViewModel>();
+        private readonly Dictionary<Guid, DeviceViewModel> _deviceViewModels = new Dictionary<Guid, DeviceViewModel>();
         private RelayCommand _startScanCommand;
         private RelayCommand _stopScanCommand;
         private RelayCommand<IDevice> _selectDeviceCommand;
@@ -58,8 +58,8 @@ namespace MDKControl.Core.ViewModels
                 _isScanning = value;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
-                        ((RelayCommand)StartScanCommand).RaiseCanExecuteChanged();
-                        ((RelayCommand)StopScanCommand).RaiseCanExecuteChanged();
+                        StartScanCommand.RaiseCanExecuteChanged();
+                        StopScanCommand.RaiseCanExecuteChanged();
                         RaisePropertyChanged(() => IsScanning);
                     });
             }

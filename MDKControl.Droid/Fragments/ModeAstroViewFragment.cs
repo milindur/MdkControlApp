@@ -1,5 +1,4 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -15,7 +14,7 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
-        private object _runStatusLock = new object();
+        private readonly object _runStatusLock = new object();
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _northRadioBinding;
@@ -134,73 +133,23 @@ namespace MDKControl.Droid.Fragments
             _runStatusBinding?.Detach();
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-            if (dlg != null)
-            {
-                dlg.DismissAllowingStateLoss();
-            }
+            dlg?.DismissAllowingStateLoss();
 
             base.OnPause();
         }
 
-        public ModeAstroViewModel Vm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
-            }
-        }
+        public ModeAstroViewModel Vm => ((DeviceViewActivity)_activity).Vm.ModeAstroViewModel;
 
-        public DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm;
-            }
-        }
+        public DeviceViewModel DeviceVm => ((DeviceViewActivity)_activity).Vm;
 
-        public Button StartProgramButton
-        {
-            get
-            {
-                return _startProgramButton
-                    ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
-            }
-        }
+        public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
 
-        public RadioButton NorthRadioButton
-        {
-            get
-            {
-                return _northRadioButton
-                    ?? (_northRadioButton = View.FindViewById<RadioButton>(Resource.Id.NorthRadioButton));
-            }
-        }
+        public RadioButton NorthRadioButton => _northRadioButton ?? (_northRadioButton = View.FindViewById<RadioButton>(Resource.Id.NorthRadioButton));
 
-        public RadioButton SouthRadioButton
-        {
-            get
-            {
-                return _southRadioButton
-                    ?? (_southRadioButton = View.FindViewById<RadioButton>(Resource.Id.SouthRadioButton));
-            }
-        }
+        public RadioButton SouthRadioButton => _southRadioButton ?? (_southRadioButton = View.FindViewById<RadioButton>(Resource.Id.SouthRadioButton));
 
-        public RadioButton SiderealRadioButton
-        {
-            get
-            {
-                return _siderealRadioButton
-                    ?? (_siderealRadioButton = View.FindViewById<RadioButton>(Resource.Id.SiderealRadioButton));
-            }
-        }
+        public RadioButton SiderealRadioButton => _siderealRadioButton ?? (_siderealRadioButton = View.FindViewById<RadioButton>(Resource.Id.SiderealRadioButton));
 
-        public RadioButton LunarRadioButton
-        {
-            get
-            {
-                return _lunarRadioButton
-                    ?? (_lunarRadioButton = View.FindViewById<RadioButton>(Resource.Id.LunarRadioButton));
-            }
-        }
+        public RadioButton LunarRadioButton => _lunarRadioButton ?? (_lunarRadioButton = View.FindViewById<RadioButton>(Resource.Id.LunarRadioButton));
     }
 }

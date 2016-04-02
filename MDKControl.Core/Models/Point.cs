@@ -8,12 +8,12 @@
             Y = y;
         }
 
-        public float X { get; private set; }
-        public float Y { get; private set; }
+        public float X { get; }
+        public float Y { get; }
 
         public override string ToString()
         {
-            return string.Format("[Point: X={0}, Y={1}]", X, Y);
+            return $"[Point: X={X}, Y={Y}]";
         }
     }
 }

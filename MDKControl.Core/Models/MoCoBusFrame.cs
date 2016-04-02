@@ -10,14 +10,14 @@ namespace MDKControl.Core.Models
             Address = address;
             SubAddress = subAddress;
             Command = command;
-            Data = data != null ? (byte[])data.Clone() : null;
+            Data = (byte[]) data?.Clone();
         }
 
         public byte Address { get; set; }
         public byte SubAddress { get; set; }
         public byte Command { get; set; }
         public byte[] Data { get; set; }
-        public byte Length { get { return Data != null ? (byte)Data.Length : (byte)0; } }
+        public byte Length => Data != null ? (byte)Data.Length : (byte)0;
 
         public static bool TryParse(byte[] bytes, out MoCoBusFrame frame)
         {
@@ -53,14 +53,14 @@ namespace MDKControl.Core.Models
             result[6] = Address;
             result[7] = SubAddress;
             result[8] = Command;
-            result[9] = (byte)Length;
-            if (Data != null) Data.CopyTo(result, 10);
+            result[9] = Length;
+            Data?.CopyTo(result, 10);
             return result;
         }
 
         public override string ToString()
         {
-            return string.Format("[MoCoBusFrame: Address={0}, SubAddress={1}, Command={2}, Data={3}]", Address, SubAddress, Command, BitConverter.ToString(Data));
+            return $"[MoCoBusFrame: Address={Address}, SubAddress={SubAddress}, Command={Command}, Data={BitConverter.ToString(Data)}]";
         }
     }
 }

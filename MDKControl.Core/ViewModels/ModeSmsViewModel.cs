@@ -30,16 +30,16 @@ namespace MDKControl.Core.ViewModels
         private decimal _intervalTime = 3.0m;
         private decimal _durationTime = 300.0m;
 
-        private int _sliderStartPos = 0;
-        private int _sliderStopPos = 0;
-        private int _panStartPos = 0;
-        private int _panStopPos = 0;
-        private int _tiltStartPos = 0;
-        private int _tiltStopPos = 0;
+        private int _sliderStartPos;
+        private int _sliderStopPos;
+        private int _panStartPos;
+        private int _panStopPos;
+        private int _tiltStartPos;
+        private int _tiltStopPos;
 
-        private float _progress = 0;
+        private float _progress;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
-        private int _elapsedShots = 0;
+        private int _elapsedShots;
 
         public ModeSmsViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
@@ -48,7 +48,7 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
-        public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
+        public DeviceViewModel DeviceViewModel => _deviceViewModel;
 
         public decimal ExposureTime
         {
@@ -187,90 +187,39 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public float Progress
-        {
-            get { return _progress; }
-        }
+        public float Progress => _progress;
 
-        public TimeSpan ElapsedTime
-        {
-            get { return _elapsedTime; }
-        }
+        public TimeSpan ElapsedTime => _elapsedTime;
 
-        public int ElapsedShots
-        {
-            get { return _elapsedShots; }
-        }
+        public int ElapsedShots => _elapsedShots;
 
-        public TimeSpan RemainingTime
-        {
-            get { return TimeSpan.FromSeconds((double)DurationTime) - ElapsedTime; }
-        }
+        public TimeSpan RemainingTime => TimeSpan.FromSeconds((double)DurationTime) - ElapsedTime;
 
-        public int RemainingShots
-        {
-            get { return MaxShots - ElapsedShots; }
-        }
+        public int RemainingShots => MaxShots - ElapsedShots;
 
-        public TimeSpan VideoLength24
-        {
-            get { return TimeSpan.FromSeconds(_elapsedShots / 24f); }
-        }
+        public TimeSpan VideoLength24 => TimeSpan.FromSeconds(_elapsedShots / 24f);
 
-        public TimeSpan VideoLength25
-        {
-            get { return TimeSpan.FromSeconds(_elapsedShots / 25f); }
-        }
+        public TimeSpan VideoLength25 => TimeSpan.FromSeconds(_elapsedShots / 25f);
 
-        public TimeSpan VideoLength30
-        {
-            get { return TimeSpan.FromSeconds(_elapsedShots / 30f); }
-        }
+        public TimeSpan VideoLength30 => TimeSpan.FromSeconds(_elapsedShots / 30f);
 
-        public int SliderStartPosition
-        {
-            get { return _sliderStartPos; }
-        }
+        public int SliderStartPosition => _sliderStartPos;
 
-        public int SliderStopPosition
-        {
-            get { return _sliderStopPos; }
-        }
+        public int SliderStopPosition => _sliderStopPos;
 
-        public int PanStartPosition
-        {
-            get { return _panStartPos; }
-        }
+        public int PanStartPosition => _panStartPos;
 
-        public int PanStopPosition
-        {
-            get { return _panStopPos; }
-        }
+        public int PanStopPosition => _panStopPos;
 
-        public int TiltStartPosition
-        {
-            get { return _tiltStartPos; }
-        }
+        public int TiltStartPosition => _tiltStartPos;
 
-        public int TiltStopPosition
-        {
-            get { return _tiltStopPos; }
-        }
+        public int TiltStopPosition => _tiltStopPos;
 
-        public RelayCommand SetStartCommand
-        {
-            get { return _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart)); }
-        }
+        public RelayCommand SetStartCommand => _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart));
 
-        public RelayCommand SetStopCommand
-        {
-            get { return _setStopCommand ?? (_setStopCommand = new RelayCommand(SetStop)); }
-        }
+        public RelayCommand SetStopCommand => _setStopCommand ?? (_setStopCommand = new RelayCommand(SetStop));
 
-        public RelayCommand SwapStartStopCommand
-        {
-            get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop)); }
-        }
+        public RelayCommand SwapStartStopCommand => _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop));
 
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
@@ -294,15 +243,9 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public RelayCommand PauseProgramCommand
-        {
-            get { return _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram)); }
-        }
+        public RelayCommand PauseProgramCommand => _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram));
 
-        public RelayCommand StopProgramCommand
-        {
-            get { return _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram)); }
-        }
+        public RelayCommand StopProgramCommand => _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram));
 
         private async void SetStart()
         {
@@ -514,10 +457,10 @@ namespace MDKControl.Core.ViewModels
                 _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
                 _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
 
-                _exposureTime = (decimal)await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
-                _postDelayTime = (decimal)await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
-                _intervalTime = (decimal)await _protocolService.Camera.GetInterval().ConfigureAwait(false) / 1000m;
-                _durationTime = ((decimal)await _protocolService.Camera.GetMaxShots().ConfigureAwait(false) - 1) * _intervalTime;
+                _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
+                _postDelayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
+                _intervalTime = await _protocolService.Camera.GetInterval().ConfigureAwait(false) / 1000m;
+                _durationTime = (await _protocolService.Camera.GetMaxShots().ConfigureAwait(false) - 1m) * _intervalTime;
                 if (_durationTime < 0)
                     _durationTime = 0;
 

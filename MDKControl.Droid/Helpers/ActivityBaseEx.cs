@@ -6,23 +6,11 @@ namespace MDKControl.Droid.Helpers
 {
     public class ActivityBaseEx : ActivityBase
     {
-        private static int _activeCount = 0;
+        private static int _activeCount;
         
-        public IDialogService Dialog
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<IDialogService>();
-            }
-        }
+        public IDialogService Dialog => ServiceLocator.Current.GetInstance<IDialogService>();
 
-        public NavigationService GlobalNavigation
-        {
-            get
-            {
-                return (NavigationService)ServiceLocator.Current.GetInstance<INavigationService>();
-            }
-        }
+        public NavigationService GlobalNavigation => (NavigationService)ServiceLocator.Current.GetInstance<INavigationService>();
 
         protected override void OnStart()
         {

@@ -8,7 +8,7 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-	partial class DeviceListViewController : UIViewController
+    internal partial class DeviceListViewController : UIViewController
 	{
         private ObservableTableViewController<IDevice> _tableViewController;
         
@@ -16,12 +16,9 @@ namespace MDKControl.iOS
 		{
 		}
 
-        public DeviceListViewModel Vm
-        {
-            get { return ServiceLocator.Current.GetInstance<DeviceListViewModel>(); }
-        }
+        public DeviceListViewModel Vm => ServiceLocator.Current.GetInstance<DeviceListViewModel>();
 
-        public override void ViewDidLoad()
+	    public override void ViewDidLoad()
         {
             Vm.PropertyChanged += (s, e) => {};
             ScanButton.Clicked += (s, e) => {};
@@ -37,15 +34,17 @@ namespace MDKControl.iOS
             base.ViewDidLoad();
         }
 
-        private void BindDeviceCell(UITableViewCell cell, IDevice device, NSIndexPath path)
+        private static void BindDeviceCell(UITableViewCell cell, IDevice device, NSIndexPath path)
         {
             cell.TextLabel.Text = device.Name;
         }
 
-        private UITableViewCell CreateDeviceCell(NSString reuseId)
+        private static UITableViewCell CreateDeviceCell(NSString reuseId)
         {
-            var cell = new UITableViewCell(UITableViewCellStyle.Default, null);
-            cell.Accessory = UITableViewCellAccessory.DisclosureIndicator;
+            var cell = new UITableViewCell(UITableViewCellStyle.Default, null)
+            {
+                Accessory = UITableViewCellAccessory.DisclosureIndicator
+            };
             return cell;
         }
     }

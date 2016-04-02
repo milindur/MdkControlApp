@@ -7,7 +7,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace MDKControl.iOS
 {
-    partial class ModeSmsStatusViewController : SubDeviceViewControllerBase, INavigationTarget
+    internal partial class ModeSmsStatusViewController : SubDeviceViewControllerBase, INavigationTarget
     {
         private Binding _runStatusBinding;
         private Binding _progressBarBinding;
@@ -21,7 +21,7 @@ namespace MDKControl.iOS
         private Binding _videoLength25Binding;
         private Binding _videoLength30Binding;
 
-        private bool _canceled = false;
+        private bool _canceled;
 
         public ModeSmsStatusViewController(IntPtr handle)
             : base(handle, MoCoBusProgramMode.ShootMoveShoot, AppDelegate.ModeSmsStatusViewKey)
@@ -32,13 +32,7 @@ namespace MDKControl.iOS
 
         public ModeSmsViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         public override void ViewDidLoad()
         {
@@ -104,39 +98,39 @@ namespace MDKControl.iOS
 
             _elapsedTimeBinding = this.SetBinding(() => Vm.ElapsedTime).WhenSourceChanges(() =>
                 {
-                    ElapsedTimeValueLabel.Text = string.Format("{0}:{1:00}m", (int)Vm.ElapsedTime.TotalMinutes, Vm.ElapsedTime.Seconds);
+                    ElapsedTimeValueLabel.Text = $"{(int) Vm.ElapsedTime.TotalMinutes}:{Vm.ElapsedTime.Seconds:00}m";
                 });
             _elapsedShotsBinding = this.SetBinding(() => Vm.ElapsedShots).WhenSourceChanges(() =>
                 {
-                    ElapsedShotsValueLabel.Text = string.Format("{0}", Vm.ElapsedShots);
+                    ElapsedShotsValueLabel.Text = $"{Vm.ElapsedShots}";
                 });
             _remainingTimeBinding = this.SetBinding(() => Vm.RemainingTime).WhenSourceChanges(() =>
                 {
-                    RemainingTimeValueLabel.Text = string.Format("{0}:{1:00}m", (int)Vm.RemainingTime.TotalMinutes, Vm.RemainingTime.Seconds);
+                    RemainingTimeValueLabel.Text = $"{(int) Vm.RemainingTime.TotalMinutes}:{Vm.RemainingTime.Seconds:00}m";
                 });
             _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
                 {
-                    RemainingShotsValueLabel.Text = string.Format("{0}", Vm.RemainingShots);
+                    RemainingShotsValueLabel.Text = $"{Vm.RemainingShots}";
                 });
             _overallTimeBinding = this.SetBinding(() => Vm.DurationTime).WhenSourceChanges(() =>
                 {
-                    OverallTimeValueLabel.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                    OverallTimeValueLabel.Text = $"{(int) (Vm.DurationTime/60)}:{(int) Vm.DurationTime%60:00}m";
                 });
             _overallShotsBinding = this.SetBinding(() => Vm.MaxShots).WhenSourceChanges(() =>
                 {
-                    OverallShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
+                    OverallShotsValueLabel.Text = $"{Vm.MaxShots}";
                 });
             _videoLength24Binding = this.SetBinding(() => Vm.VideoLength24).WhenSourceChanges(() =>
                 {
-                    VideoLength24ValueLabel.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength24.TotalMinutes, Vm.VideoLength24.Seconds);
+                    VideoLength24ValueLabel.Text = $"{(int) Vm.VideoLength24.TotalMinutes}:{Vm.VideoLength24.Seconds:00}m";
                 });
             _videoLength25Binding = this.SetBinding(() => Vm.VideoLength25).WhenSourceChanges(() =>
                 {
-                    VideoLength25ValueLabel.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength25.TotalMinutes, Vm.VideoLength25.Seconds);
+                    VideoLength25ValueLabel.Text = $"{(int) Vm.VideoLength25.TotalMinutes}:{Vm.VideoLength25.Seconds:00}m";
                 });
             _videoLength30Binding = this.SetBinding(() => Vm.VideoLength30).WhenSourceChanges(() =>
                 {
-                    VideoLength30ValueLabel.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength30.TotalMinutes, Vm.VideoLength30.Seconds);
+                    VideoLength30ValueLabel.Text = $"{(int) Vm.VideoLength30.TotalMinutes}:{Vm.VideoLength30.Seconds:00}m";
                 });
 
             _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() =>

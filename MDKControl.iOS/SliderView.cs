@@ -11,20 +11,20 @@ using UIKit;
 namespace MDKControl.iOS
 {
     [Register("SliderView"), DesignTimeVisible(true)]
-    public class SliderView : UIView
+    internal class SliderView : UIView
     {
-        private const int padding = 10;
+        private const int Padding = 10;
 
         private readonly EventLoopScheduler _scheduler = new EventLoopScheduler();
         private readonly Subject<float> _sliderStartSubject = new Subject<float>();
         private readonly Subject<Unit> _sliderStopSubject = new Subject<Unit>();
         private readonly Subject<float> _sliderMoveSubject = new Subject<float>();
 
-        private CGRect _bounds = new CGRect();
+        private CGRect _bounds;
 
-        private bool _isActive = false;
-        private CGPoint _sliderPositionRaw = new CGPoint();
-        private float _sliderPosition = 0;
+        private bool _isActive;
+        private CGPoint _sliderPositionRaw;
+        private float _sliderPosition;
 
         public SliderView(IntPtr handle)
             : base(handle)
@@ -36,17 +36,17 @@ namespace MDKControl.iOS
         {
         }
 
-        public IObservable<float> SliderStart { get { return _sliderStartSubject.ObserveOn(_scheduler); } }
+        public IObservable<float> SliderStart => _sliderStartSubject.ObserveOn(_scheduler);
 
-        public IObservable<Unit> SliderStop { get { return _sliderStopSubject.ObserveOn(_scheduler); } }
+        public IObservable<Unit> SliderStop => _sliderStopSubject.ObserveOn(_scheduler);
 
-        public IObservable<float> SliderMove { get { return _sliderMoveSubject.ObserveOn(_scheduler); } }
+        public IObservable<float> SliderMove => _sliderMoveSubject.ObserveOn(_scheduler);
 
         public override void Draw(CGRect rect)
         {
             base.Draw(rect);
 
-            _bounds = new CGRect(rect.X + padding, rect.Y + padding, rect.Width - 2 * padding, rect.Height - 2 * padding);
+            _bounds = new CGRect(rect.X + Padding, rect.Y + Padding, rect.Width - 2 * Padding, rect.Height - 2 * Padding);
 
             using (var ctx = UIGraphics.GetCurrentContext())
             {

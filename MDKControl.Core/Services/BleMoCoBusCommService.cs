@@ -91,7 +91,7 @@ namespace MDKControl.Core.Services
             Debug.WriteLine("MoCoBusRxCharacteristicOnValueUpdated: Entering");
             try
             {
-                if (e.Characteristic == null || e.Characteristic.Value == null)
+                if (e.Characteristic?.Value == null)
                 {
                     Debug.WriteLine("MoCoBusRxCharacteristicOnValueUpdated: Characteristic or Characteristic value is null");
                     return;

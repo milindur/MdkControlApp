@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using Foundation;
 using UIKit;
 
 namespace MDKControl.iOS
 {
     [Register("TimePickerTableViewCell"), DesignTimeVisible(true)]
-    public class TimePickerTableViewCell : UITableViewCell
+    internal class TimePickerTableViewCell : UITableViewCell
     {
         public TimePickerTableViewCell(IntPtr handle)
             : base(handle)
@@ -39,7 +40,7 @@ namespace MDKControl.iOS
         public class TimePickerViewModel : UIPickerViewModel
         {
             private TimeSpan _selectedTime;
-            private UIPickerView _timePickerView;
+            private readonly UIPickerView _timePickerView;
 
             public event EventHandler<EventArgs> ValueChanged;
 
@@ -76,6 +77,7 @@ namespace MDKControl.iOS
                 switch (component)
                 {
                     default:
+                        return 0;
                     case 0: // hours
                         return 24;
                     case 1: // minutes
@@ -92,6 +94,7 @@ namespace MDKControl.iOS
                 switch (component)
                 {
                     default:
+                        return string.Empty;
                     case 0: // hours
                         return row.ToString("00'h'");
                     case 1: // minutes
@@ -99,7 +102,7 @@ namespace MDKControl.iOS
                     case 2: // seconds
                         return row.ToString("00's'");
                     case 3: // milliseconds
-                        return "." + row.ToString();
+                        return "." + row.ToString(CultureInfo.InvariantCulture);
                 }
             }
 
@@ -121,10 +124,7 @@ namespace MDKControl.iOS
                         break;
                 }
 
-                if (ValueChanged != null)
-                {
-                    ValueChanged(this, new EventArgs());
-                }
+                ValueChanged?.Invoke(this, new EventArgs());
             }
         }
     }

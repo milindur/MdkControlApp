@@ -27,17 +27,17 @@ namespace MDKControl.Core.ViewModels
         private decimal _exposureTime = 0.1m;
         private decimal _delayTime = 0.5m;
 
-        private int _panStartPos = 0;
-        private int _panStopPos = 0;
-        private int _tiltStartPos = 0;
-        private int _tiltStopPos = 0;
+        private int _panStartPos;
+        private int _panStopPos;
+        private int _tiltStartPos;
+        private int _tiltStopPos;
 
-        private float _progress = 0;
+        private float _progress;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
-        private int _elapsedShots = 0;
-        private int _overallShots = 0;
-        private uint _overallCols = 0;
-        private uint _overallRows = 0;
+        private int _elapsedShots;
+        private int _overallShots;
+        private uint _overallCols;
+        private uint _overallRows;
 
         public ModePanoViewModel(IDispatcherHelper dispatcherHelper, DeviceViewModel deviceViewModel, IMoCoBusProtocolService protocolService)
         {
@@ -46,7 +46,7 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
-        public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
+        public DeviceViewModel DeviceViewModel => _deviceViewModel;
 
         public decimal ExposureTime
         {
@@ -80,115 +80,52 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public float Progress
-        {
-            get { return _progress; }
-        }
+        public float Progress => _progress;
 
-        public TimeSpan ElapsedTime
-        {
-            get { return _elapsedTime; }
-        }
+        public TimeSpan ElapsedTime => _elapsedTime;
 
-        public int ElapsedShots
-        {
-            get { return _elapsedShots; }
-        }
+        public int ElapsedShots => _elapsedShots;
 
-        public TimeSpan RemainingTime
-        {
-            get { return OverallTime - ElapsedTime; }
-        }
+        public TimeSpan RemainingTime => OverallTime - ElapsedTime;
 
-        public int RemainingShots
-        {
-            get { return OverallShots - ElapsedShots; }
-        }
+        public int RemainingShots => OverallShots - ElapsedShots;
 
-        public TimeSpan OverallTime
-        {
-            get { return TimeSpan.Zero; }
-        }
+        public TimeSpan OverallTime => TimeSpan.Zero;
 
-        public int OverallShots
-        {
-            get { return _overallShots; }
-        }
+        public int OverallShots => _overallShots;
 
-        public uint OverallCols
-        {
-            get { return _overallCols; }
-        }
+        public uint OverallCols => _overallCols;
 
-        public uint OverallRows
-        {
-            get { return _overallRows; }
-        }
+        public uint OverallRows => _overallRows;
 
-        public int PanRefSize
-        {
-            get { return 0; }
-        }
+        public int PanRefSize => 0;
 
-        public int TiltRefSize
-        {
-            get { return 0; }
-        }
+        public int TiltRefSize => 0;
 
-        public int PanStartPosition
-        {
-            get { return _panStartPos; }
-        }
+        public int PanStartPosition => _panStartPos;
 
-        public int PanStopPosition
-        {
-            get { return _panStopPos; }
-        }
+        public int PanStopPosition => _panStopPos;
 
-        public int PanSize
-        {
-            get { return _panStopPos - _panStartPos; }
-        }
+        public int PanSize => _panStopPos - _panStartPos;
 
-        public int TiltStartPosition
-        {
-            get { return _tiltStartPos; }
-        }
+        public int TiltStartPosition => _tiltStartPos;
 
-        public int TiltStopPosition
-        {
-            get { return _tiltStopPos; }
-        }
+        public int TiltStopPosition => _tiltStopPos;
 
-        public int TiltSize
-        {
-            get { return _tiltStopPos - _tiltStartPos; }
-        }
+        public int TiltSize => _tiltStopPos - _tiltStartPos;
 
-        public RelayCommand SetStartCommand
-        {
-            get { return _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart)); }
-        }
+        public RelayCommand SetStartCommand => _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart));
 
-        public RelayCommand SetStopCommand
-        {
-            get { return _setStopCommand ?? (_setStopCommand = new RelayCommand(SetStop)); }
-        }
+        public RelayCommand SetStopCommand => _setStopCommand ?? (_setStopCommand = new RelayCommand(SetStop));
 
         public RelayCommand SwapStartStopCommand
         {
             get { return _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop, () => false)); }
         }
 
-        public RelayCommand SetRefStartCommand
-        {
-            get { return _setRefStartCommand ?? (_setRefStartCommand = new RelayCommand(SetRefStart)); }
-        }
+        public RelayCommand SetRefStartCommand => _setRefStartCommand ?? (_setRefStartCommand = new RelayCommand(SetRefStart));
 
-        public RelayCommand SetRefStopCommand
-        {
-            get { return _setRefStopCommand ?? (_setRefStopCommand = new RelayCommand(SetRefStop)); }
-        }
+        public RelayCommand SetRefStopCommand => _setRefStopCommand ?? (_setRefStopCommand = new RelayCommand(SetRefStop));
 
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
@@ -212,15 +149,9 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public RelayCommand PauseProgramCommand
-        {
-            get { return _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram)); }
-        }
+        public RelayCommand PauseProgramCommand => _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram));
 
-        public RelayCommand StopProgramCommand
-        {
-            get { return _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram)); }
-        }
+        public RelayCommand StopProgramCommand => _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram));
 
         private async void SetStart()
         {
@@ -445,8 +376,8 @@ namespace MDKControl.Core.ViewModels
                 _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
                 _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
 
-                _exposureTime = (decimal)await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
-                _delayTime = (decimal)await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
+                _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
+                _delayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {

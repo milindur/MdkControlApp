@@ -17,7 +17,7 @@ namespace MDKControl.iOS
         private Binding _overallColsBinding;
         private Binding _overallRowsBinding;
 
-        private bool _canceled = false;
+        private bool _canceled;
 
         public ModePanoStatusViewController(IntPtr handle)
             : base(handle, MoCoBusProgramMode.Panorama, AppDelegate.ModePanoStatusViewKey)
@@ -28,13 +28,7 @@ namespace MDKControl.iOS
 
         public ModePanoViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         public override void ViewDidLoad()
         {
@@ -100,23 +94,23 @@ namespace MDKControl.iOS
 
             _elapsedShotsBinding = this.SetBinding(() => Vm.ElapsedShots).WhenSourceChanges(() =>
                 {
-                    ElapsedShotsValueLabel.Text = string.Format("{0}", Vm.ElapsedShots);
+                    ElapsedShotsValueLabel.Text = $"{Vm.ElapsedShots}";
                 });
             _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
                 {
-                    RemainingShotsValueLabel.Text = string.Format("{0}", Vm.RemainingShots);
+                    RemainingShotsValueLabel.Text = $"{Vm.RemainingShots}";
                 });
             _overallShotsBinding = this.SetBinding(() => Vm.OverallShots).WhenSourceChanges(() =>
                 {
-                    OverallShotsValueLabel.Text = string.Format("{0}", Vm.OverallShots);
+                    OverallShotsValueLabel.Text = $"{Vm.OverallShots}";
                 });
             _overallColsBinding = this.SetBinding(() => Vm.OverallCols).WhenSourceChanges(() =>
                 {
-                    OverallColsValueLabel.Text = string.Format("{0}", Vm.OverallCols);
+                    OverallColsValueLabel.Text = $"{Vm.OverallCols}";
                 });
             _overallRowsBinding = this.SetBinding(() => Vm.OverallRows).WhenSourceChanges(() =>
                 {
-                    OverallRowsValueLabel.Text = string.Format("{0}", Vm.OverallRows);
+                    OverallRowsValueLabel.Text = $"{Vm.OverallRows}";
                 });
 
             _progressBarBinding = this.SetBinding(() => Vm.Progress).WhenSourceChanges(() =>
@@ -128,19 +122,19 @@ namespace MDKControl.iOS
                 {
                     PauseResumeButton.Enabled = true;
                     CancelButton.Enabled = true;
-                    if (DeviceVm.RunStatus == MoCoBusRunStatus.Running)
+                    switch (DeviceVm.RunStatus)
                     {
-                        PauseResumeButton.Title = "Pause";
-                    }
-                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Paused)
-                    {
-                        PauseResumeButton.Title = "Resume";
-                    }
-                    else if (DeviceVm.RunStatus == MoCoBusRunStatus.Stopped)
-                    {
-                        PauseResumeButton.Title = "Finished";
-                        if (_canceled)
-                            ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+                        case MoCoBusRunStatus.Running:
+                            PauseResumeButton.Title = "Pause";
+                            break;
+                        case MoCoBusRunStatus.Paused:
+                            PauseResumeButton.Title = "Resume";
+                            break;
+                        case MoCoBusRunStatus.Stopped:
+                            PauseResumeButton.Title = "Finished";
+                            if (_canceled)
+                                ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
+                            break;
                     }
                 });
         }

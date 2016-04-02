@@ -27,9 +27,11 @@ namespace MDKControl.Droid.Fragments
             var args = new Bundle();
             args.PutString("closeLabel", closeLabel);
 
-            var f = new JoystickViewFragment();
-            f.Arguments = args;
-            f.ShowsDialog = true;
+            var f = new JoystickViewFragment
+            {
+                Arguments = args,
+                ShowsDialog = true
+            };
 
             return f;
         }
@@ -57,15 +59,13 @@ namespace MDKControl.Droid.Fragments
             base.OnActivityCreated(savedInstanceState);
 
             CloseButton.Click += (o, e) => 
-                { 
-                    var handler = Closed;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                {
+                    Closed?.Invoke(this, EventArgs.Empty);
                     Dismiss();  
                 };
             CancelButton.Click += (o, e) => 
-                { 
-                    var handler = Canceled;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                {
+                    Canceled?.Invoke(this, EventArgs.Empty);
                     Dismiss(); 
                 };
 
@@ -86,49 +86,15 @@ namespace MDKControl.Droid.Fragments
             base.OnPause();
         }
 
-        public JoystickViewModel Vm
-        {
-            get
-            {
-                return ((DeviceViewActivity)Activity).Vm.JoystickViewModel;
-            }
-        }
+        public JoystickViewModel Vm => ((DeviceViewActivity)Activity).Vm.JoystickViewModel;
 
-        public JoystickView Joystick
-        {
-            get
-            {
-                return _joystick
-                    ?? (_joystick = View.FindViewById<JoystickView>(Resource.Id.Joystick));
-            }
-        }
+        public JoystickView Joystick => _joystick ?? (_joystick = View.FindViewById<JoystickView>(Resource.Id.Joystick));
 
-        public SliderView Slider
-        {
-            get
-            {
-                return _slider
-                    ?? (_slider = View.FindViewById<SliderView>(Resource.Id.Slider));
-            }
-        }
+        public SliderView Slider => _slider ?? (_slider = View.FindViewById<SliderView>(Resource.Id.Slider));
 
-        public Button CloseButton
-        {
-            get
-            {
-                return _closeButton
-                    ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
-            }
-        }
+        public Button CloseButton => _closeButton ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
 
-        public Button CancelButton
-        {
-            get
-            {
-                return _cancelButton
-                    ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
-            }
-        }
+        public Button CancelButton => _cancelButton ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
     }
 }
     

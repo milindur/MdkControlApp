@@ -16,7 +16,7 @@ namespace MDKControl.iOS
         private Binding _hemisphereBinding;
         private Binding _speedBinding;
 
-        private bool navigatedToStatusView = false;
+        private bool _navigatedToStatusView;
 
         private bool _editingHemisphere;
         private bool _editingSpeed;
@@ -33,13 +33,7 @@ namespace MDKControl.iOS
 
         public ModeAstroViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         public override void ViewDidLoad()
         {
@@ -59,7 +53,7 @@ namespace MDKControl.iOS
             _hemispherePickerViewModel = new ListPickerViewModel<string>(new[] { "North", "South" });
             _hemispherePickerViewModel.ValueChanged += (sender, e) =>
                 {
-                    var t = (MDKControl.Core.Models.AstroDirection)_hemispherePickerViewModel.SelectedIndex;
+                    var t = (AstroDirection)_hemispherePickerViewModel.SelectedIndex;
                     if (Vm.Direction != t)
                         Vm.Direction = t;
                 };
@@ -68,7 +62,7 @@ namespace MDKControl.iOS
             _speedPickerViewModel = new ListPickerViewModel<string>(new[] { "Sidereal/Stars", "Lunar" });
             _speedPickerViewModel.ValueChanged += (sender, e) =>
                 {
-                    var t = (MDKControl.Core.Models.AstroSpeed)_speedPickerViewModel.SelectedIndex;
+                    var t = (AstroSpeed)_speedPickerViewModel.SelectedIndex;
                     if (Vm.Speed != t)
                         Vm.Speed = t;
                 };
@@ -76,7 +70,7 @@ namespace MDKControl.iOS
 
             StartButton.Clicked += (sender, e) => 
                 {
-                    navigatedToStatusView = true;
+                    _navigatedToStatusView = true;
                     Vm.StartProgramCommand.Execute(null);
                     ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeAstroStatusViewKey, Vm);
                 };
@@ -90,7 +84,7 @@ namespace MDKControl.iOS
         {
             System.Diagnostics.Debug.WriteLine("ModeAstroViewController ViewWillAppear");
 
-            navigatedToStatusView = false;
+            _navigatedToStatusView = false;
             
             SetupBindings();
 
@@ -116,7 +110,7 @@ namespace MDKControl.iOS
                 .WhenSourceChanges(() =>
                     { 
                         HemisphereValueLabel.Text = _hemispherePickerViewModel.Items[(int)Vm.Direction];
-                        if ((MDKControl.Core.Models.AstroDirection)_hemispherePickerViewModel.SelectedIndex != Vm.Direction)
+                        if ((AstroDirection)_hemispherePickerViewModel.SelectedIndex != Vm.Direction)
                         {
                             HemisphereValuePickerView.ReloadAllComponents();
                             HemisphereValuePickerView.Select((int)Vm.Direction, 0, !HemisphereValuePickerView.Hidden);
@@ -128,7 +122,7 @@ namespace MDKControl.iOS
                 .WhenSourceChanges(() =>
                     { 
                         SpeedValueLabel.Text = _speedPickerViewModel.Items[(int)Vm.Speed];
-                        if ((MDKControl.Core.Models.AstroSpeed)_speedPickerViewModel.SelectedIndex != Vm.Speed)
+                        if ((AstroSpeed)_speedPickerViewModel.SelectedIndex != Vm.Speed)
                         {
                             SpeedValuePickerView.ReloadAllComponents();
                             SpeedValuePickerView.Select((int)Vm.Speed, 0, !SpeedValuePickerView.Hidden);
@@ -141,9 +135,9 @@ namespace MDKControl.iOS
                     var nav = ServiceLocator.Current.GetInstance<INavigationService>();
                     if (nav.CurrentPageKey != AppDelegate.ModeAstroViewKey) return;
 
-                    if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey && !navigatedToStatusView)
+                    if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey && !_navigatedToStatusView)
                     {
-                        navigatedToStatusView = true;
+                        _navigatedToStatusView = true;
                         DeviceVm.StartUpdateTask();
                         nav.NavigateTo(AppDelegate.ModeAstroStatusViewKey, Vm);
                     }

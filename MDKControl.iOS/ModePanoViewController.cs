@@ -10,7 +10,7 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    partial class ModePanoViewController : SubDeviceTableViewControllerBase, INavigationTarget
+    internal partial class ModePanoViewController : SubDeviceTableViewControllerBase, INavigationTarget
     {
         private Binding _runStatusBinding;
 
@@ -27,7 +27,7 @@ namespace MDKControl.iOS
         private Binding _panFovSizeBinding;
         private Binding _tiltFovSizeBinding;
 
-        private bool navigatedToStatusView = false;
+        private bool _navigatedToStatusView;
 
         private bool _editingPreDelay;
         private bool _editingExposure;
@@ -42,13 +42,7 @@ namespace MDKControl.iOS
 
         public ModePanoViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         public override void ViewDidLoad()
         {
@@ -65,7 +59,7 @@ namespace MDKControl.iOS
             tableView.BackgroundView = null;
             tableView.AllowsSelection = true;
 
-            PreDelayValueLabel.Text = string.Format("{0:F1}s", 0.1f); 
+            PreDelayValueLabel.Text = $"{0.1f:F1}s"; 
             
             ExposureValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
             {
@@ -83,7 +77,7 @@ namespace MDKControl.iOS
 
             StartButton.Clicked += (sender, e) => 
                 {
-                    navigatedToStatusView = true;
+                    _navigatedToStatusView = true;
                     Vm.StartProgramCommand.Execute(null);
                     ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModePanoStatusViewKey, Vm);
                 };
@@ -97,7 +91,7 @@ namespace MDKControl.iOS
         {
             System.Diagnostics.Debug.WriteLine("ModePanoViewController ViewWillAppear");
 
-            navigatedToStatusView = false;
+            _navigatedToStatusView = false;
 
             SetupBindings();
 
@@ -121,7 +115,7 @@ namespace MDKControl.iOS
 
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime).WhenSourceChanges(() => 
             {
-                ExposureValueLabel.Text = string.Format("{0:F1}s", Vm.ExposureTime);
+                ExposureValueLabel.Text = $"{Vm.ExposureTime:F1}s";
                 if ((decimal)ExposureValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.ExposureTime)
                 {
                     ExposureValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.ExposureTime);
@@ -131,7 +125,7 @@ namespace MDKControl.iOS
 
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime).WhenSourceChanges(() => 
             {
-                PostDelayValueLabel.Text = string.Format("{0:F1}s", Vm.DelayTime);
+                PostDelayValueLabel.Text = $"{Vm.DelayTime:F1}s";
                 if ((decimal)PostDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DelayTime)
                 {
                     PostDelayValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DelayTime);
@@ -141,49 +135,49 @@ namespace MDKControl.iOS
 
             _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition).WhenSourceChanges(() => 
             {
-                PanStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+                PanStartPosValueLabel.Text = $"{(double) Vm.PanStartPosition/(190*200*16)*360:F1}°";
             });
             _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition).WhenSourceChanges(() => 
             {
-                PanStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+                PanStopPosValueLabel.Text = $"{(double) Vm.PanStopPosition/(190*200*16)*360:F1}°";
             });
             _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition).WhenSourceChanges(() => 
             {
-                TiltStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+                TiltStartPosValueLabel.Text = $"{(double) Vm.TiltStartPosition/(190*200*16)*360:F1}°";
             });
             _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition).WhenSourceChanges(() => 
             {
-                TiltStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+                TiltStopPosValueLabel.Text = $"{(double) Vm.TiltStopPosition/(190*200*16)*360:F1}°";
             });
             _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panSizeBinding = this.SetBinding(() => Vm.PanSize).WhenSourceChanges(() => 
                 {
-                    PanSizeValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanSize / (190 * 200 * 16) * 360);
+                    PanSizeValueLabel.Text = $"{(double) Vm.PanSize/(190*200*16)*360:F1}°";
                 });
             _panSizeBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltSizeBinding = this.SetBinding(() => Vm.TiltSize).WhenSourceChanges(() => 
                 {
-                    TiltSizeValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltSize / (190 * 200 * 16) * 360);
+                    TiltSizeValueLabel.Text = $"{(double) Vm.TiltSize/(190*200*16)*360:F1}°";
                 });
             _tiltSizeBinding.ForceUpdateValueFromSourceToTarget();
 
             _panFovSizeBinding = this.SetBinding(() => Vm.PanRefSize).WhenSourceChanges(() => 
                 {
-                    PanFovSizeValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanRefSize / (190 * 200 * 16) * 360);
+                    PanFovSizeValueLabel.Text = $"{(double) Vm.PanRefSize/(190*200*16)*360:F1}°";
                 });
             _panFovSizeBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltFovSizeBinding = this.SetBinding(() => Vm.TiltRefSize).WhenSourceChanges(() => 
                 {
-                    TiltFovSizeValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltRefSize / (190 * 200 * 16) * 360);
+                    TiltFovSizeValueLabel.Text = $"{(double) Vm.TiltRefSize/(190*200*16)*360:F1}°";
                 });
             _tiltFovSizeBinding.ForceUpdateValueFromSourceToTarget();
 
@@ -192,9 +186,9 @@ namespace MDKControl.iOS
                 var nav = ServiceLocator.Current.GetInstance<INavigationService>();
                 if (nav.CurrentPageKey != AppDelegate.ModeSmsViewKey)
                     return;
-                if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModePanoStatusViewKey && !navigatedToStatusView)
+                if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModePanoStatusViewKey && !_navigatedToStatusView)
                 {
-                    navigatedToStatusView = true;
+                    _navigatedToStatusView = true;
                     DeviceVm.StartUpdateTask();
                     nav.NavigateTo(AppDelegate.ModePanoStatusViewKey, Vm);
                 }

@@ -15,7 +15,7 @@ namespace MDKControl.Core.Services
 
         private readonly AsyncLock _mutex = new AsyncLock();
 
-        private int _retryCounter = 0;
+        private int _retryCounter;
         private ConnectionState _connectionState = ConnectionState.Disconnected;
 
         public event EventHandler ConnectionChanged;
@@ -38,10 +38,7 @@ namespace MDKControl.Core.Services
             }
         }
 
-        public virtual bool IsConnected
-        {
-            get { return ConnectionState == ConnectionState.Connected; }
-        }
+        public virtual bool IsConnected => ConnectionState == ConnectionState.Connected;
 
         public abstract void Send(MoCoBusFrame frame);
 
@@ -107,11 +104,7 @@ namespace MDKControl.Core.Services
 
         protected virtual void OnConnectionChanged()
         {
-            var handler = ConnectionChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            ConnectionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

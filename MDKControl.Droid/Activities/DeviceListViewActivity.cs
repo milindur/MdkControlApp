@@ -1,5 +1,4 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -17,14 +16,7 @@ namespace MDKControl.Droid.Activities
     {
         private ListView _devicesList;
 
-        public DeviceListViewActivity()
-        {
-        }
-
-        public DeviceListViewModel Vm
-        {
-            get { return ServiceLocator.Current.GetInstance<DeviceListViewModel>(); }
-        }
+        public DeviceListViewModel Vm => ServiceLocator.Current.GetInstance<DeviceListViewModel>();
 
         public void OnItemClick(AdapterView parent, View view, int position, long id)
         {
@@ -38,7 +30,7 @@ namespace MDKControl.Droid.Activities
 
             App.Initialize(this);
 
-            DevicesList.Adapter = Vm.Devices.GetAdapter(GetDevicesAdapter);
+            DevicesList.Adapter = Vm.Devices.GetAdapter((position, device, view) => GetDevicesAdapter(device));
             DevicesList.OnItemClickListener = this;
         }
 
@@ -48,11 +40,6 @@ namespace MDKControl.Droid.Activities
 
             App.Initialize(this);
             ServiceLocator.Current.GetInstance<DispatcherHelper>().SetOwner(this);
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -92,9 +79,9 @@ namespace MDKControl.Droid.Activities
             }
         }
 
-        private View GetDevicesAdapter(int position, Ble.IDevice device, View convertView)
+        private View GetDevicesAdapter(Ble.IDevice device)
         {
-            convertView = LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
+            var convertView = LayoutInflater.Inflate(Android.Resource.Layout.SimpleListItem1, null);
 
             var title = convertView.FindViewById<TextView>(Android.Resource.Id.Text1);
             title.Text = device.Name;
@@ -102,13 +89,6 @@ namespace MDKControl.Droid.Activities
             return convertView;
         }
 
-        public ListView DevicesList
-        {
-            get
-            {
-                return _devicesList
-                    ?? (_devicesList = FindViewById<ListView>(Resource.Id.DevicesList));
-            }
-        }
+        public ListView DevicesList => _devicesList ?? (_devicesList = FindViewById<ListView>(Resource.Id.DevicesList));
     }
 }

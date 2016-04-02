@@ -10,7 +10,7 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    partial class ModeSmsViewController : SubDeviceTableViewControllerBase, INavigationTarget
+    internal partial class ModeSmsViewController : SubDeviceTableViewControllerBase, INavigationTarget
     {
         private Binding _runStatusBinding;
 
@@ -27,7 +27,7 @@ namespace MDKControl.iOS
         private Binding _tiltStartPosBinding;
         private Binding _tiltStopPosBinding;
 
-        private bool navigatedToStatusView = false;
+        private bool _navigatedToStatusView;
 
         private bool _editingPreDelay;
         private bool _editingExposure;
@@ -45,13 +45,7 @@ namespace MDKControl.iOS
 
         public ModeSmsViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         public override void ViewDidLoad()
         {
@@ -71,7 +65,7 @@ namespace MDKControl.iOS
             tableView.BackgroundView = null;
             tableView.AllowsSelection = true;
 
-            PreDelayValueLabel.Text = string.Format("{0:F1}s", 0.1f); 
+            PreDelayValueLabel.Text = $"{0.1f:F1}s"; 
             
             ExposureValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
             {
@@ -114,7 +108,7 @@ namespace MDKControl.iOS
 
             StartButton.Clicked += (sender, e) => 
                 {
-                    navigatedToStatusView = true;
+                    _navigatedToStatusView = true;
                     Vm.StartProgramCommand.Execute(null);
                     ServiceLocator.Current.GetInstance<INavigationService>().NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
                 };
@@ -128,7 +122,7 @@ namespace MDKControl.iOS
         {
             System.Diagnostics.Debug.WriteLine("ModeSmsViewController ViewWillAppear");
 
-            navigatedToStatusView = false;
+            _navigatedToStatusView = false;
 
             SetupBindings();
 
@@ -152,7 +146,7 @@ namespace MDKControl.iOS
 
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime).WhenSourceChanges(() => 
             {
-                ExposureValueLabel.Text = string.Format("{0:F1}s", Vm.ExposureTime);
+                ExposureValueLabel.Text = $"{Vm.ExposureTime:F1}s";
                 if ((decimal)ExposureValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.ExposureTime)
                 {
                     ExposureValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.ExposureTime);
@@ -162,7 +156,7 @@ namespace MDKControl.iOS
 
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime).WhenSourceChanges(() => 
             {
-                PostDelayValueLabel.Text = string.Format("{0:F1}s", Vm.DelayTime);
+                PostDelayValueLabel.Text = $"{Vm.DelayTime:F1}s";
                 if ((decimal)PostDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DelayTime)
                 {
                     PostDelayValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DelayTime);
@@ -172,7 +166,7 @@ namespace MDKControl.iOS
 
             _intervalTimeBinding = this.SetBinding(() => Vm.IntervalTime).WhenSourceChanges(() => 
             {
-                IntervalValueLabel.Text = string.Format("{0:F1}s", Vm.IntervalTime);
+                IntervalValueLabel.Text = $"{Vm.IntervalTime:F1}s";
                 if ((decimal)IntervalValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.IntervalTime)
                 {
                     IntervalValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.IntervalTime);
@@ -182,7 +176,7 @@ namespace MDKControl.iOS
 
             _durationTimeBinding = this.SetBinding(() => Vm.DurationTime).WhenSourceChanges(() => 
             {
-                DurationValueLabel.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                DurationValueLabel.Text = $"{(int) (Vm.DurationTime/60)}:{(int) Vm.DurationTime%60:00}m";
                 if ((decimal)DurationValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.DurationTime)
                 {
                     DurationValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.DurationTime);
@@ -192,7 +186,7 @@ namespace MDKControl.iOS
 
             _maxShotsBinding = this.SetBinding(() => Vm.MaxShots).WhenSourceChanges(() => 
             {
-                ShotsValueLabel.Text = string.Format("{0}", Vm.MaxShots);
+                ShotsValueLabel.Text = $"{Vm.MaxShots}";
                 if (ShotsValuePickerTableViewCell.Model.SelectedNumber != Vm.MaxShots)
                 {
                     ShotsValuePickerTableViewCell.Model.SelectedNumber = Vm.MaxShots;
@@ -202,37 +196,37 @@ namespace MDKControl.iOS
 
             _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition).WhenSourceChanges(() => 
             {
-                SliderStartPosValueLabel.Text = string.Format("{0}", Vm.SliderStartPosition);
+                SliderStartPosValueLabel.Text = $"{Vm.SliderStartPosition}";
             });
             _sliderStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _sliderStopPosBinding = this.SetBinding(() => Vm.SliderStopPosition).WhenSourceChanges(() => 
             {
-                SliderStopPosValueLabel.Text = string.Format("{0}", Vm.SliderStopPosition);
+                SliderStopPosValueLabel.Text = $"{Vm.SliderStopPosition}";
             });
             _sliderStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition).WhenSourceChanges(() => 
             {
-                PanStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+                PanStartPosValueLabel.Text = $"{(double) Vm.PanStartPosition/(190*200*16)*360:F1}°";
             });
             _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition).WhenSourceChanges(() => 
             {
-                PanStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+                PanStopPosValueLabel.Text = $"{(double) Vm.PanStopPosition/(190*200*16)*360:F1}°";
             });
             _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition).WhenSourceChanges(() => 
             {
-                TiltStartPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+                TiltStartPosValueLabel.Text = $"{(double) Vm.TiltStartPosition/(190*200*16)*360:F1}°";
             });
             _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition).WhenSourceChanges(() => 
             {
-                TiltStopPosValueLabel.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+                TiltStopPosValueLabel.Text = $"{(double) Vm.TiltStopPosition/(190*200*16)*360:F1}°";
             });
             _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
@@ -241,9 +235,9 @@ namespace MDKControl.iOS
                 var nav = ServiceLocator.Current.GetInstance<INavigationService>();
                 if (nav.CurrentPageKey != AppDelegate.ModeSmsViewKey)
                     return;
-                if (DeviceVm.RunStatus != MDKControl.Core.Models.MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey && !navigatedToStatusView)
+                if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeSmsStatusViewKey && !_navigatedToStatusView)
                 {
-                    navigatedToStatusView = true;
+                    _navigatedToStatusView = true;
                     DeviceVm.StartUpdateTask();
                     nav.NavigateTo(AppDelegate.ModeSmsStatusViewKey, Vm);
                 }

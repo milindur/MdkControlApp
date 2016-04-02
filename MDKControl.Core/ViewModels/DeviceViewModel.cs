@@ -19,11 +19,6 @@ namespace MDKControl.Core.ViewModels
         private readonly IMoCoBusCommService _commService;
         private readonly IMoCoBusProtocolService _protocolService;
 
-        private readonly ModeAstroViewModel _modeAstroViewModel;
-        private readonly ModePanoViewModel _modePanoViewModel;
-        private readonly ModeSmsViewModel _modeSmsViewModel;
-        private readonly JoystickViewModel _joystickViewModel;
-
         private MoCoBusProgramMode _programMode = MoCoBusProgramMode.Invalid;
         private MoCoBusRunStatus _runStatus;
         private RelayCommand _setModeSmsCommand;
@@ -47,11 +42,11 @@ namespace MDKControl.Core.ViewModels
 
             _protocolService = moCoBusProtocolServiceFactory(_commService, 3);
 
-            _modeAstroViewModel = new ModeAstroViewModel(_dispatcherHelper, this, _protocolService);
-            _modePanoViewModel = new ModePanoViewModel(_dispatcherHelper, this, _protocolService);
-            _modeSmsViewModel = new ModeSmsViewModel(_dispatcherHelper, this, _protocolService);
+            ModeAstroViewModel = new ModeAstroViewModel(_dispatcherHelper, this, _protocolService);
+            ModePanoViewModel = new ModePanoViewModel(_dispatcherHelper, this, _protocolService);
+            ModeSmsViewModel = new ModeSmsViewModel(_dispatcherHelper, this, _protocolService);
 
-            _joystickViewModel = new JoystickViewModel(this, _protocolService);
+            JoystickViewModel = new JoystickViewModel(this, _protocolService);
         }
 
         private async void CommServiceOnConnectionChanged(object sender, EventArgs e)
@@ -76,13 +71,13 @@ namespace MDKControl.Core.ViewModels
                 });
         }
 
-        public ModeAstroViewModel ModeAstroViewModel { get { return _modeAstroViewModel; } }
+        public ModeAstroViewModel ModeAstroViewModel { get; }
 
-        public ModePanoViewModel ModePanoViewModel { get { return _modePanoViewModel; } }
+        public ModePanoViewModel ModePanoViewModel { get; }
 
-        public ModeSmsViewModel ModeSmsViewModel { get { return _modeSmsViewModel; } }
+        public ModeSmsViewModel ModeSmsViewModel { get; }
 
-        public JoystickViewModel JoystickViewModel { get { return _joystickViewModel; } }
+        public JoystickViewModel JoystickViewModel { get; }
 
         public bool IsConnected
         {
@@ -104,30 +99,21 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public bool IsConnecting { get { return _commService.ConnectionState == ConnectionState.Connecting; } }
+        public bool IsConnecting => _commService.ConnectionState == ConnectionState.Connecting;
 
-        public bool IsDisconnected { get { return _commService.ConnectionState == ConnectionState.Disconnected; } }
+        public bool IsDisconnected => _commService.ConnectionState == ConnectionState.Disconnected;
 
-        public MoCoBusProgramMode ProgramMode { get { return _programMode; } }
+        public MoCoBusProgramMode ProgramMode => _programMode;
 
-        public MoCoBusRunStatus RunStatus { get { return _runStatus; } }
+        public MoCoBusRunStatus RunStatus => _runStatus;
 
         public int FirmwareVersion { get; private set; }
 
-        public RelayCommand SetModeSmsCommand
-        {
-            get { return _setModeSmsCommand ?? (_setModeSmsCommand = new RelayCommand(SetModeSms)); }
-        }
+        public RelayCommand SetModeSmsCommand => _setModeSmsCommand ?? (_setModeSmsCommand = new RelayCommand(SetModeSms));
 
-        public RelayCommand SetModePanoCommand
-        {
-            get { return _setModePanoCommand ?? (_setModePanoCommand = new RelayCommand(SetModePano)); }
-        }
+        public RelayCommand SetModePanoCommand => _setModePanoCommand ?? (_setModePanoCommand = new RelayCommand(SetModePano));
 
-        public RelayCommand SetModeAstroCommand
-        {
-            get { return _setModeAstroCommand ?? (_setModeAstroCommand = new RelayCommand(SetModeAstro)); }
-        }
+        public RelayCommand SetModeAstroCommand => _setModeAstroCommand ?? (_setModeAstroCommand = new RelayCommand(SetModeAstro));
 
         public Task InitState()
         {
@@ -244,7 +230,7 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public bool IsUpdateTaskRunning { get { return _updateTask != null || _updateTaskCancellationTokenSource != null; } }
+        public bool IsUpdateTaskRunning => _updateTask != null || _updateTaskCancellationTokenSource != null;
 
         public void StartUpdateTask()
         {

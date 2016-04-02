@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using Foundation;
 using UIKit;
 
 namespace MDKControl.iOS
 {
     [Register("NumberPickerTableViewCell"), DesignTimeVisible(true)]
-    public class NumberPickerTableViewCell : UITableViewCell
+    internal class NumberPickerTableViewCell : UITableViewCell
     {
         public NumberPickerTableViewCell(IntPtr handle)
             : base(handle)
@@ -39,7 +40,7 @@ namespace MDKControl.iOS
         public class NumberPickerViewModel : UIPickerViewModel
         {
             private int _selectedNumber;
-            private UIPickerView _numberPickerView;
+            private readonly UIPickerView _numberPickerView;
 
             public event EventHandler<EventArgs> ValueChanged;
 
@@ -76,6 +77,7 @@ namespace MDKControl.iOS
                 switch (component)
                 {
                     default:
+                        return 0;
                     case 0:
                         return 100;
                     case 1:
@@ -89,18 +91,7 @@ namespace MDKControl.iOS
 
             public override string GetTitle(UIPickerView pickerView, nint row, nint component)
             {
-                switch (component)
-                {
-                    default:
-                    case 0:
-                        return row.ToString();
-                    case 1:
-                        return row.ToString();
-                    case 2:
-                        return row.ToString();
-                    case 3:
-                        return row.ToString();
-                }
+                return row.ToString(CultureInfo.CurrentCulture);
             }
 
             public override void Selected(UIPickerView pickerView, nint row, nint component)
@@ -108,10 +99,7 @@ namespace MDKControl.iOS
                 _selectedNumber = _selectedNumber - ((int)Math.Floor(_selectedNumber / Math.Pow(10, 3 - (int)component)) % 10) * (int)Math.Pow(10, 3 - (int)component);
                 _selectedNumber = _selectedNumber + (int)row * (int)Math.Pow(10, 3 - (int)component);
 
-                if (ValueChanged != null)
-                {
-                    ValueChanged(this, new EventArgs());
-                }
+                ValueChanged?.Invoke(this, new EventArgs());
             }
         }
     }

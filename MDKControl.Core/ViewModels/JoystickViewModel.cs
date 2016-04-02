@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
-using MDKControl.Core.Helpers;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
 using Reactive.Bindings;
@@ -20,9 +19,9 @@ namespace MDKControl.Core.ViewModels
         private Point _joystickCurrentPoint;
         private float _sliderCurrentPoint;
 
-        private bool _sliderOrJoystickIsRunning = false;
-        private bool _joystickIsRunning = false;
-        private bool _sliderIsRunning = false;
+        private bool _sliderOrJoystickIsRunning;
+        private bool _joystickIsRunning;
+        private bool _sliderIsRunning;
 
         private Task _joystickTask;
         private CancellationTokenSource _joystickTaskCancellationTokenSource;
@@ -49,17 +48,17 @@ namespace MDKControl.Core.ViewModels
 
         public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
 
-        public ReactiveCommand<Point> StartJoystickCommand { get; private set; }
+        public ReactiveCommand<Point> StartJoystickCommand { get; }
 
-        public ReactiveCommand StopJoystickCommand { get; private set; }
+        public ReactiveCommand StopJoystickCommand { get; }
 
-        public ReactiveCommand<Point> MoveJoystickCommand { get; private set; }
+        public ReactiveCommand<Point> MoveJoystickCommand { get; }
 
-        public ReactiveCommand<float> StartSliderCommand { get; private set; }
+        public ReactiveCommand<float> StartSliderCommand { get; }
 
-        public ReactiveCommand StopSliderCommand { get; private set; }
+        public ReactiveCommand StopSliderCommand { get; }
 
-        public ReactiveCommand<float> MoveSliderCommand { get; private set; }
+        public ReactiveCommand<float> MoveSliderCommand { get; }
 
         public void StartJoystick(Point point)
         {

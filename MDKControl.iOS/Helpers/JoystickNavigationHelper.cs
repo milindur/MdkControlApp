@@ -5,10 +5,10 @@ namespace MDKControl.iOS.Helpers
 {
     public class JoystickNavigationHelper
     {
-        public JoystickNavigationHelper(JoystickViewModel _joystickViewModel, Action _dismissed)
+        public JoystickNavigationHelper(JoystickViewModel joystickViewModel, Action dismissed)
         {
-            JoystickViewModel = _joystickViewModel;
-            Dismissed = _dismissed;
+            JoystickViewModel = joystickViewModel;
+            Dismissed = dismissed;
         }
         
         public JoystickViewModel JoystickViewModel { get; private set; }

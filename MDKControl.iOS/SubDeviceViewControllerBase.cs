@@ -13,10 +13,10 @@ namespace MDKControl.iOS
         private Binding _isConnectedBinding;
         private Binding _programModeBinding;
 
-        private readonly MoCoBusProgramMode _programMode = MoCoBusProgramMode.Invalid;
-        private readonly string _viewPageKey = null;
+        private readonly MoCoBusProgramMode _programMode;
+        private readonly string _viewPageKey;
 
-        public SubDeviceViewControllerBase(IntPtr handle, MoCoBusProgramMode programMode, string viewPageKey)
+        protected SubDeviceViewControllerBase(IntPtr handle, MoCoBusProgramMode programMode, string viewPageKey)
             : base(handle)
         {
             _programMode = programMode;

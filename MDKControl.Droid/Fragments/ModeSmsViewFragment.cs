@@ -1,5 +1,4 @@
-﻿using System;
-using Android.App;
+﻿using Android.App;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -15,7 +14,7 @@ namespace MDKControl.Droid.Fragments
         private Activity _activity;
 
         private Binding _runStatusBinding;
-        private object _runStatusLock = new object();
+        private readonly object _runStatusLock = new object();
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _exposureTimeBinding;
@@ -190,77 +189,77 @@ namespace MDKControl.Droid.Fragments
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
                     { 
-                        ExposureTimeEditText.Text = string.Format("{0:F1}s", Vm.ExposureTime); 
+                        ExposureTimeEditText.Text = $"{Vm.ExposureTime:F1}s"; 
                     });
             _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
                 .WhenSourceChanges(() =>
                     { 
-                        DelayTimeEditText.Text = string.Format("{0:F1}s", Vm.DelayTime); 
+                        DelayTimeEditText.Text = $"{Vm.DelayTime:F1}s"; 
                     });
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             _intervalTimeBinding = this.SetBinding(() => Vm.IntervalTime)
                 .WhenSourceChanges(() =>
                     {
-                        IntervalTimeEditText.Text = string.Format("{0:F1}s", Vm.IntervalTime);
+                        IntervalTimeEditText.Text = $"{Vm.IntervalTime:F1}s";
                     });
             _intervalTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             _durationTimeBinding = this.SetBinding(() => Vm.DurationTime)
                 .WhenSourceChanges(() =>
                     {
-                        DurationTimeEditText.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                        DurationTimeEditText.Text = $"{(int) (Vm.DurationTime/60)}:{(int) Vm.DurationTime%60:00}m";
                     });
             _durationTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             _maxShotsBinding = this.SetBinding(() => Vm.MaxShots)
                 .WhenSourceChanges(() =>
                     {
-                        MaxShotsEditText.Text = string.Format("{0}", Vm.MaxShots);
+                        MaxShotsEditText.Text = $"{Vm.MaxShots}";
                     });
             _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
 
             _sliderStartPosBinding = this.SetBinding(() => Vm.SliderStartPosition)
                 .WhenSourceChanges(() =>
                     {
-                        SliderStartPosEditText.Text = string.Format("{0}", Vm.SliderStartPosition);
+                        SliderStartPosEditText.Text = $"{Vm.SliderStartPosition}";
                     });
             _sliderStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _sliderStopPosBinding = this.SetBinding(() => Vm.SliderStopPosition)
                 .WhenSourceChanges(() =>
                     {
-                        SliderStopPosEditText.Text = string.Format("{0}", Vm.SliderStopPosition);
+                        SliderStopPosEditText.Text = $"{Vm.SliderStopPosition}";
                     });
             _sliderStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
                 .WhenSourceChanges(() =>
                     {
-                        PanStartPosEditText.Text = string.Format("{0:F1}°", (double)Vm.PanStartPosition / (190 * 200 * 16) * 360);
+                        PanStartPosEditText.Text = $"{(double) Vm.PanStartPosition/(190*200*16)*360:F1}°";
                     });
             _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition)
                 .WhenSourceChanges(() =>
                     {
-                        PanStopPosEditText.Text = string.Format("{0:F1}°", (double)Vm.PanStopPosition / (190 * 200 * 16) * 360);
+                        PanStopPosEditText.Text = $"{(double) Vm.PanStopPosition/(190*200*16)*360:F1}°";
                     });
             _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition)
                 .WhenSourceChanges(() =>
                     {
-                        TiltStartPosEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltStartPosition / (190 * 200 * 16) * 360);
+                        TiltStartPosEditText.Text = $"{(double) Vm.TiltStartPosition/(190*200*16)*360:F1}°";
                     });
             _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition)
                 .WhenSourceChanges(() =>
                     {
-                        TiltStopPosEditText.Text = string.Format("{0:F1}°", (double)Vm.TiltStopPosition / (190 * 200 * 16) * 360);
+                        TiltStopPosEditText.Text = $"{(double) Vm.TiltStopPosition/(190*200*16)*360:F1}°";
                     });
             _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
         }
@@ -285,163 +284,43 @@ namespace MDKControl.Droid.Fragments
             _tiltStopPosBinding?.Detach();
 
             var dlg = FragmentManager.FindFragmentByTag<DialogFragment>(Consts.DialogTag);
-            if (dlg != null)
-            {
-                dlg.DismissAllowingStateLoss();
-            }
+            dlg?.DismissAllowingStateLoss();
 
             base.OnPause();
         }
 
-        public ModeSmsViewModel Vm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
-            }
-        }
+        public ModeSmsViewModel Vm => ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
 
-        public DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm;
-            }
-        }
+        public DeviceViewModel DeviceVm => ((DeviceViewActivity)_activity).Vm;
 
-        public Button SetStartButton
-        {
-            get 
-            {
-                return _setStartButton
-                    ?? (_setStartButton = View.FindViewById<Button>(Resource.Id.SetStart));
-            }
-        }
+        public Button SetStartButton => _setStartButton ?? (_setStartButton = View.FindViewById<Button>(Resource.Id.SetStart));
 
-        public Button SetStopButton
-        {
-            get 
-            {
-                return _setStopButton
-                    ?? (_setStopButton = View.FindViewById<Button>(Resource.Id.SetStop));
-            }
-        }
+        public Button SetStopButton => _setStopButton ?? (_setStopButton = View.FindViewById<Button>(Resource.Id.SetStop));
 
-        public Button SwapStartStopButton
-        {
-            get 
-            {
-                return _swapStartStopButton
-                    ?? (_swapStartStopButton = View.FindViewById<Button>(Resource.Id.SwapStartStop));
-            }
-        }
+        public Button SwapStartStopButton => _swapStartStopButton ?? (_swapStartStopButton = View.FindViewById<Button>(Resource.Id.SwapStartStop));
 
-        public Button StartProgramButton
-        {
-            get
-            {
-                return _startProgramButton
-                    ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
-            }
-        }
+        public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
 
-        public EditText ExposureTimeEditText
-        {
-            get
-            {
-                return _exposureTimeEditText
-                    ?? (_exposureTimeEditText = View.FindViewById<EditText>(Resource.Id.ExposureTime));
-            }
-        }
+        public EditText ExposureTimeEditText => _exposureTimeEditText ?? (_exposureTimeEditText = View.FindViewById<EditText>(Resource.Id.ExposureTime));
 
-        public EditText DelayTimeEditText
-        {
-            get
-            {
-                return _delayTimeEditText
-                    ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.PostDelayTime));
-            }
-        }
+        public EditText DelayTimeEditText => _delayTimeEditText ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.PostDelayTime));
 
-        public EditText IntervalTimeEditText
-        {
-            get
-            {
-                return _intervalTimeEditText
-                    ?? (_intervalTimeEditText = View.FindViewById<EditText>(Resource.Id.IntervalTime));
-            }
-        }
+        public EditText IntervalTimeEditText => _intervalTimeEditText ?? (_intervalTimeEditText = View.FindViewById<EditText>(Resource.Id.IntervalTime));
 
-        public EditText DurationTimeEditText
-        {
-            get
-            {
-                return _durationTimeEditText
-                    ?? (_durationTimeEditText = View.FindViewById<EditText>(Resource.Id.DurationTime));
-            }
-        }
+        public EditText DurationTimeEditText => _durationTimeEditText ?? (_durationTimeEditText = View.FindViewById<EditText>(Resource.Id.DurationTime));
 
-        public EditText MaxShotsEditText
-        {
-            get
-            {
-                return _maxShotsEditText
-                    ?? (_maxShotsEditText = View.FindViewById<EditText>(Resource.Id.MaxShots));
-            }
-        }
+        public EditText MaxShotsEditText => _maxShotsEditText ?? (_maxShotsEditText = View.FindViewById<EditText>(Resource.Id.MaxShots));
 
-        public EditText SliderStartPosEditText
-        {
-            get
-            {
-                return _sliderStartPosEditText
-                    ?? (_sliderStartPosEditText = View.FindViewById<EditText>(Resource.Id.SliderStartPos));
-            }
-        }
+        public EditText SliderStartPosEditText => _sliderStartPosEditText ?? (_sliderStartPosEditText = View.FindViewById<EditText>(Resource.Id.SliderStartPos));
 
-        public EditText SliderStopPosEditText
-        {
-            get
-            {
-                return _sliderStopPosEditText
-                    ?? (_sliderStopPosEditText = View.FindViewById<EditText>(Resource.Id.SliderStopPos));
-            }
-        }
+        public EditText SliderStopPosEditText => _sliderStopPosEditText ?? (_sliderStopPosEditText = View.FindViewById<EditText>(Resource.Id.SliderStopPos));
 
-        public EditText PanStartPosEditText
-        {
-            get
-            {
-                return _panStartPosEditText
-                    ?? (_panStartPosEditText = View.FindViewById<EditText>(Resource.Id.PanStartPos));
-            }
-        }
+        public EditText PanStartPosEditText => _panStartPosEditText ?? (_panStartPosEditText = View.FindViewById<EditText>(Resource.Id.PanStartPos));
 
-        public EditText PanStopPosEditText
-        {
-            get
-            {
-                return _panStopPosEditText
-                    ?? (_panStopPosEditText = View.FindViewById<EditText>(Resource.Id.PanStopPos));
-            }
-        }
+        public EditText PanStopPosEditText => _panStopPosEditText ?? (_panStopPosEditText = View.FindViewById<EditText>(Resource.Id.PanStopPos));
 
-        public EditText TiltStartPosEditText
-        {
-            get
-            {
-                return _tiltStartPosEditText
-                    ?? (_tiltStartPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStartPos));
-            }
-        }
+        public EditText TiltStartPosEditText => _tiltStartPosEditText ?? (_tiltStartPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStartPos));
 
-        public EditText TiltStopPosEditText
-        {
-            get
-            {
-                return _tiltStopPosEditText
-                    ?? (_tiltStopPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStopPos));
-            }
-        }
+        public EditText TiltStopPosEditText => _tiltStopPosEditText ?? (_tiltStopPosEditText = View.FindViewById<EditText>(Resource.Id.TiltStopPos));
     }
 }

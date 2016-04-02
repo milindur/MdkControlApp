@@ -19,7 +19,7 @@ namespace MDKControl.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : UIApplicationDelegate
+    public class AppDelegate : UIApplicationDelegate
     {
         private static IContainer _container;
 
@@ -107,13 +107,13 @@ namespace MDKControl.iOS
                 nav.Initialize((UINavigationController)Window.RootViewController);
                 nav.Configure(ViewModelLocator.DeviceListViewKey, "DeviceListViewController");
                 nav.Configure(ViewModelLocator.DeviceViewKey, "DeviceViewController");
-                nav.Configure(AppDelegate.ModeSmsViewKey, "ModeSmsViewController");
-                nav.Configure(AppDelegate.ModeSmsStatusViewKey, "ModeSmsStatusViewController");
-                nav.Configure(AppDelegate.ModePanoViewKey, "ModePanoViewController");
-                nav.Configure(AppDelegate.ModePanoStatusViewKey, "ModePanoStatusViewController");
-                nav.Configure(AppDelegate.ModeAstroViewKey, "ModeAstroViewController");
-                nav.Configure(AppDelegate.ModeAstroStatusViewKey, "ModeAstroStatusViewController");
-                nav.Configure(AppDelegate.JoystickViewKey, "JoystickViewController");
+                nav.Configure(ModeSmsViewKey, "ModeSmsViewController");
+                nav.Configure(ModeSmsStatusViewKey, "ModeSmsStatusViewController");
+                nav.Configure(ModePanoViewKey, "ModePanoViewController");
+                nav.Configure(ModePanoStatusViewKey, "ModePanoStatusViewController");
+                nav.Configure(ModeAstroViewKey, "ModeAstroViewController");
+                nav.Configure(ModeAstroStatusViewKey, "ModeAstroStatusViewController");
+                nav.Configure(JoystickViewKey, "JoystickViewController");
 
                 builder.RegisterInstance(nav)
                     .As<INavigationService>();

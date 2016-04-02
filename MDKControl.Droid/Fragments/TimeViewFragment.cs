@@ -27,9 +27,11 @@ namespace MDKControl.Droid.Fragments
             args.PutString("titleLabel", titleLabel);
             args.PutFloat("value", (float)value);
 
-            var f = new TimeViewFragment();
-            f.Arguments = args;
-            f.ShowsDialog = true;
+            var f = new TimeViewFragment
+            {
+                Arguments = args,
+                ShowsDialog = true
+            };
 
             return f;
         }
@@ -69,14 +71,12 @@ namespace MDKControl.Droid.Fragments
             CloseButton.Click += (o, e) => 
                 { 
                     Dismiss();  
-                    var handler = Closed;
-                    if (handler != null) handler(this, Value);
+                    Closed?.Invoke(this, Value);
                 };
             CancelButton.Click += (o, e) => 
                 { 
                     Dismiss(); 
-                    var handler = Canceled;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Canceled?.Invoke(this, EventArgs.Empty);
                 };
         }
 
@@ -96,59 +96,17 @@ namespace MDKControl.Droid.Fragments
             }
         }
 
-        public NumberPicker HoursPicker
-        {
-            get
-            {
-                return _hoursPicker
-                    ?? (_hoursPicker = View.FindViewById<NumberPicker>(Resource.Id.Hours));
-            }
-        }
+        public NumberPicker HoursPicker => _hoursPicker ?? (_hoursPicker = View.FindViewById<NumberPicker>(Resource.Id.Hours));
 
-        public NumberPicker MinutesPicker
-        {
-            get
-            {
-                return _minutesPicker
-                    ?? (_minutesPicker = View.FindViewById<NumberPicker>(Resource.Id.Minutes));
-            }
-        }
+        public NumberPicker MinutesPicker => _minutesPicker ?? (_minutesPicker = View.FindViewById<NumberPicker>(Resource.Id.Minutes));
 
-        public NumberPicker SecondsPicker
-        {
-            get
-            {
-                return _secondsPicker
-                    ?? (_secondsPicker = View.FindViewById<NumberPicker>(Resource.Id.Seconds));
-            }
-        }
+        public NumberPicker SecondsPicker => _secondsPicker ?? (_secondsPicker = View.FindViewById<NumberPicker>(Resource.Id.Seconds));
 
-        public NumberPicker HundrethsPicker
-        {
-            get
-            {
-                return _hundrethsPicker
-                    ?? (_hundrethsPicker = View.FindViewById<NumberPicker>(Resource.Id.Hundredths));
-            }
-        }
+        public NumberPicker HundrethsPicker => _hundrethsPicker ?? (_hundrethsPicker = View.FindViewById<NumberPicker>(Resource.Id.Hundredths));
 
-        public Button CloseButton
-        {
-            get
-            {
-                return _closeButton
-                    ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
-            }
-        }
+        public Button CloseButton => _closeButton ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
 
-        public Button CancelButton
-        {
-            get
-            {
-                return _cancelButton
-                    ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
-            }
-        }
+        public Button CancelButton => _cancelButton ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
     }
 }
     

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MDKControl.Droid
+﻿namespace MDKControl.Droid
 {
     public static class Consts
     {

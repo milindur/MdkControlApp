@@ -8,7 +8,7 @@ using Reactive.Bindings;
 
 namespace MDKControl.iOS
 {
-    partial class JoystickViewController : SubDeviceViewControllerBase, INavigationTarget
+    internal partial class JoystickViewController : SubDeviceViewControllerBase, INavigationTarget
 	{
         public JoystickViewController(IntPtr handle)
             : base(handle, MoCoBusProgramMode.Invalid, AppDelegate.JoystickViewKey)
@@ -19,13 +19,7 @@ namespace MDKControl.iOS
 
         public JoystickViewModel Vm { get; private set; }
 
-        public override DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return Vm.DeviceViewModel;
-            }
-        }
+        public override DeviceViewModel DeviceVm => Vm.DeviceViewModel;
 
         private Action Dismissed { get; set; }
 
@@ -42,7 +36,7 @@ namespace MDKControl.iOS
             
             SetButton.Clicked += (sender, e) => 
                 {
-                    Dismissed.Invoke();
+                    Dismissed?.Invoke();
                     ServiceLocator.Current.GetInstance<INavigationService>().GoBack();
                 };
 
@@ -82,11 +76,6 @@ namespace MDKControl.iOS
             DetachBindings();
 
             base.SetupBindings();
-        }
-
-        protected override void DetachBindings()
-        {
-            base.DetachBindings();
         }
 	}
 }

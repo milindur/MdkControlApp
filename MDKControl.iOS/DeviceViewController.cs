@@ -11,9 +11,9 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    partial class DeviceViewController : UITableViewController, INavigationTarget
+    internal partial class DeviceViewController : UITableViewController, INavigationTarget
 	{
-        private bool _modeChangeRequested = false;
+        private bool _modeChangeRequested;
         
         private Binding _isConnectedBinding;
         private Binding _programModeBinding;

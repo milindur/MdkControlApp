@@ -51,10 +51,12 @@ namespace MDKControl.Droid.Fragments
 
             var args = new Bundle();
 
-            var f = new ModeSmsStatusViewFragment();
-            f.Arguments = args;
-            f.ShowsDialog = true;
-            f.Cancelable = false;
+            var f = new ModeSmsStatusViewFragment
+            {
+                Arguments = args,
+                ShowsDialog = true,
+                Cancelable = false
+            };
 
             return f;
         }
@@ -84,18 +86,15 @@ namespace MDKControl.Droid.Fragments
 
             ResumeButton.Click += (o, e) => 
                 { 
-                    var handler = Resumed;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Resumed?.Invoke(this, EventArgs.Empty);
                 };
             PauseButton.Click += (o, e) => 
                 { 
-                    var handler = Paused;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Paused?.Invoke(this, EventArgs.Empty);
                 };
             StopButton.Click += (o, e) => 
                 { 
-                    var handler = Stoped;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Stoped?.Invoke(this, EventArgs.Empty);
                     Dismiss();
                 };
         }
@@ -130,39 +129,39 @@ namespace MDKControl.Droid.Fragments
                 });
             _elapsedTimeBinding = this.SetBinding(() => Vm.ElapsedTime).WhenSourceChanges(() =>
                 {
-                    ElapsedTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.ElapsedTime.TotalMinutes, Vm.ElapsedTime.Seconds);
+                    ElapsedTimeEditText.Text = $"{(int) Vm.ElapsedTime.TotalMinutes}:{Vm.ElapsedTime.Seconds:00}m";
                 });
             _elapsedShotsBinding = this.SetBinding(() => Vm.ElapsedShots).WhenSourceChanges(() =>
                 {
-                    ElapsedShotsEditText.Text = string.Format("{0}", Vm.ElapsedShots);
+                    ElapsedShotsEditText.Text = $"{Vm.ElapsedShots}";
                 });
             _remainingTimeBinding = this.SetBinding(() => Vm.RemainingTime).WhenSourceChanges(() =>
                 {
-                    RemainingTimeEditText.Text = string.Format("{0}:{1:00}m", (int)Vm.RemainingTime.TotalMinutes, Vm.RemainingTime.Seconds);
+                    RemainingTimeEditText.Text = $"{(int) Vm.RemainingTime.TotalMinutes}:{Vm.RemainingTime.Seconds:00}m";
                 });
             _remainingShotsBinding = this.SetBinding(() => Vm.RemainingShots).WhenSourceChanges(() =>
                 {
-                    RemainingShotsEditText.Text = string.Format("{0}", Vm.RemainingShots);
+                    RemainingShotsEditText.Text = $"{Vm.RemainingShots}";
                 });
             _overallTimeBinding = this.SetBinding(() => Vm.DurationTime).WhenSourceChanges(() =>
                 {
-                    OverallTimeEditText.Text = string.Format("{0}:{1:00}m", (int)(Vm.DurationTime / 60), (int)Vm.DurationTime % 60);
+                    OverallTimeEditText.Text = $"{(int) (Vm.DurationTime/60)}:{(int) Vm.DurationTime%60:00}m";
                 });
             _overallShotsBinding = this.SetBinding(() => Vm.MaxShots).WhenSourceChanges(() =>
                 {
-                    OverallShotsEditText.Text = string.Format("{0}", Vm.MaxShots);
+                    OverallShotsEditText.Text = $"{Vm.MaxShots}";
                 });
             _videoLength24Binding = this.SetBinding(() => Vm.VideoLength24).WhenSourceChanges(() =>
                 {
-                    VideoLength24EditText.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength24.TotalMinutes, Vm.VideoLength24.Seconds);
+                    VideoLength24EditText.Text = $"{(int) Vm.VideoLength24.TotalMinutes}:{Vm.VideoLength24.Seconds:00}m";
                 });
             _videoLength25Binding = this.SetBinding(() => Vm.VideoLength25).WhenSourceChanges(() =>
                 {
-                    VideoLength25EditText.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength25.TotalMinutes, Vm.VideoLength25.Seconds);
+                    VideoLength25EditText.Text = $"{(int) Vm.VideoLength25.TotalMinutes}:{Vm.VideoLength25.Seconds:00}m";
                 });
             _videoLength30Binding = this.SetBinding(() => Vm.VideoLength30).WhenSourceChanges(() =>
                 {
-                    VideoLength30EditText.Text = string.Format("{0}:{1:00}m", (int)Vm.VideoLength30.TotalMinutes, Vm.VideoLength30.Seconds);
+                    VideoLength30EditText.Text = $"{(int) Vm.VideoLength30.TotalMinutes}:{Vm.VideoLength30.Seconds:00}m";
                 });
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() =>
                 {
@@ -202,138 +201,35 @@ namespace MDKControl.Droid.Fragments
             base.OnPause();
         }
 
-        public ModeSmsViewModel Vm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
-            }
-        }
+        public ModeSmsViewModel Vm => ((DeviceViewActivity)_activity).Vm.ModeSmsViewModel;
 
-        public DeviceViewModel DeviceVm
-        {
-            get
-            {
-                return ((DeviceViewActivity)_activity).Vm;
-            }
-        }
+        public DeviceViewModel DeviceVm => ((DeviceViewActivity)_activity).Vm;
 
-        public Button ResumeButton
-        {
-            get
-            {
-                return _resumeButton
-                    ?? (_resumeButton = View.FindViewById<Button>(Resource.Id.Resume));
-            }
-        }
+        public Button ResumeButton => _resumeButton ?? (_resumeButton = View.FindViewById<Button>(Resource.Id.Resume));
 
-        public Button PauseButton
-        {
-            get
-            {
-                return _pauseButton
-                    ?? (_pauseButton = View.FindViewById<Button>(Resource.Id.Pause));
-            }
-        }
+        public Button PauseButton => _pauseButton ?? (_pauseButton = View.FindViewById<Button>(Resource.Id.Pause));
 
-        public Button StopButton
-        {
-            get
-            {
-                return _stopButton
-                    ?? (_stopButton = View.FindViewById<Button>(Resource.Id.Stop));
-            }
-        }
+        public Button StopButton => _stopButton ?? (_stopButton = View.FindViewById<Button>(Resource.Id.Stop));
 
-        public ProgressBar ProgressBar
-        {
-            get
-            {
-                return _progressBar
-                    ?? (_progressBar = View.FindViewById<ProgressBar>(Resource.Id.Progress));
-            }
-        }
+        public ProgressBar ProgressBar => _progressBar ?? (_progressBar = View.FindViewById<ProgressBar>(Resource.Id.Progress));
 
-        public EditText ElapsedTimeEditText
-        {
-            get
-            {
-                return _elapsedTimeEditText
-                    ?? (_elapsedTimeEditText = View.FindViewById<EditText>(Resource.Id.ElapsedTime));
-            }
-        }
+        public EditText ElapsedTimeEditText => _elapsedTimeEditText ?? (_elapsedTimeEditText = View.FindViewById<EditText>(Resource.Id.ElapsedTime));
 
-        public EditText ElapsedShotsEditText
-        {
-            get
-            {
-                return _elapsedShotsEditText
-                    ?? (_elapsedShotsEditText = View.FindViewById<EditText>(Resource.Id.ElapsedShots));
-            }
-        }
+        public EditText ElapsedShotsEditText => _elapsedShotsEditText ?? (_elapsedShotsEditText = View.FindViewById<EditText>(Resource.Id.ElapsedShots));
 
-        public EditText RemainingTimeEditText
-        {
-            get
-            {
-                return _remainingTimeEditText
-                    ?? (_remainingTimeEditText = View.FindViewById<EditText>(Resource.Id.RemainingTime));
-            }
-        }
+        public EditText RemainingTimeEditText => _remainingTimeEditText ?? (_remainingTimeEditText = View.FindViewById<EditText>(Resource.Id.RemainingTime));
 
-        public EditText RemainingShotsEditText
-        {
-            get
-            {
-                return _remainingShotsEditText
-                    ?? (_remainingShotsEditText = View.FindViewById<EditText>(Resource.Id.RemainingShots));
-            }
-        }
+        public EditText RemainingShotsEditText => _remainingShotsEditText ?? (_remainingShotsEditText = View.FindViewById<EditText>(Resource.Id.RemainingShots));
 
-        public EditText OverallTimeEditText
-        {
-            get
-            {
-                return _overallTimeEditText
-                    ?? (_overallTimeEditText = View.FindViewById<EditText>(Resource.Id.OverallTime));
-            }
-        }
+        public EditText OverallTimeEditText => _overallTimeEditText ?? (_overallTimeEditText = View.FindViewById<EditText>(Resource.Id.OverallTime));
 
-        public EditText OverallShotsEditText
-        {
-            get
-            {
-                return _overallShotsEditText
-                    ?? (_overallShotsEditText = View.FindViewById<EditText>(Resource.Id.OverallShots));
-            }
-        }
+        public EditText OverallShotsEditText => _overallShotsEditText ?? (_overallShotsEditText = View.FindViewById<EditText>(Resource.Id.OverallShots));
 
-        public EditText VideoLength24EditText
-        {
-            get
-            {
-                return _videoLength24EditText
-                    ?? (_videoLength24EditText = View.FindViewById<EditText>(Resource.Id.VideoLength24));
-            }
-        }
+        public EditText VideoLength24EditText => _videoLength24EditText ?? (_videoLength24EditText = View.FindViewById<EditText>(Resource.Id.VideoLength24));
 
-        public EditText VideoLength25EditText
-        {
-            get
-            {
-                return _videoLength25EditText
-                    ?? (_videoLength25EditText = View.FindViewById<EditText>(Resource.Id.VideoLength25));
-            }
-        }
+        public EditText VideoLength25EditText => _videoLength25EditText ?? (_videoLength25EditText = View.FindViewById<EditText>(Resource.Id.VideoLength25));
 
-        public EditText VideoLength30EditText
-        {
-            get
-            {
-                return _videoLength30EditText
-                    ?? (_videoLength30EditText = View.FindViewById<EditText>(Resource.Id.VideoLength30));
-            }
-        }
+        public EditText VideoLength30EditText => _videoLength30EditText ?? (_videoLength30EditText = View.FindViewById<EditText>(Resource.Id.VideoLength30));
     }
 }
     

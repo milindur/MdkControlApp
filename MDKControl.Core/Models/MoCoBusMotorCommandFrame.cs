@@ -17,7 +17,7 @@ namespace MDKControl.Core.Models
 
         public override string ToString()
         {
-            return string.Format("[MoCoBusMotorCommandFrame: Address={0}, Motor={1}, Command={2}, Data={3}]", Address, SubAddress, Command, BitConverter.ToString(Data));
+            return $"[MoCoBusMotorCommandFrame: Address={Address}, Motor={SubAddress}, Command={Command}, Data={BitConverter.ToString(Data)}]";
         }
     }
 }

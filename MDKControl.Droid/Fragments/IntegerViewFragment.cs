@@ -27,9 +27,11 @@ namespace MDKControl.Droid.Fragments
             args.PutString("titleLabel", titleLabel);
             args.PutInt("value", value);
 
-            var f = new IntegerViewFragment();
-            f.Arguments = args;
-            f.ShowsDialog = true;
+            var f = new IntegerViewFragment
+            {
+                Arguments = args,
+                ShowsDialog = true
+            };
 
             return f;
         }
@@ -69,14 +71,12 @@ namespace MDKControl.Droid.Fragments
 
             CloseButton.Click += (o, e) => 
                 { 
-                    var handler = Closed;
-                    if (handler != null) handler(this, Value);
+                    Closed?.Invoke(this, Value);
                     Dismiss();  
                 };
             CancelButton.Click += (o, e) => 
                 { 
-                    var handler = Canceled;
-                    if (handler != null) handler(this, EventArgs.Empty);
+                    Canceled?.Invoke(this, EventArgs.Empty);
                     Dismiss(); 
                 };
         }
@@ -93,59 +93,17 @@ namespace MDKControl.Droid.Fragments
             }
         }
 
-        public NumberPicker OnePicker
-        {
-            get
-            {
-                return _onePicker
-                    ?? (_onePicker = View.FindViewById<NumberPicker>(Resource.Id.One));
-            }
-        }
+        public NumberPicker OnePicker => _onePicker ?? (_onePicker = View.FindViewById<NumberPicker>(Resource.Id.One));
 
-        public NumberPicker TenPicker
-        {
-            get
-            {
-                return _tenPicker
-                    ?? (_tenPicker = View.FindViewById<NumberPicker>(Resource.Id.Ten));
-            }
-        }
+        public NumberPicker TenPicker => _tenPicker ?? (_tenPicker = View.FindViewById<NumberPicker>(Resource.Id.Ten));
 
-        public NumberPicker HundredPicker
-        {
-            get
-            {
-                return _hundredPicker
-                    ?? (_hundredPicker = View.FindViewById<NumberPicker>(Resource.Id.Hundred));
-            }
-        }
+        public NumberPicker HundredPicker => _hundredPicker ?? (_hundredPicker = View.FindViewById<NumberPicker>(Resource.Id.Hundred));
 
-        public NumberPicker ThousandPicker
-        {
-            get
-            {
-                return _thousandPicker
-                    ?? (_thousandPicker = View.FindViewById<NumberPicker>(Resource.Id.Thousand));
-            }
-        }
+        public NumberPicker ThousandPicker => _thousandPicker ?? (_thousandPicker = View.FindViewById<NumberPicker>(Resource.Id.Thousand));
 
-        public Button CloseButton
-        {
-            get
-            {
-                return _closeButton
-                    ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
-            }
-        }
+        public Button CloseButton => _closeButton ?? (_closeButton = View.FindViewById<Button>(Resource.Id.Close));
 
-        public Button CancelButton
-        {
-            get
-            {
-                return _cancelButton
-                    ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
-            }
-        }
+        public Button CancelButton => _cancelButton ?? (_cancelButton = View.FindViewById<Button>(Resource.Id.Cancel));
     }
 }
     

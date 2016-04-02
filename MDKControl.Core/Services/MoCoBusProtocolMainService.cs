@@ -25,14 +25,14 @@ namespace MDKControl.Core.Services
         public async Task Start(byte arg)
         {
             await _commService
-                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, new byte[] { arg }))
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, new[] { arg }))
                 .ConfigureAwait(false);
         }
 
         public async Task Start(byte arg1, byte arg2)
         {
             await _commService
-                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, new byte[] { arg1, arg2 }))
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, new[] { arg1, arg2 }))
                 .ConfigureAwait(false);
         }
 
@@ -53,7 +53,7 @@ namespace MDKControl.Core.Services
         public async Task SetProgramMode(MoCoBusProgramMode mode)
         {
             await _commService
-                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramMode, new byte[] { (byte)mode }))
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramMode, new[] { (byte)mode }))
                 .ConfigureAwait(false);
         }
 

@@ -27,12 +27,9 @@ namespace MDKControl.Core.ViewModels
             _protocolService = protocolService;
         }
 
-        public DeviceViewModel DeviceViewModel { get { return _deviceViewModel; } }
+        public DeviceViewModel DeviceViewModel => _deviceViewModel;
 
-        public RelayCommand ResumeProgramCommand
-        {
-            get { return _resumeProgramCommand ?? (_resumeProgramCommand = new RelayCommand(ResumeProgram)); }
-        }
+        public RelayCommand ResumeProgramCommand => _resumeProgramCommand ?? (_resumeProgramCommand = new RelayCommand(ResumeProgram));
 
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
@@ -56,15 +53,9 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        public RelayCommand PauseProgramCommand
-        {
-            get { return _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram)); }
-        }
+        public RelayCommand PauseProgramCommand => _pauseProgramCommand ?? (_pauseProgramCommand = new RelayCommand(PauseProgram));
 
-        public RelayCommand StopProgramCommand
-        {
-            get { return _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram)); }
-        }
+        public RelayCommand StopProgramCommand => _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram));
 
         private async void ResumeProgram()
         {
