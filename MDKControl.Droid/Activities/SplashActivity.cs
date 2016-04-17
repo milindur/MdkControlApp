@@ -8,7 +8,7 @@ using Xamarin;
 
 namespace MDKControl.Droid.Activities
 {
-    [Activity(Label = "MDK Control", Icon = "@drawable/ic_launcher", Theme = "@style/Splash", MainLauncher = true, NoHistory = true, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "MDK Control (Shutter Mode)", Icon = "@drawable/ic_launcher", Theme = "@style/Splash", MainLauncher = true, NoHistory = true, ScreenOrientation = ScreenOrientation.Portrait)]
     public class SplashActivity : ActivityBaseEx
     {
         protected override async void OnCreate(Bundle savedInstanceState)

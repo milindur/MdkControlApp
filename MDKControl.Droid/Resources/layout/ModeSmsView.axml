@@ -123,6 +123,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:id="@+id/SetShutterStart"
+            android:text="Set Shutter Open"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/SetShutterStop"
+            android:text="Set Shutter Close"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/SwapShutterStartStop"
+            android:text="Swap Shutter"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
             android:id="@+id/SetStart"
             android:text="Set Start"
             android:layout_height="wrap_content"

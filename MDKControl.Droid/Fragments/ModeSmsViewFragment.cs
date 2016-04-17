@@ -33,6 +33,9 @@ namespace MDKControl.Droid.Fragments
         private Button _setStartButton;
         private Button _setStopButton;
         private Button _swapStartStopButton;
+        private Button _setShutterStartButton;
+        private Button _setShutterStopButton;
+        private Button _swapShutterStartStopButton;
         private Button _startProgramButton;
 
         private EditText _exposureTimeEditText;
@@ -115,6 +118,24 @@ namespace MDKControl.Droid.Fragments
 
             SwapStartStopButton.Click += (o, e) => {};
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
+
+            SetShutterStartButton.Click += (o, e) =>
+            {
+                var dlg = JoystickViewFragment.NewInstance("Set Shutter Open");
+                dlg.Closed += (oo, ee) => { };
+                dlg.SetCommand("Closed", Vm.SetShutterStartCommand);
+                dlg.Show(FragmentManager, Consts.DialogTag);
+            };
+            SetShutterStopButton.Click += (o, e) =>
+            {
+                var dlg = JoystickViewFragment.NewInstance("Set Shutter Close");
+                dlg.Closed += (oo, ee) => { };
+                dlg.SetCommand("Closed", Vm.SetShutterStopCommand);
+                dlg.Show(FragmentManager, Consts.DialogTag);
+            };
+
+            SwapShutterStartStopButton.Click += (o, e) => { };
+            SwapShutterStartStopButton.SetCommand("Click", Vm.SwapShutterStartStopCommand);
 
             StartProgramButton.Click += (o, e) => 
                 {
@@ -306,6 +327,12 @@ namespace MDKControl.Droid.Fragments
         public Button SetStopButton => _setStopButton ?? (_setStopButton = View.FindViewById<Button>(Resource.Id.SetStop));
 
         public Button SwapStartStopButton => _swapStartStopButton ?? (_swapStartStopButton = View.FindViewById<Button>(Resource.Id.SwapStartStop));
+
+        public Button SetShutterStartButton => _setShutterStartButton ?? (_setShutterStartButton = View.FindViewById<Button>(Resource.Id.SetShutterStart));
+
+        public Button SetShutterStopButton => _setShutterStopButton ?? (_setShutterStopButton = View.FindViewById<Button>(Resource.Id.SetShutterStop));
+
+        public Button SwapShutterStartStopButton => _swapShutterStartStopButton ?? (_swapShutterStartStopButton = View.FindViewById<Button>(Resource.Id.SwapShutterStartStop));
 
         public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
 
