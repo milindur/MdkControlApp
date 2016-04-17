@@ -16,7 +16,7 @@ namespace MDKControl.Core.ViewModels
         private readonly DeviceViewModel _deviceViewModel;
         private readonly IMoCoBusProtocolService _protocolService;
 
-        private Point _joystickCurrentPoint;
+        private Point _joystickCurrentPoint = new Point(0, 0);
         private float _sliderCurrentPoint;
 
         private bool _sliderOrJoystickIsRunning;
