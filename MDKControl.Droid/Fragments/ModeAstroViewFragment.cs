@@ -46,6 +46,9 @@ namespace MDKControl.Droid.Fragments
                     var ft = FragmentManager.BeginTransaction();
                     ft.DisallowAddToBackStack();
                     var dlg = ModeAstroStatusViewFragment.NewInstance();
+                    dlg.Stoped += (oo, ee) => { };
+                    dlg.Paused += (oo, ee) => { };
+                    dlg.Resumed += (oo, ee) => { };
                     dlg.SetCommand("Stoped", Vm.StopProgramCommand);
                     dlg.SetCommand("Paused", Vm.PauseProgramCommand);
                     dlg.SetCommand("Resumed", Vm.StartProgramCommand);
@@ -87,11 +90,14 @@ namespace MDKControl.Droid.Fragments
                                 {
                                     var ft = FragmentManager.BeginTransaction();
                                     ft.DisallowAddToBackStack();
-                                    dlg = ModeAstroStatusViewFragment.NewInstance();
-                                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                                    dlg.SetCommand("Resumed", Vm.ResumeProgramCommand);
-                                    dlg.Show(ft, Consts.DialogTag);
+                                    var dlg2 = ModeAstroStatusViewFragment.NewInstance();
+                                    dlg2.Stoped += (oo, ee) => { };
+                                    dlg2.Paused += (oo, ee) => { };
+                                    dlg2.Resumed += (oo, ee) => { };
+                                    dlg2.SetCommand("Stoped", Vm.StopProgramCommand);
+                                    dlg2.SetCommand("Paused", Vm.PauseProgramCommand);
+                                    dlg2.SetCommand("Resumed", Vm.ResumeProgramCommand);
+                                    dlg2.Show(ft, Consts.DialogTag);
                                 }
                                 DeviceVm.StartUpdateTask();
                             }

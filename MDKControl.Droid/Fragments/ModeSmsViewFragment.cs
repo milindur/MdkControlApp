@@ -101,12 +101,14 @@ namespace MDKControl.Droid.Fragments
             SetStartButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Start");
+                    dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
             SetStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
+                    dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetStopCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
@@ -121,6 +123,9 @@ namespace MDKControl.Droid.Fragments
                     var ft = FragmentManager.BeginTransaction();
                     ft.DisallowAddToBackStack();
                     var dlg = ModeSmsStatusViewFragment.NewInstance();
+                    dlg.Stoped += (oo, ee) => { };
+                    dlg.Paused += (oo, ee) => { };
+                    dlg.Resumed += (oo, ee) => { };
                     dlg.SetCommand("Stoped", Vm.StopProgramCommand);
                     dlg.SetCommand("Paused", Vm.PauseProgramCommand);
                     dlg.SetCommand("Resumed", Vm.StartProgramCommand);
@@ -172,11 +177,14 @@ namespace MDKControl.Droid.Fragments
 
                                     var ft = FragmentManager.BeginTransaction();
                                     ft.DisallowAddToBackStack();
-                                    dlg = ModeSmsStatusViewFragment.NewInstance();
-                                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
-                                    dlg.Show(ft, Consts.DialogTag);
+                                    var dlg2 = ModeSmsStatusViewFragment.NewInstance();
+                                    dlg2.Stoped += (oo, ee) => { };
+                                    dlg2.Paused += (oo, ee) => { };
+                                    dlg2.Resumed += (oo, ee) => { };
+                                    dlg2.SetCommand("Stoped", Vm.StopProgramCommand);
+                                    dlg2.SetCommand("Paused", Vm.PauseProgramCommand);
+                                    dlg2.SetCommand("Resumed", Vm.StartProgramCommand);
+                                    dlg2.Show(ft, Consts.DialogTag);
                                 }
                                 DeviceVm.StartUpdateTask();
                             }

@@ -72,12 +72,14 @@ namespace MDKControl.Droid.Fragments
             SetStartButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Start");
+                    dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
             SetStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
+                    dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetStopCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
@@ -88,12 +90,14 @@ namespace MDKControl.Droid.Fragments
             SetRefStartButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Fov Start");
+                    dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetRefStartCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
             SetRefStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Fov Stop");
+                    dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetRefStopCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
@@ -105,6 +109,9 @@ namespace MDKControl.Droid.Fragments
                     var ft = FragmentManager.BeginTransaction();
                     ft.DisallowAddToBackStack();
                     var dlg = ModePanoStatusViewFragment.NewInstance();
+                    dlg.Stoped += (oo, ee) => { };
+                    dlg.Paused += (oo, ee) => { };
+                    dlg.Resumed += (oo, ee) => { };
                     dlg.SetCommand("Stoped", Vm.StopProgramCommand);
                     dlg.SetCommand("Paused", Vm.PauseProgramCommand);
                     dlg.SetCommand("Resumed", Vm.StartProgramCommand);
@@ -146,11 +153,14 @@ namespace MDKControl.Droid.Fragments
                                 {
                                     var ft = FragmentManager.BeginTransaction();
                                     ft.DisallowAddToBackStack();
-                                    dlg = ModePanoStatusViewFragment.NewInstance();
-                                    dlg.SetCommand("Stoped", Vm.StopProgramCommand);
-                                    dlg.SetCommand("Paused", Vm.PauseProgramCommand);
-                                    dlg.SetCommand("Resumed", Vm.StartProgramCommand);
-                                    dlg.Show(ft, Consts.DialogTag);
+                                    var dlg2 = ModePanoStatusViewFragment.NewInstance();
+                                    dlg2.Stoped += (oo, ee) => { };
+                                    dlg2.Paused += (oo, ee) => { };
+                                    dlg2.Resumed += (oo, ee) => { };
+                                    dlg2.SetCommand("Stoped", Vm.StopProgramCommand);
+                                    dlg2.SetCommand("Paused", Vm.PauseProgramCommand);
+                                    dlg2.SetCommand("Resumed", Vm.StartProgramCommand);
+                                    dlg2.Show(ft, Consts.DialogTag);
                                 }
                                 DeviceVm.StartUpdateTask();
                             }
