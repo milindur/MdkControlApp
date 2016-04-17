@@ -22,8 +22,11 @@ namespace MDKControl.Core.Services
         Task SetJoystickWatchdog(bool enable);
 
         Task SetProgramStartPoint();
+        Task SetProgramStartPoint(Motors motors);
         Task SetProgramStopPoint();
+        Task SetProgramStopPoint(Motors motors);
         Task ReverseAllMotorsStartStopPoints();
+        Task ReverseAllMotorsStartStopPoints(Motors motors);
 
         Task<int> GetFirmwareVersion();
 

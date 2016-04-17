@@ -90,6 +90,13 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task SetProgramStartPoint(Motors motors)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramStartPoint, new[] { (byte)motors }))
+                .ConfigureAwait(false);
+        }
+
         public async Task SetProgramStopPoint()
         {
             await _commService
@@ -97,10 +104,24 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task SetProgramStopPoint(Motors motors)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.SetProgramStopPoint, new[] { (byte)motors }))
+                .ConfigureAwait(false);
+        }
+
         public async Task ReverseAllMotorsStartStopPoints()
         {
             await _commService
                 .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.ReverseAllMotorsStartStopPoints, null))
+                .ConfigureAwait(false);
+        }
+
+        public async Task ReverseAllMotorsStartStopPoints(Motors motors)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.ReverseAllMotorsStartStopPoints, new[] { (byte)motors }))
                 .ConfigureAwait(false);
         }
 

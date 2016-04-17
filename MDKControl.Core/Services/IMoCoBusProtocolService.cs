@@ -4,8 +4,8 @@ namespace MDKControl.Core.Services
 	{
         IMoCoBusProtocolMainService Main { get; }
         IMoCoBusProtocolCameraService Camera { get; }
-        IMoCoBusProtocolMotorService Motor1 { get; }
-        IMoCoBusProtocolMotorService Motor2 { get; }
-        IMoCoBusProtocolMotorService Motor3 { get; }
+        IMoCoBusProtocolMotorService MotorSlider { get; }
+        IMoCoBusProtocolMotorService MotorPan { get; }
+        IMoCoBusProtocolMotorService MotorTilt { get; }
 	}
 }

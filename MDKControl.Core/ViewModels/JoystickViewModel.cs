@@ -128,11 +128,11 @@ namespace MDKControl.Core.ViewModels
                                 var currentJoystick = _joystickCurrentPoint;
                                 var currentSlider = _sliderCurrentPoint;
                                 Debug.WriteLine($"SliderOrJoystickTask: Move! X={currentJoystick.X} Y={currentJoystick.Y} Z={currentSlider}");
-                                await _protocolService.Motor2.SetContinuousSpeed(currentJoystick.X).ConfigureAwait(false);
+                                await _protocolService.MotorPan.SetContinuousSpeed(currentJoystick.X).ConfigureAwait(false);
                                 await Task.Delay(20, token).ConfigureAwait(false);
-                                await _protocolService.Motor3.SetContinuousSpeed(currentJoystick.Y).ConfigureAwait(false);
+                                await _protocolService.MotorTilt.SetContinuousSpeed(currentJoystick.Y).ConfigureAwait(false);
                                 await Task.Delay(20, token).ConfigureAwait(false);
-                                await _protocolService.Motor1.SetContinuousSpeed(currentSlider).ConfigureAwait(false);
+                                await _protocolService.MotorSlider.SetContinuousSpeed(currentSlider).ConfigureAwait(false);
                                 await Task.Delay(20, token).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException)
@@ -156,11 +156,11 @@ namespace MDKControl.Core.ViewModels
                     try
                     {
                         Debug.WriteLine("SliderOrJoystickTask: Stop!");
-                        await _protocolService.Motor2.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await _protocolService.MotorPan.SetContinuousSpeed(0).ConfigureAwait(false);
                         await Task.Delay(20).ConfigureAwait(false);
-                        await _protocolService.Motor3.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await _protocolService.MotorTilt.SetContinuousSpeed(0).ConfigureAwait(false);
                         await Task.Delay(20).ConfigureAwait(false);
-                        await _protocolService.Motor1.SetContinuousSpeed(0).ConfigureAwait(false);
+                        await _protocolService.MotorSlider.SetContinuousSpeed(0).ConfigureAwait(false);
                         await Task.Delay(20).ConfigureAwait(false);
                     }
                     catch (Exception ex)

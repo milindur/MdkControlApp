@@ -6,15 +6,15 @@
         {
             Main = new MoCoBusProtocolMainService(commService, address);
             Camera = new MoCoBusProtocolCameraService(commService, address);
-            Motor1 = new MoCoBusProtocolMotorService(commService, address, 1);
-            Motor2 = new MoCoBusProtocolMotorService(commService, address, 2);
-            Motor3 = new MoCoBusProtocolMotorService(commService, address, 3);
+            MotorSlider = new MoCoBusProtocolMotorService(commService, address, 1);
+            MotorPan = new MoCoBusProtocolMotorService(commService, address, 2);
+            MotorTilt = new MoCoBusProtocolMotorService(commService, address, 3);
         }
 
         public IMoCoBusProtocolMainService Main { get; }
         public IMoCoBusProtocolCameraService Camera { get; }
-        public IMoCoBusProtocolMotorService Motor1 { get; }
-        public IMoCoBusProtocolMotorService Motor2 { get; }
-        public IMoCoBusProtocolMotorService Motor3 { get; }
+        public IMoCoBusProtocolMotorService MotorSlider { get; }
+        public IMoCoBusProtocolMotorService MotorPan { get; }
+        public IMoCoBusProtocolMotorService MotorTilt { get; }
     }
 }

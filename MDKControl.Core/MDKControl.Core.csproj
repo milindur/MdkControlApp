@@ -33,6 +33,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Motors.cs" />
     <Compile Include="Models\MoCoBusRunStatus.cs" />
     <Compile Include="Services\ConnectionState.cs" />
     <Compile Include="Models\MoCoBusCameraCommand.cs" />

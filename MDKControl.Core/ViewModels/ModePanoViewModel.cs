@@ -159,8 +159,8 @@ namespace MDKControl.Core.ViewModels
             {
                 await _protocolService.Main.SetProgramStartPoint().ConfigureAwait(false);
 
-                _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
-                _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
+                _panStartPos = await _protocolService.MotorPan.GetProgramStartPoint().ConfigureAwait(false);
+                _tiltStartPos = await _protocolService.MotorTilt.GetProgramStartPoint().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -182,8 +182,8 @@ namespace MDKControl.Core.ViewModels
             {
                 await _protocolService.Main.SetProgramStopPoint().ConfigureAwait(false);
 
-                _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
-                _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
+                _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
+                _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -205,10 +205,10 @@ namespace MDKControl.Core.ViewModels
             {
                 await _protocolService.Main.ReverseAllMotorsStartStopPoints().ConfigureAwait(false);
 
-                _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
-                _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
-                _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
-                _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
+                _panStartPos = await _protocolService.MotorPan.GetProgramStartPoint().ConfigureAwait(false);
+                _tiltStartPos = await _protocolService.MotorTilt.GetProgramStartPoint().ConfigureAwait(false);
+                _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
+                _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -230,8 +230,8 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
-                await _protocolService.Motor2.SetStartHere().ConfigureAwait(false);
-                await _protocolService.Motor3.SetStartHere().ConfigureAwait(false);
+                await _protocolService.MotorPan.SetStartHere().ConfigureAwait(false);
+                await _protocolService.MotorTilt.SetStartHere().ConfigureAwait(false);
             }
             catch (TimeoutException toe)
             {
@@ -243,8 +243,8 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
-                await _protocolService.Motor2.SetStopHere().ConfigureAwait(false);
-                await _protocolService.Motor3.SetStopHere().ConfigureAwait(false);
+                await _protocolService.MotorPan.SetStopHere().ConfigureAwait(false);
+                await _protocolService.MotorTilt.SetStopHere().ConfigureAwait(false);
             }
             catch (TimeoutException toe)
             {
@@ -271,8 +271,8 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
                 await _protocolService.Main.Start().ConfigureAwait(false);
 
-                _overallCols = await _protocolService.Motor2.GetTravelShots().ConfigureAwait(false);
-                _overallRows = await _protocolService.Motor3.GetTravelShots().ConfigureAwait(false);
+                _overallCols = await _protocolService.MotorPan.GetTravelShots().ConfigureAwait(false);
+                _overallRows = await _protocolService.MotorTilt.GetTravelShots().ConfigureAwait(false);
 
                 _deviceViewModel.StartUpdateTask();
             }
@@ -345,8 +345,8 @@ namespace MDKControl.Core.ViewModels
                 _elapsedTime = await _protocolService.Main.GetRunTime().ConfigureAwait(false);
                 _elapsedShots = await _protocolService.Camera.GetCurrentShots().ConfigureAwait(false);
                 _overallShots = await _protocolService.Camera.GetMaxShots().ConfigureAwait(false);
-                //_overallCols = await _protocolService.Motor2.GetTravelShots().ConfigureAwait(false);
-                //_overallRows = await _protocolService.Motor3.GetTravelShots().ConfigureAwait(false);
+                //_overallCols = await _protocolService.MotorPan.GetTravelShots().ConfigureAwait(false);
+                //_overallRows = await _protocolService.MotorTilt.GetTravelShots().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -371,10 +371,10 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
-                _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
-                _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
-                _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
-                _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
+                _panStartPos = await _protocolService.MotorPan.GetProgramStartPoint().ConfigureAwait(false);
+                _tiltStartPos = await _protocolService.MotorTilt.GetProgramStartPoint().ConfigureAwait(false);
+                _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
+                _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
                 _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
                 _delayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;

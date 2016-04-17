@@ -215,11 +215,11 @@ namespace MDKControl.Core.ViewModels
 
         public int TiltStopPosition => _tiltStopPos;
 
-        public RelayCommand SetStartCommand => _setStartCommand ?? (_setStartCommand = new RelayCommand(SetStart));
+        public RelayCommand SetStartCommand => _setStartCommand ?? (_setStartCommand = new RelayCommand(() => SetStart(Motors.MotorPan | Motors.MotorTilt)));
 
-        public RelayCommand SetStopCommand => _setStopCommand ?? (_setStopCommand = new RelayCommand(SetStop));
+        public RelayCommand SetStopCommand => _setStopCommand ?? (_setStopCommand = new RelayCommand(() => SetStop(Motors.MotorPan | Motors.MotorTilt)));
 
-        public RelayCommand SwapStartStopCommand => _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(SwapStartStop));
+        public RelayCommand SwapStartStopCommand => _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(() => SwapStartStop(Motors.MotorPan | Motors.MotorTilt)));
 
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
@@ -247,15 +247,15 @@ namespace MDKControl.Core.ViewModels
 
         public RelayCommand StopProgramCommand => _stopProgramCommand ?? (_stopProgramCommand = new RelayCommand(StopProgram));
 
-        private async void SetStart()
+        private async void SetStart(Motors motors)
         {
             try
             {
-                await _protocolService.Main.SetProgramStartPoint().ConfigureAwait(false);
+                await _protocolService.Main.SetProgramStartPoint(motors).ConfigureAwait(false);
 
-                _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint().ConfigureAwait(false);
-                _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
-                _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
+                _sliderStartPos = await _protocolService.MotorSlider.GetProgramStartPoint().ConfigureAwait(false);
+                _panStartPos = await _protocolService.MotorPan.GetProgramStartPoint().ConfigureAwait(false);
+                _tiltStartPos = await _protocolService.MotorTilt.GetProgramStartPoint().ConfigureAwait(false);
         
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -270,15 +270,15 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        private async void SetStop()
+        private async void SetStop(Motors motors)
         {
             try
             {
-                await _protocolService.Main.SetProgramStopPoint().ConfigureAwait(false);
+                await _protocolService.Main.SetProgramStopPoint(motors).ConfigureAwait(false);
 
-                _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint().ConfigureAwait(false);
-                _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
-                _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
+                _sliderStopPos = await _protocolService.MotorSlider.GetProgramStopPoint().ConfigureAwait(false);
+                _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
+                _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -293,18 +293,18 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        private async  void SwapStartStop()
+        private async  void SwapStartStop(Motors motors)
         {
             try
             {
-                await _protocolService.Main.ReverseAllMotorsStartStopPoints().ConfigureAwait(false);
+                await _protocolService.Main.ReverseAllMotorsStartStopPoints(motors).ConfigureAwait(false);
 
-                _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint().ConfigureAwait(false);
-                _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
-                _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
-                _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint().ConfigureAwait(false);
-                _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
-                _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
+                _sliderStartPos = await _protocolService.MotorSlider.GetProgramStartPoint().ConfigureAwait(false);
+                _panStartPos = await _protocolService.MotorPan.GetProgramStartPoint().ConfigureAwait(false);
+                _tiltStartPos = await _protocolService.MotorTilt.GetProgramStartPoint().ConfigureAwait(false);
+                _sliderStopPos = await _protocolService.MotorSlider.GetProgramStopPoint().ConfigureAwait(false);
+                _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
+                _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
