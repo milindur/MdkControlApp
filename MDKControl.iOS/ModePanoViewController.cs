@@ -17,6 +17,8 @@ namespace MDKControl.iOS
         private Binding _exposureTimeBinding;
         private Binding _preDelayTimeBinding;
         private Binding _delayTimeBinding;
+        private Binding _pauseBinding;
+        private Binding _repititionsBinding;
 
         private Binding _panStartPosBinding;
         private Binding _panStopPosBinding;
@@ -33,6 +35,8 @@ namespace MDKControl.iOS
         private bool _editingPreDelay;
         private bool _editingExposure;
         private bool _editingPostDelay;
+        private bool _editingPause;
+        private bool _editingRepititions;
 
         public ModePanoViewController(IntPtr handle)
             : base(handle, MoCoBusProgramMode.Panorama, AppDelegate.ModePanoViewKey)
@@ -81,6 +85,20 @@ namespace MDKControl.iOS
                 var t = (decimal)PostDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds;
                 if (Vm.DelayTime != t)
                     Vm.DelayTime = t;
+            };
+
+            PauseValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
+            {
+                var t = (decimal)PauseValuePickerTableViewCell.Model.SelectedTime.TotalSeconds;
+                if (Vm.PauseTime != t)
+                    Vm.PauseTime = t;
+            };
+
+            RepititionsValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
+            {
+                var t = (ushort)RepititionsValuePickerTableViewCell.Model.SelectedNumber;
+                if (Vm.Repititions != t)
+                    Vm.Repititions = t;
             };
 
             StartButton.Clicked += (sender, e) => 
@@ -150,6 +168,26 @@ namespace MDKControl.iOS
                 }
             });
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _pauseBinding = this.SetBinding(() => Vm.PauseTime).WhenSourceChanges(() =>
+            {
+                PauseValueLabel.Text = $"{Vm.PauseTime:F1}s";
+                if ((decimal)PauseValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.PauseTime)
+                {
+                    PauseValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.PauseTime);
+                }
+            });
+            _pauseBinding.ForceUpdateValueFromSourceToTarget();
+
+            _repititionsBinding = this.SetBinding(() => Vm.Repititions).WhenSourceChanges(() =>
+            {
+                RepititionsValueLabel.Text = $"{Vm.Repititions}";
+                if ((ushort)RepititionsValuePickerTableViewCell.Model.SelectedNumber != Vm.Repititions)
+                {
+                    RepititionsValuePickerTableViewCell.Model.SelectedNumber = Vm.Repititions;
+                }
+            });
+            _repititionsBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition).WhenSourceChanges(() => 
             {
@@ -225,6 +263,12 @@ namespace MDKControl.iOS
             _delayTimeBinding?.Detach();
             _delayTimeBinding = null;
 
+            _pauseBinding?.Detach();
+            _pauseBinding = null;
+
+            _repititionsBinding?.Detach();
+            _repititionsBinding = null;
+
             _panStartPosBinding?.Detach();
             _panStartPosBinding = null;
 
@@ -292,6 +336,24 @@ namespace MDKControl.iOS
                                 }
                             case 5: // post-delay picker
                                 if (_editingPostDelay)
+                                {
+                                    return 219;
+                                }
+                                else
+                                {
+                                    return 0;
+                                }
+                            case 7: // pause picker
+                                if (_editingPause)
+                                {
+                                    return 219;
+                                }
+                                else
+                                {
+                                    return 0;
+                                }
+                            case 9: // repititions picker
+                                if (_editingRepititions)
                                 {
                                     return 219;
                                 }
@@ -376,6 +438,14 @@ namespace MDKControl.iOS
                             case 4: // post-delay
                                 _editingPostDelay = !_editingPostDelay;
                                 tableView.CellAt(NSIndexPath.FromRowSection(indexPath.Row + 1, indexPath.Section)).Hidden = !_editingPostDelay;
+                                break;
+                            case 6: // pause
+                                _editingPause = !_editingPause;
+                                tableView.CellAt(NSIndexPath.FromRowSection(indexPath.Row + 1, indexPath.Section)).Hidden = !_editingPause;
+                                break;
+                            case 8: // repititions
+                                _editingRepititions = !_editingRepititions;
+                                tableView.CellAt(NSIndexPath.FromRowSection(indexPath.Row + 1, indexPath.Section)).Hidden = !_editingRepititions;
                                 break;
                         }
                     }

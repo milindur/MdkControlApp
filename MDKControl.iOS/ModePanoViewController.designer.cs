@@ -40,6 +40,14 @@ namespace MDKControl.iOS
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel PauseValueLabel { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        MDKControl.iOS.TimePickerTableViewCell PauseValuePickerTableViewCell { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UILabel PostDelayValueLabel { get; set; }
 
         [Outlet]
@@ -53,6 +61,18 @@ namespace MDKControl.iOS
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
         MDKControl.iOS.TimePickerTableViewCell PreDelayValuePickerTableViewCell { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        MDKControl.iOS.NumberPickerTableViewCell RepetitionsValuePickerTableViewCell { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UILabel RepititionsValueLabel { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        MDKControl.iOS.NumberPickerTableViewCell RepititionsValuePickerTableViewCell { get; set; }
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
@@ -122,6 +142,16 @@ namespace MDKControl.iOS
                 PanStopPosValueLabel = null;
             }
 
+            if (PauseValueLabel != null) {
+                PauseValueLabel.Dispose ();
+                PauseValueLabel = null;
+            }
+
+            if (PauseValuePickerTableViewCell != null) {
+                PauseValuePickerTableViewCell.Dispose ();
+                PauseValuePickerTableViewCell = null;
+            }
+
             if (PostDelayValueLabel != null) {
                 PostDelayValueLabel.Dispose ();
                 PostDelayValueLabel = null;
@@ -140,6 +170,21 @@ namespace MDKControl.iOS
             if (PreDelayValuePickerTableViewCell != null) {
                 PreDelayValuePickerTableViewCell.Dispose ();
                 PreDelayValuePickerTableViewCell = null;
+            }
+
+            if (RepetitionsValuePickerTableViewCell != null) {
+                RepetitionsValuePickerTableViewCell.Dispose ();
+                RepetitionsValuePickerTableViewCell = null;
+            }
+
+            if (RepititionsValueLabel != null) {
+                RepititionsValueLabel.Dispose ();
+                RepititionsValueLabel = null;
+            }
+
+            if (RepititionsValuePickerTableViewCell != null) {
+                RepititionsValuePickerTableViewCell.Dispose ();
+                RepititionsValuePickerTableViewCell = null;
             }
 
             if (StartButton != null) {
