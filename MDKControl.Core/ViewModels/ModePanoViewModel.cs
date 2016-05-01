@@ -411,8 +411,8 @@ namespace MDKControl.Core.ViewModels
                 _elapsedTime = await _protocolService.Main.GetRunTime().ConfigureAwait(false);
                 _elapsedShots = await _protocolService.Camera.GetCurrentShots().ConfigureAwait(false);
                 _overallShots = await _protocolService.Camera.GetMaxShots().ConfigureAwait(false);
-                //_overallCols = await _protocolService.MotorPan.GetTravelShots().ConfigureAwait(false);
-                //_overallRows = await _protocolService.MotorTilt.GetTravelShots().ConfigureAwait(false);
+                _overallCols = await _protocolService.MotorPan.GetTravelShots().ConfigureAwait(false);
+                _overallRows = await _protocolService.MotorTilt.GetTravelShots().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
