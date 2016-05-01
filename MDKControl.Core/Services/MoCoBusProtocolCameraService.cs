@@ -58,6 +58,13 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task SetPanoRepititions(ushort shots)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.SetPanoRepititions, BitConverter.GetBytes(shots).Reverse().ToArray()))
+                .ConfigureAwait(false);
+        }
+
         public async Task<ushort> GetPreDelayTime()
         {
             var response = await _commService
@@ -110,6 +117,15 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
 
             return (ushort)MoCoBusHelper.ParseStatus<int>(response);
+        }
+
+        public async Task<ushort> GetPanoRepititions()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetPanoRepititions, null))
+                .ConfigureAwait(false);
+
+            return (ushort)MoCoBusHelper.ParseStatus<int>(response, 1);
         }
 
         public async Task<ushort> GetCurrentShots()

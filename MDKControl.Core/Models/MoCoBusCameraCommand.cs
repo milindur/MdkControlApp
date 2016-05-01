@@ -16,6 +16,7 @@
         SetCameraTestMode,
 
         SetPreDelay = 0x40,
+        SetPanoRepititions = 0x41,
 
         GetCameraEnable = 100,
         GetExposingNow,
@@ -29,6 +30,7 @@
         GetCurrentShots,
         GetCameraTestMode,
 
-        GetPreDelay = 0xe0
+        GetPreDelay = 0xe0,
+        GetPanoRepititions = 0xe1,
     }
 }

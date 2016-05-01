@@ -326,7 +326,7 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
                 await _protocolService.Camera.SetInterval((uint)pause).ConfigureAwait(false);
-                await _protocolService.Camera.SetMaxShots(Repititions).ConfigureAwait(false);
+                await _protocolService.Camera.SetPanoRepititions(Repititions).ConfigureAwait(false);
 
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
                 await _protocolService.Main.Start().ConfigureAwait(false);
@@ -395,7 +395,7 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
                 await _protocolService.Camera.SetInterval((uint)pause).ConfigureAwait(false);
-                await _protocolService.Camera.SetMaxShots(Repititions).ConfigureAwait(false);
+                await _protocolService.Camera.SetPanoRepititions(Repititions).ConfigureAwait(false);
             }
             catch (TimeoutException toe)
             {
@@ -446,7 +446,7 @@ namespace MDKControl.Core.ViewModels
                 _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
                 _postDelayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
                 _pauseTime = await _protocolService.Camera.GetInterval().ConfigureAwait(false) / 1000m;
-                _repetitions = await _protocolService.Camera.GetMaxShots().ConfigureAwait(false);
+                _repetitions = await _protocolService.Camera.GetPanoRepititions().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
