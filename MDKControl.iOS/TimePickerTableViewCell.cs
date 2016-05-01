@@ -6,8 +6,8 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    [Register("TimePickerTableViewCell"), DesignTimeVisible(true)]
-    internal class TimePickerTableViewCell : UITableViewCell
+    [DesignTimeVisible(true)]
+    internal partial class TimePickerTableViewCell : UITableViewCell
     {
         public TimePickerTableViewCell(IntPtr handle)
             : base(handle)

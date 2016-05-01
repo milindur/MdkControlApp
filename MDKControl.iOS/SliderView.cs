@@ -10,8 +10,8 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    [Register("SliderView"), DesignTimeVisible(true)]
-    internal class SliderView : UIView
+    [DesignTimeVisible(true)]
+    internal partial class SliderView : UIView
     {
         private const int Padding = 10;
 

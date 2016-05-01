@@ -10,8 +10,8 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    [Register("JoystickView"), DesignTimeVisible(true)]
-    internal class JoystickView : UIView
+    [DesignTimeVisible(true)]
+    internal partial class JoystickView : UIView
     {
         private const int Padding = 10;
         

@@ -6,8 +6,8 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-    [Register("NumberPickerTableViewCell"), DesignTimeVisible(true)]
-    internal class NumberPickerTableViewCell : UITableViewCell
+    [DesignTimeVisible(true)]
+    internal partial class NumberPickerTableViewCell : UITableViewCell
     {
         public NumberPickerTableViewCell(IntPtr handle)
             : base(handle)
