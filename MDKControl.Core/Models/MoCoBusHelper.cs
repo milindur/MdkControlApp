@@ -31,7 +31,7 @@ namespace MDKControl.Core.Models
             }
         }
 
-        public static T ParseStatus<T>(MoCoBusFrame frame)
+        public static T ParseStatus<T>(MoCoBusFrame frame, T defaultValue)
         {
             var status = ParseStatus(frame);
 
@@ -40,8 +40,13 @@ namespace MDKControl.Core.Models
                 return (T)status;
             }
 
-            return default(T);
-            throw new InvalidCastException();
+            return defaultValue;
+            //throw new InvalidCastException();
+        }
+
+        public static T ParseStatus<T>(MoCoBusFrame frame)
+        {
+            return ParseStatus<T>(frame, default(T));
         }
     }
 }

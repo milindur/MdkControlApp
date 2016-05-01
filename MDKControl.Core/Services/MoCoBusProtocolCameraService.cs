@@ -16,6 +16,13 @@ namespace MDKControl.Core.Services
             _address = address;
         }
 
+        public async Task SetPreDelayTime(ushort time)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.SetPreDelay, BitConverter.GetBytes(time).Reverse().ToArray()))
+                .ConfigureAwait(false);
+        }
+
         public async Task SetFocusTime(ushort time)
         {
             await _commService
@@ -49,6 +56,15 @@ namespace MDKControl.Core.Services
             await _commService
                 .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.SetMaxShots, BitConverter.GetBytes(shots).Reverse().ToArray()))
                 .ConfigureAwait(false);
+        }
+
+        public async Task<ushort> GetPreDelayTime()
+        {
+            var response = await _commService
+                .SendAndReceiveAsync(new MoCoBusCameraCommandFrame(_address, MoCoBusCameraCommand.GetPreDelay, null))
+                .ConfigureAwait(false);
+
+            return MoCoBusHelper.ParseStatus<ushort>(response, 100);
         }
 
         public async Task<ushort> GetFocusTime()

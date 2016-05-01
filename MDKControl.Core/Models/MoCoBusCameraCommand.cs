@@ -15,6 +15,8 @@
         SetInterval,
         SetCameraTestMode,
 
+        SetPreDelay = 0x40,
+
         GetCameraEnable = 100,
         GetExposingNow,
         GetTriggerTime,
@@ -25,6 +27,8 @@
         GetMirrorUp,
         GetIntervalTime,
         GetCurrentShots,
-        GetCameraTestMode
+        GetCameraTestMode,
+
+        GetPreDelay = 0xe0
     }
 }
