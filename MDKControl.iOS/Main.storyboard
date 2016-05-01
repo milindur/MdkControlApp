@@ -264,7 +264,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Timing" id="608">
                                 <cells>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="615" detailTextLabel="616" rowHeight="44" style="IBUITableViewCellStyleValue1" id="609">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="615" detailTextLabel="616" rowHeight="44" style="IBUITableViewCellStyleValue1" id="609">
                                         <rect key="frame" x="0.0" y="544.5" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="609" id="610">
@@ -1369,7 +1369,7 @@ Choose a single spot in the view finder of your camera. This spot will be used a
                             </tableViewSection>
                             <tableViewSection headerTitle="Timing" id="iHn-iY-lG0">
                                 <cells>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="RnE-xm-Djm" detailTextLabel="cQH-fU-Pbn" rowHeight="44" style="IBUITableViewCellStyleValue1" id="Ur6-CF-qeT">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="RnE-xm-Djm" detailTextLabel="cQH-fU-Pbn" rowHeight="44" style="IBUITableViewCellStyleValue1" id="Ur6-CF-qeT">
                                         <rect key="frame" x="0.0" y="1057" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ur6-CF-qeT" id="xmw-re-Knn">

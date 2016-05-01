@@ -18,8 +18,11 @@ namespace MDKControl.Droid.Fragments
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _exposureTimeBinding;
+        private Binding _preDelayTimeBinding;
         private Binding _delayTimeBinding;
-        
+        private Binding _intervalTimeBinding;
+        private Binding _maxShotsBinding;
+
         private Binding _panStartPosBinding;
         private Binding _panStopPosBinding;
         private Binding _panSizeBinding;
@@ -35,7 +38,10 @@ namespace MDKControl.Droid.Fragments
         private Button _startProgramButton;
 
         private EditText _exposureTimeEditText;
+        private EditText _preDelayTimeEditText;
         private EditText _delayTimeEditText;
+        private EditText _intervalTimeEditText;
+        private EditText _maxShotsEditText;
 
         private EditText _panStartPosEditText;
         private EditText _panStopPosEditText;
@@ -62,10 +68,31 @@ namespace MDKControl.Droid.Fragments
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
+            PreDelayTimeEditText.Click += (o, e) =>
+                {
+                    var dlg = TimeViewFragment.NewInstance("Pre-Delay", Vm.PreDelayTime);
+                    dlg.Closed += (oo, ee) => { Vm.PreDelayTime = ee; };
+                    dlg.Show(FragmentManager, Consts.DialogTag);
+                };
+
             DelayTimeEditText.Click += (o, e) => 
                 {
                     var dlg = TimeViewFragment.NewInstance("Delay", Vm.DelayTime);
                     dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
+                    dlg.Show(FragmentManager, Consts.DialogTag);
+                };
+
+            IntervalTimeEditText.Click += (o, e) =>
+                {
+                    var dlg = TimeViewFragment.NewInstance("Interval", Vm.PauseTime);
+                    dlg.Closed += (oo, ee) => { System.Diagnostics.Debug.WriteLine("Setting IntervalTime from dialog"); Vm.PauseTime = ee; };
+                    dlg.Show(FragmentManager, Consts.DialogTag);
+                };
+
+            MaxShotsEditText.Click += (o, e) =>
+                {
+                    var dlg = IntegerViewFragment.NewInstance("Shots", Vm.Repititions);
+                    dlg.Closed += (oo, ee) => { Vm.Repititions = (ushort)ee; };
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
@@ -76,6 +103,7 @@ namespace MDKControl.Droid.Fragments
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
+
             SetStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
@@ -94,6 +122,7 @@ namespace MDKControl.Droid.Fragments
                     dlg.SetCommand("Closed", Vm.SetRefStartCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
+
             SetRefStopButton.Click += (o, e) => 
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Fov Stop");
@@ -177,13 +206,34 @@ namespace MDKControl.Droid.Fragments
                     });
             _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
 
+            _preDelayTimeBinding = this.SetBinding(() => Vm.PreDelayTime)
+                .WhenSourceChanges(() =>
+                    {
+                        PreDelayTimeEditText.Text = $"{Vm.PreDelayTime:F1}s";
+                    });
+            _preDelayTimeBinding.ForceUpdateValueFromSourceToTarget();
+
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
                 .WhenSourceChanges(() =>
                     { 
                         DelayTimeEditText.Text = $"{Vm.DelayTime:F1}s"; 
                     });
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
-        
+
+            _intervalTimeBinding = this.SetBinding(() => Vm.PauseTime)
+                .WhenSourceChanges(() =>
+                {
+                    IntervalTimeEditText.Text = $"{Vm.PauseTime:F1}s";
+                });
+            _intervalTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _maxShotsBinding = this.SetBinding(() => Vm.Repititions)
+                .WhenSourceChanges(() =>
+                {
+                    MaxShotsEditText.Text = $"{Vm.Repititions}";
+                });
+            _maxShotsBinding.ForceUpdateValueFromSourceToTarget();
+
             _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
                 .WhenSourceChanges(() =>
                     {
@@ -231,7 +281,10 @@ namespace MDKControl.Droid.Fragments
         {
             _runStatusBinding?.Detach();
             _exposureTimeBinding?.Detach();
+            _preDelayTimeBinding?.Detach();
             _delayTimeBinding?.Detach();
+            _intervalTimeBinding?.Detach();
+            _maxShotsBinding?.Detach();
 
             _panStartPosBinding?.Detach();
             _panStopPosBinding?.Detach();
@@ -264,7 +317,13 @@ namespace MDKControl.Droid.Fragments
 
         public EditText ExposureTimeEditText => _exposureTimeEditText ?? (_exposureTimeEditText = View.FindViewById<EditText>(Resource.Id.ExposureTime));
 
+        public EditText PreDelayTimeEditText => _preDelayTimeEditText ?? (_preDelayTimeEditText = View.FindViewById<EditText>(Resource.Id.PreDelayTime));
+
         public EditText DelayTimeEditText => _delayTimeEditText ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.PostDelayTime));
+
+        public EditText IntervalTimeEditText => _intervalTimeEditText ?? (_intervalTimeEditText = View.FindViewById<EditText>(Resource.Id.IntervalTime));
+
+        public EditText MaxShotsEditText => _maxShotsEditText ?? (_maxShotsEditText = View.FindViewById<EditText>(Resource.Id.MaxShots));
 
         public EditText PanStartPosEditText => _panStartPosEditText ?? (_panStartPosEditText = View.FindViewById<EditText>(Resource.Id.PanStartPos));
 

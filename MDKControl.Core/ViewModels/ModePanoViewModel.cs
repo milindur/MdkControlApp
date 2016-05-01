@@ -24,8 +24,11 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _pauseProgramCommand;
         private RelayCommand _stopProgramCommand;
 
+        private decimal _preDelayTime = 0.1m;
         private decimal _exposureTime = 0.1m;
-        private decimal _delayTime = 0.5m;
+        private decimal _postDelayTime = 0.5m;
+        private decimal _pauseTime = 60.0m;
+        private ushort _repetitions = 1;
 
         private int _panStartPos;
         private int _panStopPos;
@@ -57,26 +60,77 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                     });
             }
         }
 
-        public decimal DelayTime
+        public decimal PreDelayTime
         {
-            get { return _delayTime; }
+            get { return _preDelayTime; }
             set
             {
-                _delayTime = value;
-                if (_delayTime < 0.1m)
-                    _delayTime = 0.1m;
-                if (_delayTime > 60m)
-                    _delayTime = 60m;
+                _preDelayTime = value;
+                if (_preDelayTime < 0.1m)
+                    _preDelayTime = 0.1m;
+                if (_preDelayTime > 60m)
+                    _preDelayTime = 60m;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => ExposureTime);
+                    RaisePropertyChanged(() => PreDelayTime);
+                    RaisePropertyChanged(() => DelayTime);
+                });
+            }
+        }
+
+        public decimal DelayTime
+        {
+            get { return _postDelayTime; }
+            set
+            {
+                _postDelayTime = value;
+                if (_postDelayTime < 0.1m)
+                    _postDelayTime = 0.1m;
+                if (_postDelayTime > 60m)
+                    _postDelayTime = 60m;
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                     });
+            }
+        }
+
+        public decimal PauseTime
+        {
+            get { return _pauseTime; }
+            set
+            {
+                _pauseTime = value;
+                if (_pauseTime < 0.0m)
+                    _pauseTime = 0.0m;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => PauseTime);
+                });
+            }
+        }
+
+        public ushort Repititions
+        {
+            get { return _repetitions; }
+            set
+            {
+                _repetitions = value;
+                if (_repetitions < 1)
+                    _repetitions = 1;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => Repititions);
+                });
             }
         }
 
@@ -256,17 +310,23 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
-                ushort preDelay = 100;
+                var preDelay = PreDelayTime * 1000m;
                 ushort focusTime = 100;
                 var exposureTime = ExposureTime * 1000m;
                 var postDelay = DelayTime * 1000m;
+                var pause = _pauseTime * 1000m;
 
+                if (preDelay > ushort.MaxValue)
+                    preDelay = 60000m;
                 if (postDelay > ushort.MaxValue)
                     postDelay = 60000m;
 
+                await _protocolService.Camera.SetPreDelayTime((ushort)preDelay).ConfigureAwait(false);
                 await _protocolService.Camera.SetFocusTime(focusTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
+                await _protocolService.Camera.SetInterval((uint)pause).ConfigureAwait(false);
+                await _protocolService.Camera.SetMaxShots(Repititions).ConfigureAwait(false);
 
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
                 await _protocolService.Main.Start().ConfigureAwait(false);
@@ -319,17 +379,23 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
-                ushort preDelay = 100;
+                var preDelay = PreDelayTime * 1000m;
                 ushort focusTime = 100;
                 var exposureTime = ExposureTime * 1000m;
                 var postDelay = DelayTime * 1000m;
+                var pause = _pauseTime * 1000m;
 
+                if (preDelay > ushort.MaxValue)
+                    preDelay = 60000m;
                 if (postDelay > ushort.MaxValue)
                     postDelay = 60000m;
 
+                await _protocolService.Camera.SetPreDelayTime((ushort)preDelay).ConfigureAwait(false);
                 await _protocolService.Camera.SetFocusTime(focusTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
+                await _protocolService.Camera.SetInterval((uint)pause).ConfigureAwait(false);
+                await _protocolService.Camera.SetMaxShots(Repititions).ConfigureAwait(false);
             }
             catch (TimeoutException toe)
             {
@@ -376,8 +442,11 @@ namespace MDKControl.Core.ViewModels
                 _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
                 _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
+                _preDelayTime = await _protocolService.Camera.GetPreDelayTime().ConfigureAwait(false) / 1000m;
                 _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
-                _delayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
+                _postDelayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
+                _pauseTime = await _protocolService.Camera.GetInterval().ConfigureAwait(false) / 1000m;
+                _repetitions = await _protocolService.Camera.GetMaxShots().ConfigureAwait(false);
 
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
@@ -388,7 +457,10 @@ namespace MDKControl.Core.ViewModels
                         RaisePropertyChanged(() => PanSize);
                         RaisePropertyChanged(() => TiltSize);
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
+                        RaisePropertyChanged(() => PauseTime);
+                        RaisePropertyChanged(() => Repititions);
                     });
             }
             catch (TimeoutException toe)

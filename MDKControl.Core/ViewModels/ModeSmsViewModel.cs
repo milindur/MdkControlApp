@@ -23,7 +23,7 @@ namespace MDKControl.Core.ViewModels
         private RelayCommand _stopProgramCommand;
 
         private const decimal _minMotionTime = 1.5m;
-        private const decimal _preDelayTime = 0.1m;
+        private decimal _preDelayTime = 0.1m;
         private const decimal _focusTime = 0.1m;
         private decimal _exposureTime = 0.1m;
         private decimal _postDelayTime = 1.2m;
@@ -67,11 +67,40 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
                         RaisePropertyChanged(() => MaxShots);
                     });
+            }
+        }
+
+        public decimal PreDelayTime
+        {
+            get { return _preDelayTime; }
+            set
+            {
+                _preDelayTime = value;
+
+                if (_preDelayTime < 0.1m)
+                    _preDelayTime = 0.1m;
+                if (_preDelayTime > 60m)
+                    _preDelayTime = 60m;
+                if (_intervalTime < _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime)
+                    _intervalTime = _preDelayTime + _focusTime + _exposureTime + _postDelayTime + _minMotionTime;
+
+                _durationTime = Math.Ceiling(_durationTime / _intervalTime) * _intervalTime;
+
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => ExposureTime);
+                    RaisePropertyChanged(() => PreDelayTime);
+                    RaisePropertyChanged(() => DelayTime);
+                    RaisePropertyChanged(() => IntervalTime);
+                    RaisePropertyChanged(() => DurationTime);
+                    RaisePropertyChanged(() => MaxShots);
+                });
             }
         }
 
@@ -94,6 +123,7 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
@@ -133,6 +163,7 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
@@ -156,6 +187,7 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
@@ -179,6 +211,7 @@ namespace MDKControl.Core.ViewModels
                 _dispatcherHelper.RunOnUIThread(() =>
                     {
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);
@@ -339,6 +372,7 @@ namespace MDKControl.Core.ViewModels
                 if (postDelay > ushort.MaxValue)
                     postDelay = 60000m;
 
+                await _protocolService.Camera.SetPreDelayTime((ushort)preDelay).ConfigureAwait(false);
                 await _protocolService.Camera.SetFocusTime((ushort)focusTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
@@ -406,6 +440,7 @@ namespace MDKControl.Core.ViewModels
                 if (postDelay > ushort.MaxValue)
                     postDelay = 60000m;
 
+                await _protocolService.Camera.SetPreDelayTime((ushort)preDelay).ConfigureAwait(false);
                 await _protocolService.Camera.SetFocusTime((ushort)focusTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetTriggerTime((uint)exposureTime).ConfigureAwait(false);
                 await _protocolService.Camera.SetExposureDelayTime((ushort)postDelay).ConfigureAwait(false);
@@ -457,6 +492,7 @@ namespace MDKControl.Core.ViewModels
                 _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
                 _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
+                _preDelayTime = await _protocolService.Camera.GetPreDelayTime().ConfigureAwait(false) / 1000m;
                 _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
                 _postDelayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
                 _intervalTime = await _protocolService.Camera.GetInterval().ConfigureAwait(false) / 1000m;
@@ -473,6 +509,7 @@ namespace MDKControl.Core.ViewModels
                         RaisePropertyChanged(() => PanStopPosition);
                         RaisePropertyChanged(() => TiltStopPosition);
                         RaisePropertyChanged(() => ExposureTime);
+                        RaisePropertyChanged(() => PreDelayTime);
                         RaisePropertyChanged(() => DelayTime);
                         RaisePropertyChanged(() => IntervalTime);
                         RaisePropertyChanged(() => DurationTime);

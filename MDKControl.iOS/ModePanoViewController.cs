@@ -15,6 +15,7 @@ namespace MDKControl.iOS
         private Binding _runStatusBinding;
 
         private Binding _exposureTimeBinding;
+        private Binding _preDelayTimeBinding;
         private Binding _delayTimeBinding;
 
         private Binding _panStartPosBinding;
@@ -66,6 +67,13 @@ namespace MDKControl.iOS
                 var t = (decimal)ExposureValuePickerTableViewCell.Model.SelectedTime.TotalSeconds;
                 if (Vm.ExposureTime != t)
                     Vm.ExposureTime = t;
+            };
+
+            PreDelayValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
+            {
+                var t = (decimal)PreDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds;
+                if (Vm.PreDelayTime != t)
+                    Vm.PreDelayTime = t;
             };
 
             PostDelayValuePickerTableViewCell.Model.ValueChanged += (sender, e) =>
@@ -122,6 +130,16 @@ namespace MDKControl.iOS
                 }
             });
             _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
+
+            _preDelayTimeBinding = this.SetBinding(() => Vm.PreDelayTime).WhenSourceChanges(() =>
+            {
+                PreDelayValueLabel.Text = $"{Vm.PreDelayTime:F1}s";
+                if ((decimal)PreDelayValuePickerTableViewCell.Model.SelectedTime.TotalSeconds != Vm.PreDelayTime)
+                {
+                    PreDelayValuePickerTableViewCell.Model.SelectedTime = TimeSpan.FromSeconds((double)Vm.PreDelayTime);
+                }
+            });
+            _preDelayTimeBinding.ForceUpdateValueFromSourceToTarget();
 
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime).WhenSourceChanges(() => 
             {
@@ -200,6 +218,9 @@ namespace MDKControl.iOS
         {
             _exposureTimeBinding?.Detach();
             _exposureTimeBinding = null;
+
+            _preDelayTimeBinding?.Detach();
+            _preDelayTimeBinding = null;
 
             _delayTimeBinding?.Detach();
             _delayTimeBinding = null;

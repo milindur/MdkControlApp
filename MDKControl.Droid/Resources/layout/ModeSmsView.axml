@@ -167,9 +167,7 @@
                 android:ems="4"
                 android:editable="false"
                 android:focusable="false"
-                android:clickable="true"
-                android:enabled="false"
-                android:text="0.1s" />
+                android:clickable="true" />
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"

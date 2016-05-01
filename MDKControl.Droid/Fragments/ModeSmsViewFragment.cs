@@ -18,6 +18,7 @@ namespace MDKControl.Droid.Fragments
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
         private Binding _exposureTimeBinding;
+        private Binding _preDelayTimeBinding;
         private Binding _delayTimeBinding;
         private Binding _intervalTimeBinding;
         private Binding _durationTimeBinding;
@@ -36,6 +37,7 @@ namespace MDKControl.Droid.Fragments
         private Button _startProgramButton;
 
         private EditText _exposureTimeEditText;
+        private EditText _preDelayTimeEditText;
         private EditText _delayTimeEditText;
         private EditText _intervalTimeEditText;
         private EditText _durationTimeEditText;
@@ -61,51 +63,58 @@ namespace MDKControl.Droid.Fragments
 
             System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment OnActivityCreated");
 
-            Vm.PropertyChanged += (o, e) => {};
+            Vm.PropertyChanged += (o, e) => { };
 
-            ExposureTimeEditText.Click += (o, e) => 
+            ExposureTimeEditText.Click += (o, e) =>
                 {
                     var dlg = TimeViewFragment.NewInstance("Exposure", Vm.ExposureTime);
                     dlg.Closed += (oo, ee) => { Vm.ExposureTime = ee; };
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
-            
-            DelayTimeEditText.Click += (o, e) => 
+
+            PreDelayTimeEditText.Click += (o, e) =>
+                {
+                    var dlg = TimeViewFragment.NewInstance("Pre-Delay", Vm.PreDelayTime);
+                    dlg.Closed += (oo, ee) => { Vm.PreDelayTime = ee; };
+                    dlg.Show(FragmentManager, Consts.DialogTag);
+                };
+
+            DelayTimeEditText.Click += (o, e) =>
                 {
                     var dlg = TimeViewFragment.NewInstance("Delay", Vm.DelayTime);
                     dlg.Closed += (oo, ee) => { Vm.DelayTime = ee; };
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
-            IntervalTimeEditText.Click += (o, e) => 
+            IntervalTimeEditText.Click += (o, e) =>
                 {
                     var dlg = TimeViewFragment.NewInstance("Interval", Vm.IntervalTime);
                     dlg.Closed += (oo, ee) => { System.Diagnostics.Debug.WriteLine("Setting IntervalTime from dialog"); Vm.IntervalTime = ee; };
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
-            DurationTimeEditText.Click += (o, e) => 
+            DurationTimeEditText.Click += (o, e) =>
                 {
                     var dlg = TimeViewFragment.NewInstance("Duration", Vm.DurationTime);
                     dlg.Closed += (oo, ee) => { Vm.DurationTime = ee; };
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
-            MaxShotsEditText.Click += (o, e) => 
+            MaxShotsEditText.Click += (o, e) =>
                 {
                     var dlg = IntegerViewFragment.NewInstance("Shots", Vm.MaxShots);
                     dlg.Closed += (oo, ee) => { Vm.MaxShots = (ushort)ee; };
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
-            SetStartButton.Click += (o, e) => 
+            SetStartButton.Click += (o, e) =>
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Start");
                     dlg.Closed += (oo, ee) => { };
                     dlg.SetCommand("Closed", Vm.SetStartCommand);
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
-            SetStopButton.Click += (o, e) => 
+            SetStopButton.Click += (o, e) =>
                 {
                     var dlg = JoystickViewFragment.NewInstance("Set Stop");
                     dlg.Closed += (oo, ee) => { };
@@ -113,10 +122,10 @@ namespace MDKControl.Droid.Fragments
                     dlg.Show(FragmentManager, Consts.DialogTag);
                 };
 
-            SwapStartStopButton.Click += (o, e) => {};
+            SwapStartStopButton.Click += (o, e) => { };
             SwapStartStopButton.SetCommand("Click", Vm.SwapStartStopCommand);
 
-            StartProgramButton.Click += (o, e) => 
+            StartProgramButton.Click += (o, e) =>
                 {
                     System.Diagnostics.Debug.WriteLine("ModeSmsViewFragment StartProgramButton Clicked");
 
@@ -196,15 +205,22 @@ namespace MDKControl.Droid.Fragments
 
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
-                    { 
-                        ExposureTimeEditText.Text = $"{Vm.ExposureTime:F1}s"; 
+                    {
+                        ExposureTimeEditText.Text = $"{Vm.ExposureTime:F1}s";
                     });
             _exposureTimeBinding.ForceUpdateValueFromSourceToTarget();
 
+            _preDelayTimeBinding = this.SetBinding(() => Vm.PreDelayTime)
+                .WhenSourceChanges(() =>
+                {
+                    PreDelayTimeEditText.Text = $"{Vm.PreDelayTime:F1}s";
+                });
+            _preDelayTimeBinding.ForceUpdateValueFromSourceToTarget();
+
             _delayTimeBinding = this.SetBinding(() => Vm.DelayTime)
                 .WhenSourceChanges(() =>
-                    { 
-                        DelayTimeEditText.Text = $"{Vm.DelayTime:F1}s"; 
+                    {
+                        DelayTimeEditText.Text = $"{Vm.DelayTime:F1}s";
                     });
             _delayTimeBinding.ForceUpdateValueFromSourceToTarget();
 
@@ -218,7 +234,7 @@ namespace MDKControl.Droid.Fragments
             _durationTimeBinding = this.SetBinding(() => Vm.DurationTime)
                 .WhenSourceChanges(() =>
                     {
-                        DurationTimeEditText.Text = $"{(int) (Vm.DurationTime/60)}:{(int) Vm.DurationTime%60:00}m";
+                        DurationTimeEditText.Text = $"{(int)(Vm.DurationTime / 60)}:{(int)Vm.DurationTime % 60:00}m";
                     });
             _durationTimeBinding.ForceUpdateValueFromSourceToTarget();
 
@@ -246,28 +262,28 @@ namespace MDKControl.Droid.Fragments
             _panStartPosBinding = this.SetBinding(() => Vm.PanStartPosition)
                 .WhenSourceChanges(() =>
                     {
-                        PanStartPosEditText.Text = $"{(double) Vm.PanStartPosition/(190*200*16)*360:F1}°";
+                        PanStartPosEditText.Text = $"{(double)Vm.PanStartPosition / (190 * 200 * 16) * 360:F1}°";
                     });
             _panStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _panStopPosBinding = this.SetBinding(() => Vm.PanStopPosition)
                 .WhenSourceChanges(() =>
                     {
-                        PanStopPosEditText.Text = $"{(double) Vm.PanStopPosition/(190*200*16)*360:F1}°";
+                        PanStopPosEditText.Text = $"{(double)Vm.PanStopPosition / (190 * 200 * 16) * 360:F1}°";
                     });
             _panStopPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStartPosBinding = this.SetBinding(() => Vm.TiltStartPosition)
                 .WhenSourceChanges(() =>
                     {
-                        TiltStartPosEditText.Text = $"{(double) Vm.TiltStartPosition/(190*200*16)*360:F1}°";
+                        TiltStartPosEditText.Text = $"{(double)Vm.TiltStartPosition / (190 * 200 * 16) * 360:F1}°";
                     });
             _tiltStartPosBinding.ForceUpdateValueFromSourceToTarget();
 
             _tiltStopPosBinding = this.SetBinding(() => Vm.TiltStopPosition)
                 .WhenSourceChanges(() =>
                     {
-                        TiltStopPosEditText.Text = $"{(double) Vm.TiltStopPosition/(190*200*16)*360:F1}°";
+                        TiltStopPosEditText.Text = $"{(double)Vm.TiltStopPosition / (190 * 200 * 16) * 360:F1}°";
                     });
             _tiltStopPosBinding.ForceUpdateValueFromSourceToTarget();
         }
@@ -279,6 +295,7 @@ namespace MDKControl.Droid.Fragments
             _runStatusBinding?.Detach();
 
             _exposureTimeBinding?.Detach();
+            _preDelayTimeBinding?.Detach();
             _delayTimeBinding?.Detach();
             _intervalTimeBinding?.Detach();
             _durationTimeBinding?.Detach();
@@ -310,6 +327,8 @@ namespace MDKControl.Droid.Fragments
         public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
 
         public EditText ExposureTimeEditText => _exposureTimeEditText ?? (_exposureTimeEditText = View.FindViewById<EditText>(Resource.Id.ExposureTime));
+
+        public EditText PreDelayTimeEditText => _preDelayTimeEditText ?? (_preDelayTimeEditText = View.FindViewById<EditText>(Resource.Id.PreDelayTime));
 
         public EditText DelayTimeEditText => _delayTimeEditText ?? (_delayTimeEditText = View.FindViewById<EditText>(Resource.Id.PostDelayTime));
 
