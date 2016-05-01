@@ -135,7 +135,7 @@ namespace MDKControl.iOS
                     var nav = ServiceLocator.Current.GetInstance<INavigationService>();
                     if (nav.CurrentPageKey != AppDelegate.ModeAstroViewKey) return;
 
-                    if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey && !_navigatedToStatusView)
+                    if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModeAstroStatusViewKey && !_navigatedToStatusView && !DeviceVm.IsUpdateTaskRunning)
                     {
                         _navigatedToStatusView = true;
                         DeviceVm.StartUpdateTask();

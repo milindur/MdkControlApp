@@ -29,7 +29,7 @@ namespace MDKControl.iOS
         {
             _isConnectedBinding = this.SetBinding(() => DeviceVm.IsConnected).WhenSourceChanges(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine("SubDeviceViewControllerBase: DeviceViewModel PropertyChanged IsConnected");
+                    System.Diagnostics.Debug.WriteLine($"SubDeviceViewControllerBase({this.ToString()}): DeviceViewModel PropertyChanged IsConnected {DeviceVm.IsConnected}");
 
                     var navService = ServiceLocator.Current.GetInstance<INavigationService>();
                     if (!DeviceVm.IsConnected && navService.CurrentPageKey == _viewPageKey)
@@ -42,7 +42,7 @@ namespace MDKControl.iOS
 
             _programModeBinding = this.SetBinding(() => DeviceVm.ProgramMode).WhenSourceChanges(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine("SubDeviceViewControllerBase: DeviceViewModel PropertyChanged ProgramMode");
+                    System.Diagnostics.Debug.WriteLine($"SubDeviceViewControllerBase({this.ToString()}): DeviceViewModel PropertyChanged ProgramMode {DeviceVm.ProgramMode}");
 
                     var navService = ServiceLocator.Current.GetInstance<INavigationService>();
                     if (_programMode != MoCoBusProgramMode.Invalid && DeviceVm.ProgramMode != _programMode && navService.CurrentPageKey == _viewPageKey)

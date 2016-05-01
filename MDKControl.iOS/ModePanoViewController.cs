@@ -240,10 +240,14 @@ namespace MDKControl.iOS
             _runStatusBinding = this.SetBinding(() => DeviceVm.RunStatus).WhenSourceChanges(() => 
             {
                 var nav = ServiceLocator.Current.GetInstance<INavigationService>();
-                if (nav.CurrentPageKey != AppDelegate.ModeSmsViewKey)
+
+                System.Diagnostics.Debug.WriteLine($"ModePanoViewController RunStatusBinding: CurrentPageKey={nav.CurrentPageKey}, RunStatus={DeviceVm.RunStatus}, _navigatedToStatusView={_navigatedToStatusView}");
+
+                if (nav.CurrentPageKey != AppDelegate.ModePanoViewKey)
                     return;
-                if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModePanoStatusViewKey && !_navigatedToStatusView)
+                if (DeviceVm.RunStatus != MoCoBusRunStatus.Stopped && nav.CurrentPageKey != AppDelegate.ModePanoStatusViewKey && !_navigatedToStatusView && !DeviceVm.IsUpdateTaskRunning)
                 {
+                    System.Diagnostics.Debug.WriteLine($"ModePanoViewController RunStatusBinding: Start update task and navigate to status view");
                     _navigatedToStatusView = true;
                     DeviceVm.StartUpdateTask();
                     nav.NavigateTo(AppDelegate.ModePanoStatusViewKey, Vm);
