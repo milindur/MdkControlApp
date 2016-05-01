@@ -11,27 +11,28 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-	[Register ("ModeAstroStatusViewController")]
-	partial class ModeAstroStatusViewController
-	{
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIBarButtonItem CancelButton { get; set; }
+    [Register ("ModeAstroStatusViewController")]
+    partial class ModeAstroStatusViewController
+    {
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIBarButtonItem CancelButton { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIBarButtonItem PauseResumeButton { get; set; }
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIBarButtonItem PauseResumeButton { get; set; }
 
-		void ReleaseDesignerOutlets ()
-		{
-			if (CancelButton != null) {
-				CancelButton.Dispose ();
-				CancelButton = null;
-			}
-			if (PauseResumeButton != null) {
-				PauseResumeButton.Dispose ();
-				PauseResumeButton = null;
-			}
-		}
-	}
+        void ReleaseDesignerOutlets ()
+        {
+            if (CancelButton != null) {
+                CancelButton.Dispose ();
+                CancelButton = null;
+            }
+
+            if (PauseResumeButton != null) {
+                PauseResumeButton.Dispose ();
+                PauseResumeButton = null;
+            }
+        }
+    }
 }

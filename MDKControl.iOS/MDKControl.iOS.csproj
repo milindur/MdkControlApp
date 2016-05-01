@@ -130,9 +130,21 @@
     <MtouchI18n />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="JoystickView.designer.cs">
+      <DependentUpon>JoystickView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="SliderView.designer.cs">
+      <DependentUpon>SliderView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimePickerTableViewCell.designer.cs">
+      <DependentUpon>TimePickerTableViewCell.cs</DependentUpon>
+    </Compile>
     <None Include="Info.plist" />
+    <Compile Include="NumberPickerTableViewCell.designer.cs">
+      <DependentUpon>NumberPickerTableViewCell.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
     <None Include="app.config" />

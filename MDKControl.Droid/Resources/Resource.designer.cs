@@ -89,8 +89,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070002
 			public const int DisconnectedLayout = 2131165186;
 			
-			// aapt resource value: 0x7f070037
-			public const int DurationTime = 2131165239;
+			// aapt resource value: 0x7f070038
+			public const int DurationTime = 2131165240;
 			
 			// aapt resource value: 0x7f07001c
 			public const int ElapsedShots = 2131165212;
@@ -110,8 +110,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f07003c
 			public const int Hundredths = 2131165244;
 			
-			// aapt resource value: 0x7f070036
-			public const int IntervalTime = 2131165238;
+			// aapt resource value: 0x7f070031
+			public const int IntervalTime = 2131165233;
 			
 			// aapt resource value: 0x7f07000f
 			public const int Joystick = 2131165199;
@@ -119,8 +119,8 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070017
 			public const int LunarRadioButton = 2131165207;
 			
-			// aapt resource value: 0x7f070038
-			public const int MaxShots = 2131165240;
+			// aapt resource value: 0x7f070032
+			public const int MaxShots = 2131165234;
 			
 			// aapt resource value: 0x7f07003a
 			public const int Minutes = 2131165242;
@@ -209,11 +209,11 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070010
 			public const int Slider = 2131165200;
 			
-			// aapt resource value: 0x7f070034
-			public const int SliderStartPos = 2131165236;
+			// aapt resource value: 0x7f070036
+			public const int SliderStartPos = 2131165238;
 			
-			// aapt resource value: 0x7f070035
-			public const int SliderStopPos = 2131165237;
+			// aapt resource value: 0x7f070037
+			public const int SliderStopPos = 2131165239;
 			
 			// aapt resource value: 0x7f070018
 			public const int SolarRadioButton = 2131165208;
@@ -245,14 +245,14 @@ namespace MDKControl.Droid
 			// aapt resource value: 0x7f070029
 			public const int TiltStopPos = 2131165225;
 			
-			// aapt resource value: 0x7f070031
-			public const int VideoLength24 = 2131165233;
-			
-			// aapt resource value: 0x7f070032
-			public const int VideoLength25 = 2131165234;
-			
 			// aapt resource value: 0x7f070033
-			public const int VideoLength30 = 2131165235;
+			public const int VideoLength24 = 2131165235;
+			
+			// aapt resource value: 0x7f070034
+			public const int VideoLength25 = 2131165236;
+			
+			// aapt resource value: 0x7f070035
+			public const int VideoLength30 = 2131165237;
 			
 			static Id()
 			{

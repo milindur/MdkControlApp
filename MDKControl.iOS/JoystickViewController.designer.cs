@@ -11,43 +11,46 @@ using UIKit;
 
 namespace MDKControl.iOS
 {
-	[Register ("JoystickViewController")]
-	partial class JoystickViewController
-	{
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIBarButtonItem CancelButton { get; set; }
+    [Register ("JoystickViewController")]
+    partial class JoystickViewController
+    {
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIBarButtonItem CancelButton { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		JoystickView Joystick { get; set; }
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        MDKControl.iOS.JoystickView Joystick { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UIBarButtonItem SetButton { get; set; }
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIBarButtonItem SetButton { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		SliderView Slider { get; set; }
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        MDKControl.iOS.SliderView Slider { get; set; }
 
-		void ReleaseDesignerOutlets ()
-		{
-			if (CancelButton != null) {
-				CancelButton.Dispose ();
-				CancelButton = null;
-			}
-			if (Joystick != null) {
-				Joystick.Dispose ();
-				Joystick = null;
-			}
-			if (SetButton != null) {
-				SetButton.Dispose ();
-				SetButton = null;
-			}
-			if (Slider != null) {
-				Slider.Dispose ();
-				Slider = null;
-			}
-		}
-	}
+        void ReleaseDesignerOutlets ()
+        {
+            if (CancelButton != null) {
+                CancelButton.Dispose ();
+                CancelButton = null;
+            }
+
+            if (Joystick != null) {
+                Joystick.Dispose ();
+                Joystick = null;
+            }
+
+            if (SetButton != null) {
+                SetButton.Dispose ();
+                SetButton = null;
+            }
+
+            if (Slider != null) {
+                Slider.Dispose ();
+                Slider = null;
+            }
+        }
+    }
 }
