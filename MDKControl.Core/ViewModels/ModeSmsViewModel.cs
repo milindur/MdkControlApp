@@ -450,12 +450,12 @@ namespace MDKControl.Core.ViewModels
         {
             try
             {
-                _sliderStartPos = await _protocolService.Motor1.GetProgramStartPoint().ConfigureAwait(false);
-                _panStartPos = await _protocolService.Motor2.GetProgramStartPoint().ConfigureAwait(false);
-                _tiltStartPos = await _protocolService.Motor3.GetProgramStartPoint().ConfigureAwait(false);
-                _sliderStopPos = await _protocolService.Motor1.GetProgramStopPoint().ConfigureAwait(false);
-                _panStopPos = await _protocolService.Motor2.GetProgramStopPoint().ConfigureAwait(false);
-                _tiltStopPos = await _protocolService.Motor3.GetProgramStopPoint().ConfigureAwait(false);
+                _sliderStartPos = await _protocolService.MotorSlider.GetProgramStartPoint().ConfigureAwait(false);
+                _panStartPos = await _protocolService.MotorPan.GetProgramStartPoint().ConfigureAwait(false);
+                _tiltStartPos = await _protocolService.MotorTilt.GetProgramStartPoint().ConfigureAwait(false);
+                _sliderStopPos = await _protocolService.MotorSlider.GetProgramStopPoint().ConfigureAwait(false);
+                _panStopPos = await _protocolService.MotorPan.GetProgramStopPoint().ConfigureAwait(false);
+                _tiltStopPos = await _protocolService.MotorTilt.GetProgramStopPoint().ConfigureAwait(false);
 
                 _exposureTime = await _protocolService.Camera.GetTriggerTime().ConfigureAwait(false) / 1000m;
                 _postDelayTime = await _protocolService.Camera.GetExposureDelayTime().ConfigureAwait(false) / 1000m;
