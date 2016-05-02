@@ -248,11 +248,11 @@ namespace MDKControl.Core.ViewModels
 
         public int TiltStopPosition => _tiltStopPos;
 
-        public RelayCommand SetStartCommand => _setStartCommand ?? (_setStartCommand = new RelayCommand(() => SetStart(Motors.MotorPan | Motors.MotorTilt)));
+        public RelayCommand SetStartCommand => _setStartCommand ?? (_setStartCommand = new RelayCommand(() => SetStart(Motors.MotorSlider | Motors.MotorPan | Motors.MotorTilt)));
 
-        public RelayCommand SetStopCommand => _setStopCommand ?? (_setStopCommand = new RelayCommand(() => SetStop(Motors.MotorPan | Motors.MotorTilt)));
+        public RelayCommand SetStopCommand => _setStopCommand ?? (_setStopCommand = new RelayCommand(() => SetStop(Motors.MotorSlider | Motors.MotorPan | Motors.MotorTilt)));
 
-        public RelayCommand SwapStartStopCommand => _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(() => SwapStartStop(Motors.MotorPan | Motors.MotorTilt)));
+        public RelayCommand SwapStartStopCommand => _swapStartStopCommand ?? (_swapStartStopCommand = new RelayCommand(() => SwapStartStop(Motors.MotorSlider | Motors.MotorPan | Motors.MotorTilt)));
 
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
