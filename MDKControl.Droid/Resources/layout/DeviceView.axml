@@ -94,10 +94,16 @@
                 android:layout_width="0dp"
                 android:layout_weight="1" />
         </LinearLayout>
-        <FrameLayout
-            android:id="@+id/ConnectedFragmentContainer"
-            android:orientation="horizontal"
+        <ScrollView
+            android:id="@+id/ConnectedFragmentScrollView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"
+            android:scrollbars="vertical">
+            <FrameLayout
+                android:id="@+id/ConnectedFragmentContainer"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </ScrollView>
     </LinearLayout>
 </LinearLayout>
