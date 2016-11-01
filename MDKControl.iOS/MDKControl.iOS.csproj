@@ -67,7 +67,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchUseRefCounting>True</MtouchUseRefCounting>
     <MtouchUseLlvm>False</MtouchUseLlvm>
-    <MtouchSdkVersion>9.3</MtouchSdkVersion>
+    <MtouchSdkVersion>10.0</MtouchSdkVersion>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchDebug>False</MtouchDebug>
     <MtouchProfiling>False</MtouchProfiling>
@@ -91,7 +91,7 @@
     <CodesignProvision>Automatic:AdHoc</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <MtouchUseLlvm>False</MtouchUseLlvm>
-    <MtouchSdkVersion>9.3</MtouchSdkVersion>
+    <MtouchSdkVersion>10.0</MtouchSdkVersion>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchDebug>False</MtouchDebug>
     <MtouchProfiling>False</MtouchProfiling>
@@ -117,7 +117,7 @@
     <MtouchUseLlvm>False</MtouchUseLlvm>
     <IpaPackageName>
     </IpaPackageName>
-    <MtouchSdkVersion>9.3</MtouchSdkVersion>
+    <MtouchSdkVersion>10.0</MtouchSdkVersion>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchDebug>False</MtouchDebug>
     <MtouchProfiling>False</MtouchProfiling>
