@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
 
@@ -29,10 +30,33 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
-        public async Task Start(byte arg1, byte arg2)
+        public async Task StartAstro(AstroDirection direction, AstroSpeed speed)
         {
             await _commService
-                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(_address, MoCoBusMainCommand.Start, new[] { arg1, arg2 }))
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(
+                    _address, 
+                    MoCoBusMainCommand.Start, 
+                    new[] { (byte)direction, (byte)speed }))
+                .ConfigureAwait(false);
+        }
+
+        public async Task StartAstro(AstroDirection direction, AstroSpeed speed, GearType gear)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(
+                    _address, 
+                    MoCoBusMainCommand.Start, 
+                    new[] { (byte)direction, (byte)speed, (byte)gear }))
+                .ConfigureAwait(false);
+        }
+
+        public async Task StartAstro(AstroDirection direction, AstroSpeed speed, float gearReduction)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(
+                    _address, 
+                    MoCoBusMainCommand.Start, 
+                    new[] { (byte)direction, (byte)speed }.Concat(BitConverter.GetBytes(gearReduction).Reverse()).ToArray()))
                 .ConfigureAwait(false);
         }
 

@@ -76,7 +76,18 @@ namespace MDKControl.Core.ViewModels
             try
             {
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
-                await _protocolService.Main.Start((byte)Direction, (byte)Speed).ConfigureAwait(false);
+                if (GearType != null)
+                {
+                    await _protocolService.Main.StartAstro(Direction, Speed, GearType.Value).ConfigureAwait(false);
+                }
+                else if (GearReduction != null)
+                {
+                    await _protocolService.Main.StartAstro(Direction, Speed, GearReduction.Value).ConfigureAwait(false);
+                }
+                else
+                {
+                    await _protocolService.Main.StartAstro(Direction, Speed).ConfigureAwait(false);
+                }
 
                 _deviceViewModel.StartUpdateTask();
             }
@@ -152,6 +163,46 @@ namespace MDKControl.Core.ViewModels
                     {
                         RaisePropertyChanged(() => Speed);
                     });
+            }
+        }
+
+        private GearType? _gearType;
+
+        public GearType? GearType
+        {
+            get
+            {
+                return _gearType;
+            }
+            set
+            {
+                _gearType = value;
+                if (_gearType != null) _gearReduction = null;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => GearType);
+                    RaisePropertyChanged(() => GearReduction);
+                });
+            }
+        }
+
+        private float? _gearReduction;
+
+        public float? GearReduction
+        {
+            get
+            {
+                return _gearReduction;
+            }
+            set
+            {
+                _gearReduction = value;
+                if (_gearReduction != null) _gearType = null;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => GearType);
+                    RaisePropertyChanged(() => GearReduction);
+                });
             }
         }
 

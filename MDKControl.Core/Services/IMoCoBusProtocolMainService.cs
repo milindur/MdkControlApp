@@ -8,7 +8,9 @@ namespace MDKControl.Core.Services
     {
         Task Start();
         Task Start(byte arg);
-        Task Start(byte arg1, byte arg2);
+        Task StartAstro(AstroDirection direction, AstroSpeed speed);
+        Task StartAstro(AstroDirection direction, AstroSpeed speed, GearType gear);
+        Task StartAstro(AstroDirection direction, AstroSpeed speed, float gearReduction);
         Task Pause();
         Task Stop();
 
