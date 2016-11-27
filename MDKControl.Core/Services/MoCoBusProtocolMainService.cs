@@ -40,23 +40,23 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
-        public async Task StartAstro(AstroDirection direction, AstroSpeed speed, GearType gear)
+        public async Task StartAstro(Motors motors, AstroDirection direction, AstroSpeed speed, GearType gear)
         {
             await _commService
                 .SendAndReceiveAsync(new MoCoBusMainCommandFrame(
                     _address, 
                     MoCoBusMainCommand.Start, 
-                    new[] { (byte)direction, (byte)speed, (byte)gear }))
+                    new[] { (byte)motors, (byte)direction, (byte)speed, (byte)gear }))
                 .ConfigureAwait(false);
         }
 
-        public async Task StartAstro(AstroDirection direction, AstroSpeed speed, float gearReduction)
+        public async Task StartAstro(Motors motors, AstroDirection direction, AstroSpeed speed, float gearReduction)
         {
             await _commService
                 .SendAndReceiveAsync(new MoCoBusMainCommandFrame(
                     _address, 
                     MoCoBusMainCommand.Start, 
-                    new[] { (byte)direction, (byte)speed }.Concat(BitConverter.GetBytes(gearReduction).Reverse()).ToArray()))
+                    new[] { (byte)motors, (byte)direction, (byte)speed }.Concat(BitConverter.GetBytes(gearReduction).Reverse()).ToArray()))
                 .ConfigureAwait(false);
         }
 

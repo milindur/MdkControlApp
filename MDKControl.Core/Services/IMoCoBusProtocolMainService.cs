@@ -9,8 +9,8 @@ namespace MDKControl.Core.Services
         Task Start();
         Task Start(byte arg);
         Task StartAstro(AstroDirection direction, AstroSpeed speed);
-        Task StartAstro(AstroDirection direction, AstroSpeed speed, GearType gear);
-        Task StartAstro(AstroDirection direction, AstroSpeed speed, float gearReduction);
+        Task StartAstro(Motors motors, AstroDirection direction, AstroSpeed speed, GearType gear);
+        Task StartAstro(Motors motors, AstroDirection direction, AstroSpeed speed, float gearReduction);
         Task Pause();
         Task Stop();
 

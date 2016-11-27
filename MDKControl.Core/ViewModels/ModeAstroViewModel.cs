@@ -34,7 +34,8 @@ namespace MDKControl.Core.ViewModels
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
         {
-            get { 
+            get
+            {
                 return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(async () =>
                     {
                         try
@@ -78,11 +79,18 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
                 if (GearType != null)
                 {
-                    await _protocolService.Main.StartAstro(Direction, Speed, GearType.Value).ConfigureAwait(false);
+                    if (GearType.Value == Models.GearType.MdkV5 && Motors == Models.Motors.MotorSlider)
+                    {
+                        await _protocolService.Main.StartAstro(Direction, Speed).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await _protocolService.Main.StartAstro(Motors, Direction, Speed, GearType.Value).ConfigureAwait(false);
+                    }
                 }
                 else if (GearReduction != null)
                 {
-                    await _protocolService.Main.StartAstro(Direction, Speed, GearReduction.Value).ConfigureAwait(false);
+                    await _protocolService.Main.StartAstro(Motors, Direction, Speed, GearReduction.Value).ConfigureAwait(false);
                 }
                 else
                 {
@@ -127,6 +135,24 @@ namespace MDKControl.Core.ViewModels
             catch (TimeoutException toe)
             {
                 Insights.Report(toe);
+            }
+        }
+
+        private Motors _motors;
+
+        public Motors Motors
+        {
+            get
+            {
+                return _motors;
+            }
+            set
+            {
+                _motors = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => Motors);
+                });
             }
         }
 
