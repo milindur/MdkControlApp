@@ -17,16 +17,32 @@ namespace MDKControl.Droid.Fragments
         private readonly object _runStatusLock = new object();
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
+        private Binding _sliderAxisRadioBinding;
+        private Binding _panAxisRadioBinding;
+        private Binding _tiltAxisRadioBinding;
+        private Binding _mdkV5RadioBinding;
+        private Binding _mdkV6RadioBinding;
+        private Binding _nicOTiltRadioBinding;
+        private Binding _otherMechanicsRadioBinding;
+        private Binding _otherMechanicsGearReductionBinding;
         private Binding _northRadioBinding;
         private Binding _southRadioBinding;
         private Binding _siderealRadioBinding;
         private Binding _lunarRadioBinding;
 
         private Button _startProgramButton;
+        private RadioButton _sliderAxisRadioButton;
+        private RadioButton _panAxisRadioButton;
+        private RadioButton _tiltAxisRadioButton;
+        private RadioButton _mdkV5RadioButton;
+        private RadioButton _mdkV6RadioButton;
+        private RadioButton _nicOTiltRadioButton;
+        private RadioButton _otherMechanicsRadioButton;
         private RadioButton _northRadioButton;
         private RadioButton _southRadioButton;
         private RadioButton _siderealRadioButton;
         private RadioButton _lunarRadioButton;
+        private EditText _otherMechanicsGearReductionEditText;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -107,6 +123,69 @@ namespace MDKControl.Droid.Fragments
                     });
             _runStatusBinding.ForceUpdateValueFromSourceToTarget();
 
+            _sliderAxisRadioBinding = this.SetBinding(() => SliderAxisRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (SliderAxisRadioButton.Checked)
+                    {
+                        Vm.Motors = Motors.MotorSlider;
+                    }
+                });
+
+            _panAxisRadioBinding = this.SetBinding(() => PanAxisRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (PanAxisRadioButton.Checked)
+                    {
+                        Vm.Motors = Motors.MotorPan;
+                    }
+                });
+
+            _tiltAxisRadioBinding = this.SetBinding(() => TiltAxisRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (TiltAxisRadioButton.Checked)
+                    {
+                        Vm.Motors = Motors.MotorTilt;
+                    }
+                });
+
+            _mdkV5RadioBinding = this.SetBinding(() => MdkV5RadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (MdkV5RadioButton.Checked)
+                    {
+                        Vm.GearType = GearType.MdkV5;
+                    }
+                });
+
+            _mdkV6RadioBinding = this.SetBinding(() => MdkV6RadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (MdkV6RadioButton.Checked)
+                    {
+                        Vm.GearType = GearType.MdkV6;
+                    }
+                });
+
+            _nicOTiltRadioBinding = this.SetBinding(() => NicOTiltRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (NicOTiltRadioButton.Checked)
+                    {
+                        Vm.GearType = GearType.NicOTilt;
+                    }
+                });
+
+            _otherMechanicsRadioBinding = this.SetBinding(() => OtherMechanicsRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (OtherMechanicsRadioButton.Checked)
+                    {
+                        Vm.GearReduction = 60.0f;
+                    }
+                });
+
             _northRadioBinding = this.SetBinding(() => NorthRadioButton.Checked)
                 .WhenSourceChanges(() =>
                     {
@@ -132,6 +211,14 @@ namespace MDKControl.Droid.Fragments
 
         public override void OnPause()
         {
+            _sliderAxisRadioBinding?.Detach();
+            _panAxisRadioBinding?.Detach();
+            _tiltAxisRadioBinding?.Detach();
+            _mdkV5RadioBinding?.Detach();
+            _mdkV6RadioBinding?.Detach();
+            _nicOTiltRadioBinding?.Detach();
+            _otherMechanicsRadioBinding?.Detach();
+            _otherMechanicsGearReductionBinding?.Detach();
             _northRadioBinding?.Detach();
             _southRadioBinding?.Detach();
             _siderealRadioBinding?.Detach();
@@ -149,6 +236,20 @@ namespace MDKControl.Droid.Fragments
         public DeviceViewModel DeviceVm => ((DeviceViewActivity)_activity).Vm;
 
         public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
+
+        public RadioButton SliderAxisRadioButton => _sliderAxisRadioButton ?? (_sliderAxisRadioButton = View.FindViewById<RadioButton>(Resource.Id.SliderAxisRadioButton));
+
+        public RadioButton PanAxisRadioButton => _panAxisRadioButton ?? (_panAxisRadioButton = View.FindViewById<RadioButton>(Resource.Id.PanAxisRadioButton));
+
+        public RadioButton TiltAxisRadioButton => _tiltAxisRadioButton ?? (_tiltAxisRadioButton = View.FindViewById<RadioButton>(Resource.Id.TiltAxisRadioButton));
+
+        public RadioButton MdkV5RadioButton => _mdkV5RadioButton ?? (_mdkV5RadioButton = View.FindViewById<RadioButton>(Resource.Id.MdkV5RadioButton));
+
+        public RadioButton MdkV6RadioButton => _mdkV6RadioButton ?? (_mdkV6RadioButton = View.FindViewById<RadioButton>(Resource.Id.MdkV6RadioButton));
+
+        public RadioButton NicOTiltRadioButton => _nicOTiltRadioButton ?? (_nicOTiltRadioButton = View.FindViewById<RadioButton>(Resource.Id.NoTRadioButton));
+
+        public RadioButton OtherMechanicsRadioButton => _otherMechanicsRadioButton ?? (_otherMechanicsRadioButton = View.FindViewById<RadioButton>(Resource.Id.OtherMechanicsRadioButton));
 
         public RadioButton NorthRadioButton => _northRadioButton ?? (_northRadioButton = View.FindViewById<RadioButton>(Resource.Id.NorthRadioButton));
 
