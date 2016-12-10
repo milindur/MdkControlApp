@@ -55,6 +55,13 @@ namespace MDKControl.Droid.Fragments
 
             Vm.PropertyChanged += (o, e) => {};
 
+            OtherMechanicsGearReductionEditText.Click += (o, e) =>
+            {
+                var dlg = FloatViewFragment.NewInstance("Gear Reduction", Vm.GearReduction ?? 0f);
+                dlg.Closed += (oo, ee) => { Vm.GearReduction = ee; };
+                dlg.Show(FragmentManager, Consts.DialogTag);
+            };
+
             StartProgramButton.Click += (o, e) => 
                 {
                     System.Diagnostics.Debug.WriteLine("ModeAstroViewFragment StartProgramButton Clicked");
@@ -184,6 +191,7 @@ namespace MDKControl.Droid.Fragments
                     {
                         Vm.GearReduction = 60.0f;
                     }
+                    OtherMechanicsGearReductionEditText.Enabled = OtherMechanicsRadioButton.Checked;
                 });
 
             _northRadioBinding = this.SetBinding(() => NorthRadioButton.Checked)
@@ -207,6 +215,12 @@ namespace MDKControl.Droid.Fragments
                     {
                         if (LunarRadioButton.Checked) Vm.Speed = AstroSpeed.Lunar;
                     });
+
+            _otherMechanicsGearReductionBinding = this.SetBinding(() => Vm.GearReduction)
+                .WhenSourceChanges(() =>
+                {
+                    OtherMechanicsGearReductionEditText.Text = $"{Vm.GearReduction:F1}";
+                });
         }
 
         public override void OnPause()
@@ -250,6 +264,8 @@ namespace MDKControl.Droid.Fragments
         public RadioButton NicOTiltRadioButton => _nicOTiltRadioButton ?? (_nicOTiltRadioButton = View.FindViewById<RadioButton>(Resource.Id.NoTRadioButton));
 
         public RadioButton OtherMechanicsRadioButton => _otherMechanicsRadioButton ?? (_otherMechanicsRadioButton = View.FindViewById<RadioButton>(Resource.Id.OtherMechanicsRadioButton));
+
+        public EditText OtherMechanicsGearReductionEditText => _otherMechanicsGearReductionEditText ?? (_otherMechanicsGearReductionEditText = View.FindViewById<EditText>(Resource.Id.OtherMechanicsGearReduction));
 
         public RadioButton NorthRadioButton => _northRadioButton ?? (_northRadioButton = View.FindViewById<RadioButton>(Resource.Id.NorthRadioButton));
 
