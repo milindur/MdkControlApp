@@ -42,7 +42,7 @@ namespace MDKControl.Droid.Fragments
             base.OnCreate(savedInstanceState);
 
             _titleLabel = Arguments.GetString("titleLabel");
-            _value = Arguments.GetInt("value");
+            _value = Arguments.GetFloat("value");
 
             SetStyle(DialogFragmentStyle.Normal, 0);
         }
@@ -51,7 +51,7 @@ namespace MDKControl.Droid.Fragments
         {
             Dialog.SetTitle(_titleLabel);
             
-            var view = inflater.Inflate(Resource.Layout.IntegerView, container, false);
+            var view = inflater.Inflate(Resource.Layout.FloatView, container, false);
             return view;
         }
 
@@ -86,12 +86,14 @@ namespace MDKControl.Droid.Fragments
 
         protected float Value
         {
-            get { return HundredPicker.Value * 100 + TenPicker.Value * 10 + OnePicker.Value + TenthPicker.Value / 10f + HundredthsPicker.Value / 100f; }
+            get { return HundredPicker.Value * 100f + TenPicker.Value * 10f + OnePicker.Value + TenthPicker.Value / 10f + HundredthsPicker.Value / 100f; }
             set 
             {
                 HundredPicker.Value = (int)value / 100;
                 TenPicker.Value = ((int)value % 100) / 10;
                 OnePicker.Value = (int)value % 10;
+                TenthPicker.Value = (int)(value * 10) % 10;
+                HundredthsPicker.Value = (int)(value * 100) % 10;
             }
         }
 
