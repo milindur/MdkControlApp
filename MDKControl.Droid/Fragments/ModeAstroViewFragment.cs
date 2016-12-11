@@ -31,9 +31,9 @@ namespace MDKControl.Droid.Fragments
         private Binding _lunarRadioBinding;
 
         private Button _startProgramButton;
-        private RadioButton _sliderAxisRadioButton;
-        private RadioButton _panAxisRadioButton;
-        private RadioButton _tiltAxisRadioButton;
+        private CheckBox _sliderAxisRadioButton;
+        private CheckBox _panAxisRadioButton;
+        private CheckBox _tiltAxisRadioButton;
         private RadioButton _mdkV5RadioButton;
         private RadioButton _mdkV6RadioButton;
         private RadioButton _nicOTiltRadioButton;
@@ -135,7 +135,11 @@ namespace MDKControl.Droid.Fragments
                 {
                     if (SliderAxisRadioButton.Checked)
                     {
-                        Vm.Motors = Motors.MotorSlider;
+                        Vm.Motors |= Motors.MotorSlider;
+                    }
+                    else
+                    {
+                        Vm.Motors &= ~Motors.MotorSlider;
                     }
                 });
 
@@ -144,7 +148,11 @@ namespace MDKControl.Droid.Fragments
                 {
                     if (PanAxisRadioButton.Checked)
                     {
-                        Vm.Motors = Motors.MotorPan;
+                        Vm.Motors |= Motors.MotorPan;
+                    }
+                    else
+                    {
+                        Vm.Motors &= ~Motors.MotorPan;
                     }
                 });
 
@@ -153,7 +161,11 @@ namespace MDKControl.Droid.Fragments
                 {
                     if (TiltAxisRadioButton.Checked)
                     {
-                        Vm.Motors = Motors.MotorTilt;
+                        Vm.Motors |= Motors.MotorTilt;
+                    }
+                    else
+                    {
+                        Vm.Motors &= ~Motors.MotorTilt;
                     }
                 });
 
@@ -251,19 +263,19 @@ namespace MDKControl.Droid.Fragments
 
         public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
 
-        public RadioButton SliderAxisRadioButton => _sliderAxisRadioButton ?? (_sliderAxisRadioButton = View.FindViewById<RadioButton>(Resource.Id.SliderAxisRadioButton));
+        public CheckBox SliderAxisRadioButton => _sliderAxisRadioButton ?? (_sliderAxisRadioButton = View.FindViewById<CheckBox>(Resource.Id.SliderAxis));
 
-        public RadioButton PanAxisRadioButton => _panAxisRadioButton ?? (_panAxisRadioButton = View.FindViewById<RadioButton>(Resource.Id.PanAxisRadioButton));
+        public CheckBox PanAxisRadioButton => _panAxisRadioButton ?? (_panAxisRadioButton = View.FindViewById<CheckBox>(Resource.Id.PanAxis));
 
-        public RadioButton TiltAxisRadioButton => _tiltAxisRadioButton ?? (_tiltAxisRadioButton = View.FindViewById<RadioButton>(Resource.Id.TiltAxisRadioButton));
+        public CheckBox TiltAxisRadioButton => _tiltAxisRadioButton ?? (_tiltAxisRadioButton = View.FindViewById<CheckBox>(Resource.Id.TiltAxis));
 
-        public RadioButton MdkV5RadioButton => _mdkV5RadioButton ?? (_mdkV5RadioButton = View.FindViewById<RadioButton>(Resource.Id.MdkV5RadioButton));
+        public RadioButton MdkV5RadioButton => _mdkV5RadioButton ?? (_mdkV5RadioButton = View.FindViewById<RadioButton>(Resource.Id.MdkV5));
 
-        public RadioButton MdkV6RadioButton => _mdkV6RadioButton ?? (_mdkV6RadioButton = View.FindViewById<RadioButton>(Resource.Id.MdkV6RadioButton));
+        public RadioButton MdkV6RadioButton => _mdkV6RadioButton ?? (_mdkV6RadioButton = View.FindViewById<RadioButton>(Resource.Id.MdkV6));
 
-        public RadioButton NicOTiltRadioButton => _nicOTiltRadioButton ?? (_nicOTiltRadioButton = View.FindViewById<RadioButton>(Resource.Id.NoTRadioButton));
+        public RadioButton NicOTiltRadioButton => _nicOTiltRadioButton ?? (_nicOTiltRadioButton = View.FindViewById<RadioButton>(Resource.Id.NicOTilt));
 
-        public RadioButton OtherMechanicsRadioButton => _otherMechanicsRadioButton ?? (_otherMechanicsRadioButton = View.FindViewById<RadioButton>(Resource.Id.OtherMechanicsRadioButton));
+        public RadioButton OtherMechanicsRadioButton => _otherMechanicsRadioButton ?? (_otherMechanicsRadioButton = View.FindViewById<RadioButton>(Resource.Id.OtherMechanics));
 
         public EditText OtherMechanicsGearReductionEditText => _otherMechanicsGearReductionEditText ?? (_otherMechanicsGearReductionEditText = View.FindViewById<EditText>(Resource.Id.OtherMechanicsGearReduction));
 

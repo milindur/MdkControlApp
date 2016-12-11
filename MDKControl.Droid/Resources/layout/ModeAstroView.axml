@@ -25,21 +25,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <RadioButton
-                android:id="@+id/SliderAxisRadioButton"
+            <CheckBox
+                android:id="@+id/SliderAxis"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Slider"
                 android:checked="true" />
-            <RadioButton
-                android:id="@+id/PanAxisRadioButton"
+            <CheckBox
+                android:id="@+id/PanAxis"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Pan" />
-            <RadioButton
-                android:id="@+id/TiltAxisRadioButton"
+            <CheckBox
+                android:id="@+id/TiltAxis"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -69,26 +69,26 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RadioButton
-                android:id="@+id/MdkV5RadioButton"
+                android:id="@+id/MdkV5"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="MDKv5"
                 android:checked="true" />
             <RadioButton
-                android:id="@+id/MdkV6RadioButton"
+                android:id="@+id/MdkV6"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="MDKv6" />
             <RadioButton
-                android:id="@+id/NoTRadioButton"
+                android:id="@+id/NicOTilt"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Nic-O-Tilt" />
             <RadioButton
-                android:id="@+id/OtherMechanicsRadioButton"
+                android:id="@+id/OtherMechanics"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"

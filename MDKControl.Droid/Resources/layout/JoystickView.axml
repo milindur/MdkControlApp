@@ -3,6 +3,38 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="0dp">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/AllAxis"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:checked="true" />
+            <RadioButton
+                android:id="@+id/PanAxis"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Pan" />
+            <RadioButton
+                android:id="@+id/TiltAxis"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Tilt" />
+        </RadioGroup>
+    </LinearLayout>
     <MDKControl.Droid.Widgets.JoystickView
         android:id="@+id/Joystick"
         android:layout_width="fill_parent"

@@ -7,6 +7,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.Util;
 using Android.Views;
+using MDKControl.Core.Models;
 
 namespace MDKControl.Droid.Widgets
 {
@@ -75,6 +76,8 @@ namespace MDKControl.Droid.Widgets
                 TextSize = 20*scaledDensity
             };
         }
+
+        public static Motors Motors { get; set; } = Motors.MotorPan | Motors.MotorTilt;
 
         public IObservable<Core.Models.Point> JoystickStart => _joystickStartSubject.ObserveOn(_scheduler);
 
@@ -203,11 +206,14 @@ namespace MDKControl.Droid.Widgets
                 if (y > _bounds.Bottom)
                     y = _bounds.Bottom;
 
-                _joystickPositionRaw = new PointF(x, y);
-                _isActive = e.Action == MotionEventActions.Down || e.Action == MotionEventActions.Move;
-
                 var scaleX = _bounds.Width() / 2f;
                 var scaleY = _bounds.Height() / 2f;
+
+                x = Motors.HasFlag(Motors.MotorPan) ? x : scaleX;
+                y = Motors.HasFlag(Motors.MotorTilt) ? y : scaleY;
+
+                _joystickPositionRaw = new PointF(x, y);
+                _isActive = e.Action == MotionEventActions.Down || e.Action == MotionEventActions.Move;
 
                 x = (x - scaleX) * 100f / scaleX;
                 y = (y - scaleY) * 100f / scaleY;
@@ -226,11 +232,14 @@ namespace MDKControl.Droid.Widgets
                 if (y > _bounds.Bottom)
                     y = _bounds.Bottom;
 
-                _joystickPositionRaw = new PointF(x, y);
-                _isActive = e.Action == MotionEventActions.Down || e.Action == MotionEventActions.Move;
-
                 var scaleX = _bounds.Width() / 2f;
                 var scaleY = _bounds.Height() / 2f;
+
+                x = Motors.HasFlag(Motors.MotorPan) ? x : scaleX;
+                y = Motors.HasFlag(Motors.MotorTilt) ? y : scaleY;
+
+                _joystickPositionRaw = new PointF(x, y);
+                _isActive = e.Action == MotionEventActions.Down || e.Action == MotionEventActions.Move;
 
                 x = (x - scaleX) * 10f / scaleX;
                 y = (y - scaleY) * 10f / scaleY;
