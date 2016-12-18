@@ -79,7 +79,7 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Astro).ConfigureAwait(false);
                 if (GearType != null)
                 {
-                    if (GearType.Value == Models.GearType.MdkV5 && Motors == Models.Motors.MotorSlider)
+                    if (GearType.Value == Models.GearType.MdkV5 && Motors == Motors.MotorSlider)
                     {
                         await _protocolService.Main.StartAstro(Direction, Speed).ConfigureAwait(false);
                     }
