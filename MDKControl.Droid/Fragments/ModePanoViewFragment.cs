@@ -17,6 +17,17 @@ namespace MDKControl.Droid.Fragments
         private readonly object _runStatusLock = new object();
         private MoCoBusRunStatus _prevRunStatus = MoCoBusRunStatus.Stopped;
 
+        private Binding _panAxisRadioBinding;
+        private Binding _tiltAxisRadioBinding;
+        private Binding _allowReversedBinding;
+
+        private Binding _panMdkV5RadioBinding;
+        private Binding _panMdkV6RadioBinding;
+        private Binding _panNicOTiltRadioBinding;
+        private Binding _tiltMdkV5RadioBinding;
+        private Binding _tiltMdkV6RadioBinding;
+        private Binding _tiltNicOTiltRadioBinding;
+
         private Binding _exposureTimeBinding;
         private Binding _preDelayTimeBinding;
         private Binding _delayTimeBinding;
@@ -36,6 +47,16 @@ namespace MDKControl.Droid.Fragments
         private Button _setRefStartButton;
         private Button _setRefStopButton;
         private Button _startProgramButton;
+
+        private CheckBox _panAxisRadioButton;
+        private CheckBox _tiltAxisRadioButton;
+        private CheckBox _allowReversedCheckBox;
+        private RadioButton _panMdkV5RadioButton;
+        private RadioButton _panMdkV6RadioButton;
+        private RadioButton _panNicOTiltRadioButton;
+        private RadioButton _tiltMdkV5RadioButton;
+        private RadioButton _tiltMdkV6RadioButton;
+        private RadioButton _tiltNicOTiltRadioButton;
 
         private EditText _exposureTimeEditText;
         private EditText _preDelayTimeEditText;
@@ -199,6 +220,94 @@ namespace MDKControl.Droid.Fragments
                     });
             _runStatusBinding.ForceUpdateValueFromSourceToTarget();
 
+            _panAxisRadioBinding = this.SetBinding(() => PanAxisRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (PanAxisRadioButton.Checked)
+                    {
+                        Vm.Motors |= Motors.MotorPan;
+                    }
+                    else
+                    {
+                        Vm.Motors &= ~Motors.MotorPan;
+                    }
+                });
+
+            _tiltAxisRadioBinding = this.SetBinding(() => TiltAxisRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (TiltAxisRadioButton.Checked)
+                    {
+                        Vm.Motors |= Motors.MotorTilt;
+                    }
+                    else
+                    {
+                        Vm.Motors &= ~Motors.MotorTilt;
+                    }
+                });
+
+            _allowReversedBinding = this.SetBinding(() => AllowReversedCheckBox.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    Vm.AllowReversedOrder = AllowReversedCheckBox.Checked;
+                });
+            _allowReversedBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panMdkV5RadioBinding = this.SetBinding(() => PanMdkV5RadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (PanMdkV5RadioButton.Checked)
+                    {
+                        //Vm.GearType = GearType.MdkV5;
+                    }
+                });
+            _panMdkV5RadioBinding.ForceUpdateValueFromSourceToTarget();
+
+            _panMdkV6RadioBinding = this.SetBinding(() => PanMdkV6RadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (PanMdkV6RadioButton.Checked)
+                    {
+                        //Vm.GearType = GearType.MdkV6;
+                    }
+                });
+
+            _panNicOTiltRadioBinding = this.SetBinding(() => PanNicOTiltRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (PanNicOTiltRadioButton.Checked)
+                    {
+                        //Vm.GearType = GearType.NicOTilt;
+                    }
+                });
+
+            _tiltMdkV5RadioBinding = this.SetBinding(() => TiltMdkV5RadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (TiltMdkV5RadioButton.Checked)
+                    {
+                        //Vm.GearType = GearType.MdkV5;
+                    }
+                });
+
+            _tiltMdkV6RadioBinding = this.SetBinding(() => TiltMdkV6RadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (TiltMdkV6RadioButton.Checked)
+                    {
+                        //Vm.GearType = GearType.MdkV6;
+                    }
+                });
+
+            _tiltNicOTiltRadioBinding = this.SetBinding(() => TiltNicOTiltRadioButton.Checked)
+                .WhenSourceChanges(() =>
+                {
+                    if (TiltNicOTiltRadioButton.Checked)
+                    {
+                        //Vm.GearType = GearType.NicOTilt;
+                    }
+                });
+
             _exposureTimeBinding = this.SetBinding(() => Vm.ExposureTime)
                 .WhenSourceChanges(() =>
                     { 
@@ -280,6 +389,15 @@ namespace MDKControl.Droid.Fragments
         public override void OnPause()
         {
             _runStatusBinding?.Detach();
+            _panAxisRadioBinding?.Detach();
+            _tiltAxisRadioBinding?.Detach();
+            _allowReversedBinding?.Detach();
+            _panMdkV5RadioBinding?.Detach();
+            _panMdkV6RadioBinding?.Detach();
+            _panNicOTiltRadioBinding?.Detach();
+            _tiltMdkV5RadioBinding?.Detach();
+            _tiltMdkV6RadioBinding?.Detach();
+            _tiltNicOTiltRadioBinding?.Detach();
             _exposureTimeBinding?.Detach();
             _preDelayTimeBinding?.Detach();
             _delayTimeBinding?.Detach();
@@ -314,6 +432,24 @@ namespace MDKControl.Droid.Fragments
         public Button SetRefStopButton => _setRefStopButton ?? (_setRefStopButton = View.FindViewById<Button>(Resource.Id.SetRefStop));
 
         public Button StartProgramButton => _startProgramButton ?? (_startProgramButton = View.FindViewById<Button>(Resource.Id.StartProgram));
+
+        public CheckBox PanAxisRadioButton => _panAxisRadioButton ?? (_panAxisRadioButton = View.FindViewById<CheckBox>(Resource.Id.PanAxis));
+
+        public CheckBox TiltAxisRadioButton => _tiltAxisRadioButton ?? (_tiltAxisRadioButton = View.FindViewById<CheckBox>(Resource.Id.TiltAxis));
+
+        public CheckBox AllowReversedCheckBox => _allowReversedCheckBox ?? (_allowReversedCheckBox = View.FindViewById<CheckBox>(Resource.Id.AllowReversedOrder));
+
+        public RadioButton PanMdkV5RadioButton => _panMdkV5RadioButton ?? (_panMdkV5RadioButton = View.FindViewById<RadioButton>(Resource.Id.PanMdkV5));
+
+        public RadioButton PanMdkV6RadioButton => _panMdkV6RadioButton ?? (_panMdkV6RadioButton = View.FindViewById<RadioButton>(Resource.Id.PanMdkV6));
+
+        public RadioButton PanNicOTiltRadioButton => _panNicOTiltRadioButton ?? (_panNicOTiltRadioButton = View.FindViewById<RadioButton>(Resource.Id.PanNicOTilt));
+
+        public RadioButton TiltMdkV5RadioButton => _tiltMdkV5RadioButton ?? (_tiltMdkV5RadioButton = View.FindViewById<RadioButton>(Resource.Id.TiltMdkV5));
+
+        public RadioButton TiltMdkV6RadioButton => _tiltMdkV6RadioButton ?? (_tiltMdkV6RadioButton = View.FindViewById<RadioButton>(Resource.Id.TiltMdkV6));
+
+        public RadioButton TiltNicOTiltRadioButton => _tiltNicOTiltRadioButton ?? (_tiltNicOTiltRadioButton = View.FindViewById<RadioButton>(Resource.Id.TiltNicOTilt));
 
         public EditText ExposureTimeEditText => _exposureTimeEditText ?? (_exposureTimeEditText = View.FindViewById<EditText>(Resource.Id.ExposureTime));
 
