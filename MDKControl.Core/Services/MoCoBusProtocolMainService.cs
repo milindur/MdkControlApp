@@ -30,6 +30,16 @@ namespace MDKControl.Core.Services
                 .ConfigureAwait(false);
         }
 
+        public async Task StartPano(Motors motors, bool allowReversedOrder)
+        {
+            await _commService
+                .SendAndReceiveAsync(new MoCoBusMainCommandFrame(
+                    _address,
+                    MoCoBusMainCommand.Start,
+                    new[] { (byte)motors, (byte)(allowReversedOrder ? 1 : 0) }))
+                .ConfigureAwait(false);
+        }
+
         public async Task StartAstro(AstroDirection direction, AstroSpeed speed)
         {
             await _commService

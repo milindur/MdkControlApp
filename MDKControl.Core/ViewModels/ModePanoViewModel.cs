@@ -29,6 +29,7 @@ namespace MDKControl.Core.ViewModels
         private decimal _postDelayTime = 0.5m;
         private decimal _pauseTime = 60.0m;
         private ushort _repetitions = 1;
+        private bool _allowReversedOrder = false;
 
         private int _panStartPos;
         private int _panStopPos;
@@ -50,6 +51,24 @@ namespace MDKControl.Core.ViewModels
         }
 
         public DeviceViewModel DeviceViewModel => _deviceViewModel;
+
+        private Motors _motors;
+
+        public Motors Motors
+        {
+            get
+            {
+                return _motors;
+            }
+            set
+            {
+                _motors = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => Motors);
+                });
+            }
+        }
 
         public decimal ExposureTime
         {
@@ -134,6 +153,19 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
+        public bool AllowReversedOrder
+        {
+            get { return _allowReversedOrder; }
+            set
+            {
+                _allowReversedOrder = value;
+                _dispatcherHelper.RunOnUIThread(() =>
+                {
+                    RaisePropertyChanged(() => AllowReversedOrder);
+                });
+            }
+        }
+
         public float Progress => _progress;
 
         public TimeSpan ElapsedTime => _elapsedTime;
@@ -184,7 +216,8 @@ namespace MDKControl.Core.ViewModels
         private bool _startProgramRunning;
         public RelayCommand StartProgramCommand
         {
-            get { 
+            get
+            {
                 return _startProgramCommand ?? (_startProgramCommand = new RelayCommand(async () =>
                     {
                         try
@@ -253,7 +286,7 @@ namespace MDKControl.Core.ViewModels
             }
         }
 
-        private async  void SwapStartStop()
+        private async void SwapStartStop()
         {
             try
             {
@@ -329,7 +362,7 @@ namespace MDKControl.Core.ViewModels
                 await _protocolService.Camera.SetPanoRepititions(Repititions).ConfigureAwait(false);
 
                 await _protocolService.Main.SetProgramMode(MoCoBusProgramMode.Panorama).ConfigureAwait(false);
-                await _protocolService.Main.Start().ConfigureAwait(false);
+                await _protocolService.Main.StartPano(Motors, AllowReversedOrder).ConfigureAwait(false);
 
                 _overallCols = await _protocolService.MotorPan.GetTravelShots().ConfigureAwait(false);
                 _overallRows = await _protocolService.MotorTilt.GetTravelShots().ConfigureAwait(false);

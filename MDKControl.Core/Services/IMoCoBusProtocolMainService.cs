@@ -8,6 +8,7 @@ namespace MDKControl.Core.Services
     {
         Task Start();
         Task Start(byte arg);
+        Task StartPano(Motors motors, bool allowReversedOrder);
         Task StartAstro(AstroDirection direction, AstroSpeed speed);
         Task StartAstro(Motors motors, AstroDirection direction, AstroSpeed speed, GearType gear);
         Task StartAstro(Motors motors, AstroDirection direction, AstroSpeed speed, float gearReduction);
