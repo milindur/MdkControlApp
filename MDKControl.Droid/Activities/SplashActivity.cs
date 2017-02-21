@@ -4,7 +4,6 @@ using Android.Content.PM;
 using Android.OS;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
-using Xamarin;
 
 namespace MDKControl.Droid.Activities
 {
@@ -23,7 +22,7 @@ namespace MDKControl.Droid.Activities
 
             await Task.Delay(400);
 
-            Insights.Track("StartDeviceListViewActivity");
+            // FIXME: Insights.Track("StartDeviceListViewActivity");
             StartActivity(typeof(DeviceListViewActivity));
         }
     }

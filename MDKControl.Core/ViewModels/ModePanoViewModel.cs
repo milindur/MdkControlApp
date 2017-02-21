@@ -5,7 +5,6 @@ using GalaSoft.MvvmLight.Command;
 using MDKControl.Core.Helpers;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
-using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -259,7 +258,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -282,7 +281,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -309,7 +308,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -322,7 +321,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -335,7 +334,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -371,7 +370,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -383,7 +382,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -395,7 +394,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
             try
             {
@@ -404,7 +403,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -432,7 +431,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -462,7 +461,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
 
@@ -498,7 +497,7 @@ namespace MDKControl.Core.ViewModels
             }
             catch (TimeoutException toe)
             {
-                Insights.Report(toe);
+                // FIXME: Insights.Report(toe);
             }
         }
     }

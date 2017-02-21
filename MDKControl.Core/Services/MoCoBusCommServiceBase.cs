@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
 using Nito.AsyncEx;
-using Xamarin;
 
 namespace MDKControl.Core.Services
 {
@@ -79,11 +78,11 @@ namespace MDKControl.Core.Services
                         if (_retryCounter >= 100)
                         {
                             Debug.WriteLine("RetryCounter >= 100 ({0}): Try to reconnect!", _retryCounter);
-                            Insights.Track("MoCoBusCommServiceBaseRetryCounterOverrun", 
-                                new Dictionary<string, string> 
+                            /* FIXME: Insights.Track("MoCoBusCommServiceBaseRetryCounterOverrun", 
+                            new Dictionary<string, string> 
                                 { 
                                     { "RetryCounter", _retryCounter.ToString() } 
-                                });
+                                });*/
 
                             _retryCounter = 0;
                             Disconnect();

@@ -7,7 +7,6 @@ using GalaSoft.MvvmLight;
 using MDKControl.Core.Models;
 using MDKControl.Core.Services;
 using Reactive.Bindings;
-using Xamarin;
 
 namespace MDKControl.Core.ViewModels
 {
@@ -203,7 +202,7 @@ namespace MDKControl.Core.ViewModels
             {
                 _joystickTaskCancellationTokenSource = null;
                 _joystickTask = null;
-                Insights.Report(ex);
+                // FIXME: Insights.Report(ex);
             }
         }
 
@@ -233,7 +232,7 @@ namespace MDKControl.Core.ViewModels
             {
                 _joystickTaskCancellationTokenSource = null;
                 _joystickTask = null;
-                Insights.Report(ex);
+                // FIXME: Insights.Report(ex);
             }
         }
 

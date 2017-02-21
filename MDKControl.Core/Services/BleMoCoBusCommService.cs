@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MDKControl.Core.Models;
-using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Core.Services
@@ -153,7 +152,7 @@ namespace MDKControl.Core.Services
         public override void Connect()
         {
             Debug.WriteLine("BleMoCoBusCommService: Connect");
-            Insights.Track("BleMoCoBusCommServiceConnect");
+            // FIXME: Insights.Track("BleMoCoBusCommServiceConnect");
 
             _adapter.ConnectToDevice(_device);
             ConnectionState = ConnectionState.Connecting;
@@ -162,7 +161,7 @@ namespace MDKControl.Core.Services
         public override void Disconnect()
         {
             Debug.WriteLine("BleMoCoBusCommService: Disconnect");
-            Insights.Track("BleMoCoBusCommServiceDisconnect");
+            // FIXME: Insights.Track("BleMoCoBusCommServiceDisconnect");
 
             OnDisconnect();
 

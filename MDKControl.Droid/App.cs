@@ -12,7 +12,6 @@ using MDKControl.Core.ViewModels;
 using MDKControl.Droid.Activities;
 using MDKControl.Droid.Helpers;
 using Microsoft.Practices.ServiceLocation;
-using Xamarin;
 using Ble = Robotics.Mobile.Core.Bluetooth.LE;
 
 namespace MDKControl.Droid
@@ -89,7 +88,7 @@ namespace MDKControl.Droid
 
         public static void Initialize(Context context)
         {
-            if (!Insights.IsInitialized)
+            /* FIXME: if (!Insights.IsInitialized)
             {
                 Insights.HasPendingCrashReport += (sender, isStartupCrash) =>
                 {
@@ -106,7 +105,7 @@ namespace MDKControl.Droid
 #endif
 
                 Insights.Track("Initialize");
-            }
+            }*/
         }
 
         private static void AppDomain_CurrentDomain_UnhandledException (object sender, UnhandledExceptionEventArgs e)
@@ -114,11 +113,11 @@ namespace MDKControl.Droid
             if (e.ExceptionObject is TimeoutException)
             {
                 // ignore (for the moment, should communicate to user that there is a communication issue)
-                Insights.Report(e.ExceptionObject as Exception);
+                // FIXME: Insights.Report(e.ExceptionObject as Exception);
             }
             else
             {
-                Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
+                // FIXME: Insights.Report(e.ExceptionObject as Exception, Insights.Severity.Error);
             }
         }
 
@@ -127,12 +126,12 @@ namespace MDKControl.Droid
             if (e.Exception.InnerException is TimeoutException)
             {
                 // ignore (for the moment, should communicate to user that there is a communication issue)
-                Insights.Report(e.Exception);
+                // FIXME: Insights.Report(e.Exception);
                 e.SetObserved();
             }
             else
             {
-                Insights.Report(e.Exception, Insights.Severity.Error);
+                // FIXME: Insights.Report(e.Exception, Insights.Severity.Error);
             }
         }
     }
